@@ -73,6 +73,7 @@
 // Header.jsx
 import React from "react";
 import { Bell, Menu } from "lucide-react";
+import logo from "../../../assets/Winkizlogo.png";
 
 export default function Header({ onNotificationsClick, onHamburgerClick }) {
   return (
@@ -80,7 +81,7 @@ export default function Header({ onNotificationsClick, onHamburgerClick }) {
       {/* Logo */}
       <div className="px-0 md:px-2">
         <div className="w-16 h-16 md:w-20 md:h-20">
-          <img src="../src/assets/Winkizlogo.png" alt="Logo" />
+          <img src={logo} alt="Logo" />
         </div>
       </div>
 
