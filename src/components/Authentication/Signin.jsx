@@ -32,7 +32,7 @@ function Signin() {
           Cookies.set("jwt", data.token);
           Cookies.set("user", JSON.stringify(data.userDetails));
           console.log(data.userDetails)
-          navigate("/influencer-insights", { state: { userDetails: data.userDetails } });
+          navigate("/creator-to-creator", { state: { userDetails: data.userDetails } });
         } else {
           Cookies.set("jwt", data.token);
           navigate("/BrandDashBoard");
