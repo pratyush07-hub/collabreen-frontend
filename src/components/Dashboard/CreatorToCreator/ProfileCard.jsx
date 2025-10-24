@@ -524,7 +524,7 @@ export default function ProfileCard({ profile, onLike, onDislike, onStartConvers
 
   // ---------------- Mobile Layout ----------------
 const MobileView = () => (
-  <div className="lg:hidden w-full bg-white mt-6 rounded-2xl overflow-hidden shadow-lg p-4 flex flex-col">
+  <div className="lg:hidden w-full bg-white mt-6 pt-16 rounded-2xl overflow-hidden shadow-lg p-4 flex flex-col">
     {/* Search & Filter */}
     <div className="flex items-center justify-between mt-2 gap-2 mb-4">
       <div className="flex-1 relative">

@@ -29,6 +29,7 @@ import InfluencerDashboardPage from "./components/Dashboard/InfluencerDashboard/
 import EditProfile from "./components/Dashboard/InfluencerDashboard/EditProfile";
 import CreatorToCreatorMain from "./components/Dashboard/CreatorToCreator/CreatorToCreatorMain";
 import ErrorBoundary from "./components/Dashboard/CreatorToCreator/ErrorBoundary";
+import CollabReqAcceptReject from "./components/Dashboard/CreatorToCreator/CollabReqAcceptReject";
 
 function App() {
   const location = useLocation();
@@ -66,6 +67,7 @@ function App() {
         <Route exact path="/services/payment/influencer" element={<PayInfluencer />} />
         <Route exact path="/blogs" element={<Blogs />} />
         <Route exact path="/blog" element={<Blog />} />
+        <Route exact path="/kk" element={<CollabReqAcceptReject />} />
 
         {/* Influencer Dashboard */}
         <Route exact path="/influencerdashboard" element={<InfluencerDashboardPage />} />

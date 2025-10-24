@@ -19,9 +19,11 @@ const ProjectsDashboard = () => {
   const fetchUserAndCollabs = async () => {
     try {
       const userRes = await getCurrentUser();
+      console.log("Fetched current user:", userRes.data.user);
       setCurrentUser(userRes.data.user);
 
       const { data } = await getAcceptedCollaborations();
+      console.log("Fetched accepted collaborations:", data.collaborations);
       const activeCollabs = data.collaborations.filter(
         (collab) => collab.status === "active"
       );
@@ -32,8 +34,9 @@ const ProjectsDashboard = () => {
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-5xl mt-24 mx-auto">
       {/* Header */}
+      {/* <CollabReqAcceptReject /> */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">
           {activeView === "projects"
@@ -125,7 +128,11 @@ const ProjectsDashboard = () => {
       )}
 
       {/* === Collaboration Requests === */}
-      {activeView === "collaborationRequests" && <CollabReqAcceptReject />}
+      {/* {activeView === "collaborationRequests" && <CollabReqAcceptReject />} */}
+      {activeView === "collaborationRequests" && currentUser && (
+  <CollabReqAcceptReject currentUser={currentUser} />
+)}
+
     </div>
   );
 };

@@ -607,322 +607,366 @@
 //     );
 // }
 
-import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Phone, Video, MoreVertical, Paperclip, Mic, Send } from 'lucide-react';
-import CollaborationModal from './CollaborationModal';
-import { getChatMessages, sendMessage } from '../../../api/client';
-import io from 'socket.io-client';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  ArrowLeft,
+  Phone,
+  Video,
+  MoreVertical,
+  Paperclip,
+  Mic,
+  Send,
+} from "lucide-react";
+import CollaborationModal from "./CollaborationModal";
+import { getChatMessages, sendMessage } from "../../../api/client";
+import io from "socket.io-client";
 import Cookies from "js-cookie";
 
 export default function ChatWindow({ chatId, onBack }) {
-    const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([]);
-    const [chatInfo, setChatInfo] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [showCollaborationModal, setShowCollaborationModal] = useState(false);
-    const [currentUserId, setCurrentUserId] = useState(null);
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [chatInfo, setChatInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showCollaborationModal, setShowCollaborationModal] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
-    const socketRef = useRef(null);
-    const messagesEndRef = useRef(null);
-    // console.log("ChatID: ", chatId);
+  const socketRef = useRef(null);
+  const messagesEndRef = useRef(null);
+  // console.log("ChatID: ", chatId);
 
-    // Initialize WebSocket connection
-    useEffect(() => {
-        // Get JWT token from cookie
-        const token = Cookies.get("jwt");
-      
+  // Initialize WebSocket connection
+  useEffect(() => {
+    // Get JWT token from cookie
+    const token = Cookies.get("jwt");
 
-        if (token) {
-            // Initialize socket connection with authentication
-            socketRef.current = io(import.meta.VITE_BACKEND_URL || 'http://localhost:8000', {
-                auth: {
-                    token: token
-                },
-                transports: ['websocket', 'polling']
-            });
-
-            // Connection established
-            socketRef.current.on('connect', () => {
-                console.log('WebSocket connected:', socketRef.current.id);
-            });
-
-            // Listen for incoming messages
-            socketRef.current.on('receiveMessage', (newMessage) => {
-                // Only add message if it belongs to current chat
-                if (newMessage.chat === chatId) {
-                    setMessages(prev => [...prev, newMessage]);
-                    scrollToBottom();
-                }
-            });
-
-            // Listen for message sent confirmation
-            socketRef.current.on('messageSent', (sentMessage) => {
-                console.log('Message sent confirmation:', sentMessage);
-            });
-
-            // Handle connection errors
-            socketRef.current.on('connect_error', (error) => {
-                console.error('WebSocket connection error:', error);
-            });
-
-            // Handle disconnection
-            socketRef.current.on('disconnect', (reason) => {
-                console.log('WebSocket disconnected:', reason);
-            });
-
-            // Cleanup on unmount
-            return () => {
-                if (socketRef.current) {
-                    socketRef.current.disconnect();
-                }
-            };
+    if (token) {
+      // Initialize socket connection with authentication
+      socketRef.current = io(
+        import.meta.VITE_BACKEND_URL || "http://localhost:8000",
+        {
+          auth: {
+            token: token,
+          },
+          transports: ["websocket", "polling"],
         }
-    }, [chatId]);
+      );
 
-    // Join chat room when chatId changes
-    useEffect(() => {
-        if (socketRef.current && chatId) {
-            socketRef.current.emit('joinChat', chatId);
-            console.log('Joined chat room:', chatId);
+      // Connection established
+      socketRef.current.on("connect", () => {
+        console.log("WebSocket connected:", socketRef.current.id);
+      });
+
+      // Listen for incoming messages
+      socketRef.current.on("receiveMessage", (newMessage) => {
+        // Only add message if it belongs to current chat
+        if (newMessage.chat === chatId) {
+          setMessages((prev) => [...prev, newMessage]);
+          scrollToBottom();
         }
+      });
 
-        return () => {
-            if (socketRef.current && chatId) {
-                socketRef.current.emit('leaveChat', chatId);
-                console.log('Left chat room:', chatId);
-            }
-        };
-    }, [chatId]);
+      // Listen for message sent confirmation
+      socketRef.current.on("messageSent", (sentMessage) => {
+        console.log("Message sent confirmation:", sentMessage);
+      });
 
-    useEffect(() => {
-        // Get current user ID from token or API
-        const getCurrentUserId = async () => {
-            try {
-                const token = Cookies.get("jwt");
-                if (token) {
-                    const userRaw= Cookies.get("user");
-                    const userId  = JSON.parse(userRaw).id;
-                 
-                    // You can replace this with actual JWT decoding or API logic
-                    setCurrentUserId(userId); // placeholder for now
-                }
-            } catch (error) {
-                console.error('Error getting current user ID:', error);
-            }
-        };
+      // Handle connection errors
+      socketRef.current.on("connect_error", (error) => {
+        console.error("WebSocket connection error:", error);
+      });
 
-        getCurrentUserId();
-    }, []);
+      // Handle disconnection
+      socketRef.current.on("disconnect", (reason) => {
+        console.log("WebSocket disconnected:", reason);
+      });
 
-    useEffect(() => {
-        if (chatId) {
-            fetchMessages();
+      // Cleanup on unmount
+      return () => {
+        if (socketRef.current) {
+          socketRef.current.disconnect();
         }
-    }, [chatId]);
+      };
+    }
+  }, [chatId]);
 
-    // Auto-scroll to bottom when new messages arrive
-    useEffect(() => {
-        scrollToBottom();
-        console.log(messages)
-    }, [messages]);
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    const fetchMessages = async () => {
-        try {
-            setLoading(true);
-            const response = await getChatMessages(chatId);
-            if (response.data.success) {
-                setMessages(response.data.data);
-                console.log("Fetched messages:", response.data.data);
-
-                if (response.data.data.length > 0) {
-                    const otherParticipant = response.data.data[0].sender;
-                    setChatInfo({
-                        id: otherParticipant._id,
-                        name: otherParticipant.name,
-                        avatar: otherParticipant.profilePic || '/default-avatar.png'
-                    });
-                }
-            }
-        } catch (error) {
-            console.error('Error fetching messages:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleSendMessage = async () => {
-        if (!message.trim()) return;
-
-        const messageContent = message.trim();
-        setMessage(''); // Clear input immediately for better UX
-
-        try {
-            // Send via WebSocket for real-time delivery
-            if (socketRef.current && socketRef.current.connected) {
-                socketRef.current.emit('sendMessage', {
-                    chatId: chatId,
-                    content: messageContent
-                });
-            } else {
-                // Fallback to REST API if WebSocket is not connected
-                console.warn('WebSocket not connected, using REST API fallback');
-                const response = await sendMessage(chatId, messageContent);
-                if (response.data.success) {
-                    setMessages(prev => [...prev, response.data.data]);
-                }
-            }
-        } catch (error) {
-            console.error('Error sending message:', error);
-            // Restore message in input on error
-            setMessage(messageContent);
-        }
-    };
-
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            handleSendMessage();
-        }
-    };
-
-    if (loading) {
-        return (
-            <div className="flex flex-col h-screen bg-gray-900 items-center justify-center">
-                <div className="text-white">Loading messages...</div>
-            </div>
-        );
+  // Join chat room when chatId changes
+  useEffect(() => {
+    if (socketRef.current && chatId) {
+      socketRef.current.emit("joinChat", chatId);
+      console.log("Joined chat room:", chatId);
     }
 
-   return (
+    return () => {
+      if (socketRef.current && chatId) {
+        socketRef.current.emit("leaveChat", chatId);
+        console.log("Left chat room:", chatId);
+      }
+    };
+  }, [chatId]);
+
+  useEffect(() => {
+    // Get current user ID from token or API
+    const getCurrentUserId = async () => {
+      try {
+        const token = Cookies.get("jwt");
+        if (token) {
+          const userRaw = Cookies.get("user");
+          const userId = JSON.parse(userRaw).id;
+
+          // You can replace this with actual JWT decoding or API logic
+          setCurrentUserId(userId); // placeholder for now
+        }
+      } catch (error) {
+        console.error("Error getting current user ID:", error);
+      }
+    };
+
+    getCurrentUserId();
+  }, []);
+
+  useEffect(() => {
+    if (chatId) {
+      fetchMessages();
+    }
+  }, [chatId]);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    scrollToBottom();
+    console.log(messages);
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const fetchMessages = async () => {
+    try {
+      setLoading(true);
+      const response = await getChatMessages(chatId);
+      if (response.data.success) {
+        setMessages(response.data.data);
+        console.log("Fetched messages:", response.data.data);
+
+        if (response.data.data.length > 0) {
+          const otherParticipant = response.data.data[0].sender;
+          setChatInfo({
+            id: otherParticipant._id,
+            name: otherParticipant.name,
+            avatar: otherParticipant.profilePic || "/default-avatar.png",
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (!message.trim()) return;
+
+    const messageContent = message.trim();
+    setMessage(''); // Clear input immediately
+
+    try {
+        // Send via WebSocket
+        if (socketRef.current && socketRef.current.connected) {
+            socketRef.current.emit('sendMessage', {
+                chatId: chatId,
+                content: messageContent
+            });
+
+            // Only reload messages if chatInfo is not yet set
+            if (!chatInfo) {
+                await fetchMessages();
+            }
+        } else {
+            // Fallback to REST API
+            const response = await sendMessage(chatId, messageContent);
+            if (response.data.success) {
+                setMessages(prev => [...prev, response.data.data]);
+                if (!chatInfo) {
+                    await fetchMessages();
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+        setMessage(messageContent); // restore on error
+    }
+};
+
+
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col h-screen bg-gray-900 items-center justify-center">
+        <div className="text-white">Loading messages...</div>
+      </div>
+    );
+  }
+
+  return (
     <div className="flex flex-col h-screen bg-gray-900">
-        {/* Header */}
-        <div className="bg-white border-b mt-16 border-gray-200 p-4">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                    <button
-                        onClick={onBack}
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                    >
-                        <ArrowLeft size={20} className="text-gray-600" />
-                    </button>
+      {/* Header */}
+      <div className="bg-white border-b md:mt-16 mt-24 border-gray-200 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={onBack}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <ArrowLeft size={20} className="text-gray-600" />
+            </button>
 
-                    {chatInfo && (
-                        <>
-                            <img
-                                src={chatInfo.avatar}
-                                alt={chatInfo.name}
-                                className="w-10 h-10 rounded-full object-cover"
-                            />
-                            <div className="hidden sm:block">
-                                <h2 className="font-semibold text-gray-900">{chatInfo.name}</h2>
-                            </div>
-                        </>
-                    )}
+            {chatInfo && (
+              <>
+                <img
+                  src={chatInfo.avatar}
+                  alt={chatInfo.name}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div className="hidden sm:block">
+                  <h2 className="font-semibold text-gray-900">
+                    {chatInfo.name}
+                  </h2>
                 </div>
+              </>
+            )}
+          </div>
 
-                <div className="flex items-center space-x-2">
-                    <button
+          <div className="flex items-center space-x-2">
+            {/* <button
                         onClick={() => setShowCollaborationModal(true)}
                         className="bg-pink-100 text-pink-600 px-4 py-2 rounded-full text-sm font-medium hover:bg-pink-200 transition-colors"
                     >
                         Send Collaboration Request
-                    </button>
+                    </button> */}
+            <button
+              onClick={() => {
+                if (messages.length === 0) {
+                  alert(
+                    "Please have some conversation first before sending a collaboration request."
+                  );
+                  return;
+                }
+                setShowCollaborationModal(true);
+              }}
+              className="bg-pink-100 text-pink-600 px-4 py-2 rounded-full text-sm font-medium hover:bg-pink-200 transition-colors"
+            >
+              Send Collaboration Request
+            </button>
 
-                    <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <Phone size={20} className="text-gray-600" />
-                    </button>
+            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <Phone size={20} className="text-gray-600" />
+            </button>
 
-                    <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <Video size={20} className="text-gray-600" />
-                    </button>
+            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <Video size={20} className="text-gray-600" />
+            </button>
 
-                    <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <MoreVertical size={20} className="text-gray-600" />
-                    </button>
-                </div>
+            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <MoreVertical size={20} className="text-gray-600" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+        {messages.map((msg) => (
+          <div
+            key={msg._id}
+            className={`flex ${
+              msg.sender._id === currentUserId ? "justify-end" : "justify-start"
+            }`}
+          >
+            <div
+              className={`flex items-end space-x-2 max-w-xs sm:max-w-sm md:max-w-md ${
+                msg.sender._id === currentUserId
+                  ? "flex-row-reverse space-x-reverse"
+                  : ""
+              }`}
+            >
+              {msg.sender._id !== currentUserId && (
+                <img
+                  src={msg.sender.profilePic || "/default-avatar.png"}
+                  alt="Avatar"
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+              )}
+
+              <div
+                className={`px-4 py-2 rounded-2xl text-sm sm:text-base ${
+                  msg.sender._id === currentUserId
+                    ? "bg-orange-500 text-white"
+                    : "bg-orange-400 text-white"
+                }`}
+              >
+                <p>{msg.content}</p>
+              </div>
+
+              {msg.sender._id === currentUserId && (
+                <img
+                  src={msg.sender.profilePic || "/default-avatar.png"}
+                  alt="Avatar"
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+              )}
             </div>
-        </div>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
 
-        {/* Messages */}
-        <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-            {messages.map((msg) => (
-                <div
-                    key={msg._id}
-                    className={`flex ${msg.sender._id === currentUserId ? 'justify-end' : 'justify-start'}`}
-                >
-                    <div
-                        className={`flex items-end space-x-2 max-w-xs sm:max-w-sm md:max-w-md ${msg.sender._id === currentUserId ? 'flex-row-reverse space-x-reverse' : ''}`}
-                    >
-                        {msg.sender._id !== currentUserId && (
-                            <img
-                                src={msg.sender.profilePic || '/default-avatar.png'}
-                                alt="Avatar"
-                                className="w-8 h-8 rounded-full object-cover"
-                            />
-                        )}
-
-                        <div
-                            className={`px-4 py-2 rounded-2xl text-sm sm:text-base ${msg.sender._id === currentUserId ? 'bg-orange-500 text-white' : 'bg-orange-400 text-white'}`}
-                        >
-                            <p>{msg.content}</p>
-                        </div>
-
-                        {msg.sender._id === currentUserId && (
-                            <img
-                                src={msg.sender.profilePic || '/default-avatar.png'}
-                                alt="Avatar"
-                                className="w-8 h-8 rounded-full object-cover"
-                            />
-                        )}
-                    </div>
-                </div>
-            ))}
-            <div ref={messagesEndRef} />
-        </div>
-
-        {/* Message Input */}
-        <div className="p-4 bg-gray-900">
-            <div className="flex items-center space-x-3">
-                <div className="flex-1 relative">
-                    <input
-                        type="text"
-                        placeholder="Type your message..."
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        className="w-full bg-gray-800 text-white px-4 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-400 text-sm sm:text-base"
-                    />
-                    <button className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-700 rounded-full transition-colors">
-                        <Paperclip size={18} className="text-gray-400" />
-                    </button>
-                </div>
-
-                <button className="p-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors">
-                    <Mic size={20} className="text-white" />
-                </button>
-
-                <button
-                    onClick={handleSendMessage}
-                    className="p-3 bg-orange-500 rounded-full hover:bg-orange-600 transition-colors"
-                >
-                    <Send size={20} className="text-white" />
-                </button>
-            </div>
-        </div>
-
-        {/* Collaboration Modal */}
-        {chatInfo && (
-            <CollaborationModal
-                isOpen={showCollaborationModal}
-                onClose={() => setShowCollaborationModal(false)}
-                recipientName={chatInfo.name}
-                chatId={chatId}
+      {/* Message Input */}
+      <div className="p-4 bg-gray-900">
+        <div className="flex items-center space-x-3">
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              placeholder="Type your message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="w-full bg-gray-800 text-white px-4 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-400 text-sm sm:text-base"
             />
-        )}
+            <button className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-700 rounded-full transition-colors">
+              <Paperclip size={18} className="text-gray-400" />
+            </button>
+          </div>
+
+          <button className="p-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors">
+            <Mic size={20} className="text-white" />
+          </button>
+
+          <button
+            onClick={handleSendMessage}
+            className="p-3 bg-orange-500 rounded-full hover:bg-orange-600 transition-colors"
+          >
+            <Send size={20} className="text-white" />
+          </button>
+        </div>
+      </div>
+
+      {/* Collaboration Modal */}
+      {chatInfo && (
+        <CollaborationModal
+          isOpen={showCollaborationModal}
+          onClose={() => setShowCollaborationModal(false)}
+          recipientName={chatInfo.name || " "}
+          chatId={chatId || " "}
+        />
+      )}
     </div>
-);
+  );
 }

@@ -11,7 +11,10 @@ const CollabReqAcceptReject = () => {
       try {
         setLoading(true);
         const response = await getCollaborationRequests("received");
-        console.log("getresponse", response)
+        console.log("Fetched requests:", response.data.data);
+response.data.data.forEach(r => console.log(r.sender));
+
+        // console.log("getresponse", response)
         if (response.data.success) {
           setRequests(response.data.data);
         }
@@ -31,6 +34,7 @@ const CollabReqAcceptReject = () => {
 
   if (loading) return <div className="p-6 text-center">Loading collaboration requests...</div>;
   if (requests.length === 0) return <div className="p-6 text-center text-gray-500">No collaboration requests</div>;
+  
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
