@@ -797,134 +797,132 @@ export default function ChatWindow({ chatId, onBack }) {
         );
     }
 
-    return (
-        <div className="flex flex-col h-screen bg-gray-900">
-            {/* Header */}
-            <div className="bg-white border-b border-gray-200 p-4">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                        <button
-                            onClick={onBack}
-                            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                        >
-                            <ArrowLeft size={20} className="text-gray-600" />
-                        </button>
+   return (
+    <div className="flex flex-col h-screen bg-gray-900">
+        {/* Header */}
+        <div className="bg-white border-b mt-16 border-gray-200 p-4">
+            <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                    <button
+                        onClick={onBack}
+                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    >
+                        <ArrowLeft size={20} className="text-gray-600" />
+                    </button>
 
-                        {chatInfo && (
-                            <>
-                                <img
-                                    src={chatInfo.avatar}
-                                    alt={chatInfo.name}
-                                    className="w-10 h-10 rounded-full object-cover"
-                                />
-                                <div>
-                                    <h2 className="font-semibold text-gray-900">{chatInfo.name}</h2>
-                                </div>
-                            </>
+                    {chatInfo && (
+                        <>
+                            <img
+                                src={chatInfo.avatar}
+                                alt={chatInfo.name}
+                                className="w-10 h-10 rounded-full object-cover"
+                            />
+                            <div className="hidden sm:block">
+                                <h2 className="font-semibold text-gray-900">{chatInfo.name}</h2>
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                <div className="flex items-center space-x-2">
+                    <button
+                        onClick={() => setShowCollaborationModal(true)}
+                        className="bg-pink-100 text-pink-600 px-4 py-2 rounded-full text-sm font-medium hover:bg-pink-200 transition-colors"
+                    >
+                        Send Collaboration Request
+                    </button>
+
+                    <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <Phone size={20} className="text-gray-600" />
+                    </button>
+
+                    <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <Video size={20} className="text-gray-600" />
+                    </button>
+
+                    <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <MoreVertical size={20} className="text-gray-600" />
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+            {messages.map((msg) => (
+                <div
+                    key={msg._id}
+                    className={`flex ${msg.sender._id === currentUserId ? 'justify-end' : 'justify-start'}`}
+                >
+                    <div
+                        className={`flex items-end space-x-2 max-w-xs sm:max-w-sm md:max-w-md ${msg.sender._id === currentUserId ? 'flex-row-reverse space-x-reverse' : ''}`}
+                    >
+                        {msg.sender._id !== currentUserId && (
+                            <img
+                                src={msg.sender.profilePic || '/default-avatar.png'}
+                                alt="Avatar"
+                                className="w-8 h-8 rounded-full object-cover"
+                            />
+                        )}
+
+                        <div
+                            className={`px-4 py-2 rounded-2xl text-sm sm:text-base ${msg.sender._id === currentUserId ? 'bg-orange-500 text-white' : 'bg-orange-400 text-white'}`}
+                        >
+                            <p>{msg.content}</p>
+                        </div>
+
+                        {msg.sender._id === currentUserId && (
+                            <img
+                                src={msg.sender.profilePic || '/default-avatar.png'}
+                                alt="Avatar"
+                                className="w-8 h-8 rounded-full object-cover"
+                            />
                         )}
                     </div>
-
-                    <div className="flex items-center space-x-2">
-                        <button
-                            onClick={() => setShowCollaborationModal(true)}
-                            className="bg-pink-100 text-pink-600 px-4 py-2 rounded-full text-sm font-medium hover:bg-pink-200 transition-colors"
-                        >
-                            Send Collaboration Request
-                        </button>
-
-                        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                            <Phone size={20} className="text-gray-600" />
-                        </button>
-
-                        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                            <Video size={20} className="text-gray-600" />
-                        </button>
-
-                        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                            <MoreVertical size={20} className="text-gray-600" />
-                        </button>
-                    </div>
                 </div>
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-                
-                {messages.map((msg) => (
-
-                    <div
-                        key={msg._id}
-                        className={`flex ${msg.sender._id === currentUserId ? 'justify-end' : 'justify-start'}`}
-                    >
-                        <div
-                            className={`flex items-end space-x-2 max-w-xs lg:max-w-md ${msg.sender._id === currentUserId ? 'flex-row-reverse space-x-reverse' : ''}`}
-                        >
-                            {msg.sender._id !== currentUserId && (
-                                <img
-                                    src={msg.sender.profilePic || '/default-avatar.png'}
-                                    alt="Avatar"
-                                    className="w-8 h-8 rounded-full object-cover"
-                                />
-                            )}
-
-                            <div
-                                className={`px-4 py-2 rounded-2xl ${msg.sender._id === currentUserId ? 'bg-orange-500 text-white' : 'bg-orange-400 text-white'}`}
-                            >
-                                <p className="text-sm">{msg.content}</p>
-                            </div>
-
-                            {msg.sender._id === currentUserId && (
-                                <img
-                                    src={msg.sender.profilePic || '/default-avatar.png'}
-                                    alt="Avatar"
-                                    className="w-8 h-8 rounded-full object-cover"
-                                />
-                            )}
-                        </div>
-                    </div>
-                ))}
-                <div ref={messagesEndRef} />
-            </div>
-
-            {/* Message Input */}
-            <div className="p-4 bg-gray-900">
-                <div className="flex items-center space-x-3">
-                    <div className="flex-1 relative">
-                        <input
-                            type="text"
-                            placeholder="Type your message......"
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                            onKeyPress={handleKeyPress}
-                            className="w-full bg-gray-800 text-white px-4 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-400"
-                        />
-                        <button className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-700 rounded-full transition-colors">
-                            <Paperclip size={18} className="text-gray-400" />
-                        </button>
-                    </div>
-
-                    <button className="p-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors">
-                        <Mic size={20} className="text-white" />
-                    </button>
-
-                    <button
-                        onClick={handleSendMessage}
-                        className="p-3 bg-orange-500 rounded-full hover:bg-orange-600 transition-colors"
-                    >
-                        <Send size={20} className="text-white" />
-                    </button>
-                </div>
-            </div>
-
-            {/* Collaboration Modal */}
-            {chatInfo && (
-                <CollaborationModal
-                    isOpen={showCollaborationModal}
-                    onClose={() => setShowCollaborationModal(false)}
-                    recipientName={chatInfo.name}
-                    chatId={chatId} 
-                />
-            )}
+            ))}
+            <div ref={messagesEndRef} />
         </div>
-    );
+
+        {/* Message Input */}
+        <div className="p-4 bg-gray-900">
+            <div className="flex items-center space-x-3">
+                <div className="flex-1 relative">
+                    <input
+                        type="text"
+                        placeholder="Type your message..."
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        className="w-full bg-gray-800 text-white px-4 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-400 text-sm sm:text-base"
+                    />
+                    <button className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-700 rounded-full transition-colors">
+                        <Paperclip size={18} className="text-gray-400" />
+                    </button>
+                </div>
+
+                <button className="p-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors">
+                    <Mic size={20} className="text-white" />
+                </button>
+
+                <button
+                    onClick={handleSendMessage}
+                    className="p-3 bg-orange-500 rounded-full hover:bg-orange-600 transition-colors"
+                >
+                    <Send size={20} className="text-white" />
+                </button>
+            </div>
+        </div>
+
+        {/* Collaboration Modal */}
+        {chatInfo && (
+            <CollaborationModal
+                isOpen={showCollaborationModal}
+                onClose={() => setShowCollaborationModal(false)}
+                recipientName={chatInfo.name}
+                chatId={chatId}
+            />
+        )}
+    </div>
+);
 }

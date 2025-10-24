@@ -164,7 +164,7 @@ export default function ChatList({ onChatSelect }) {
     }
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className="bg-white mt-16 min-h-screen">
             {/* Header */}
             <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">

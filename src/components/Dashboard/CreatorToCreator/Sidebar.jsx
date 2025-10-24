@@ -63,9 +63,10 @@
 
 // Sidebar.jsx
 import React, { useState, useEffect } from "react";
+import { Bell } from "lucide-react";
 import { Search, MessageCircle, User, FolderOpen, Settings, LogOut, Users } from "lucide-react";
 
-export default function Sidebar({ activeItem, onItemClick, isFirstTime, isOpen, onClose }) {
+export default function Sidebar({ activeItem, onItemClick, isFirstTime, isOpen, onClose, onNotificationsClick }) {
   const menuItems = [
     { id: "explore", label: "Explore", icon: Search },
     { id: "chat", label: "Chat", icon: MessageCircle, hasNotification: true },
@@ -147,7 +148,40 @@ export default function Sidebar({ activeItem, onItemClick, isFirstTime, isOpen, 
           >
             ✕
           </button>
+          {/* <div className="flex items-center space-x-4"> */}
+        {/* Desktop Right Section */}
+        {/* <div className=" md:flex space-x-4"> */}
+          {/* <div className="relative">
+            <button
+              onClick={onNotificationsClick}
+              className="p-2 rounded-lg transition-colors relative"
+            >
+              <Bell size={24} className="text-white mt-1" />
+              <div className="w-2 h-2 bg-red-500 rounded-full absolute top-2 right-1"></div>
+            </button>
+          </div> */}
+          <div className="flex justify-between">
 
+          <div className="pb-4 pl-4">
+            <img
+              src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=100"
+              alt="User avatar"
+              className="w-8 h-8 rounded-full border-2 mt-2 border-white object-cover"
+              />
+          {/* </div>
+        </div> */}
+    </div>
+    <div className="">
+            <button
+              onClick={onNotificationsClick}
+              className="p-2 rounded-lg transition-colors relative"
+            >
+              <Bell size={24} className="text-white mt-1" />
+              <div className="w-2 h-2 bg-red-500 rounded-full absolute top-2 right-1"></div>
+            </button>
+          </div>
+
+              </div>
           {/* Menu Items */}
           <nav className="flex-1 flex flex-col justify-start px-2">
             {menuItems.map((item, index) => {

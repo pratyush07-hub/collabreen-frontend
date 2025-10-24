@@ -19,51 +19,55 @@ export default function ExploreCreators() {
 
   // Fetch profiles
   useEffect(() => {
-    const fetchProfiles = async () => {
-      try {
-        const res = await getAllProfiles();
-        console.log("Fetched profiles:", res.data.profiles);
+  const fetchProfiles = async () => {
+    try {
+      const res = await getAllProfiles();
+      console.log("Fetched profiles:", res.data.profiles);
 
-        if (res.data.success) {
-          const filtered = res.data.profiles.filter((p) => {
-            const id = p.user?._id || p._id;
-            return !likedProfiles.includes(id);
-          });
-          setProfiles(filtered);
-        }
-      } catch (err) {
-        console.error("Error fetching profiles:", err);
-      } finally {
-        setLoading(false);
+      if (res.data.success) {
+        setProfiles(res.data.profiles); // no need to filter here
       }
-    };
+    } catch (err) {
+      console.error("Error fetching profiles:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchProfiles();
-  }, [likedProfiles]);
+  fetchProfiles();
+}, []);
 
   // Poll for pending like requests every 10 seconds
   useEffect(() => {
     const fetchRequests = async () => {
       try {
         const res = await getPendingLikeRequests();
+        console.log("Fetched pending requests:", res.data.data);
         if (res.data.success) setIncomingRequests(res.data.data);
+
       } catch (err) {
         console.error("Error fetching requests:", err);
       }
     };
 
     fetchRequests();
+
     const interval = setInterval(fetchRequests, 10000);
     return () => clearInterval(interval);
   }, []);
+  useEffect(() => {
+  console.log("Incoming requests state:", incomingRequests);
+}, [incomingRequests]);
+
 
   const saveLikedProfile = (profileId) => {
-    setLikedProfiles((prev) => {
-      const updated = [...prev, String(profileId)];
-      localStorage.setItem("likedProfiles", JSON.stringify(updated));
-      return updated;
-    });
-  };
+  setLikedProfiles(prev => {
+    const updated = [...prev, String(profileId)];
+    localStorage.setItem("likedProfiles", JSON.stringify(updated));
+    return updated;
+  });
+};
+
 
   const showNextProfile = () => {
     setCurrentIndex((prev) => prev + 1);
@@ -106,7 +110,7 @@ export default function ExploreCreators() {
 
   if (loading) return <div>⏳ Loading profiles...</div>;
   if (!profiles.length || currentIndex >= profiles.length)
-    return <div>🎉 No more profiles!</div>;
+    return <div className="flex h-screen w-full justify-center items-center"><p>🎉 No more profiles!</p></div>;
 
   const currentProfile = profiles[currentIndex];
 
@@ -122,7 +126,7 @@ export default function ExploreCreators() {
 
       {/* Incoming Like Requests */}
       {incomingRequests.length > 0 && (
-        <div className="fixed top-4 right-4 w-72 bg-white border rounded shadow p-4">
+        <div className="fixed top-4 right-4 w-72 bg-white border rounded shadow z-50 p-4">
           <h2 className="font-semibold mb-2">New Likes</h2>
           {incomingRequests.map((req) => (
             <div

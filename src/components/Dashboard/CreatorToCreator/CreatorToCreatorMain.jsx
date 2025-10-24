@@ -164,6 +164,7 @@ export default function CreatorToCreatorMain() {
     activeItem={activeSection}
     onItemClick={handleSidebarItemClick}
     isFirstTime={isFirstTime}
+    onNotificationsClick={() => setActiveSection('notifications')}
     isOpen={isMobileSidebarOpen} // Mobile toggle
     onClose={() => setIsMobileSidebarOpen(false)}
   />
