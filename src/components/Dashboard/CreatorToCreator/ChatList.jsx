@@ -130,7 +130,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { getUserChats } from '../../../api/client';
+import { getCurrentUser, getUserChats } from '../../../api/client';
 
 export default function ChatList({ onChatSelect }) {
     const [chats, setChats] = useState([]);
@@ -144,10 +144,22 @@ export default function ChatList({ onChatSelect }) {
         try {
             setLoading(true);
             const response = await getUserChats();
-            console.log("Fetched chats:", response.data);
-            if (response.data.success) {
-                setChats(response.data.data);
-            }
+
+        // Fetch current user
+        const userResponse = await getCurrentUser(); // Make sure this returns { data: { success: true, data: { _id, name, ... } } }
+        const currentUser = userResponse.data.user;
+        console.log("Fetched chats:", response.data);
+        console.log("Current user:", currentUser);
+
+        if (response.data.success) {
+            // Save chats along with current user ID
+            const chatsWithCurrentUser = response.data.data.map(chat => ({
+                ...chat,
+                currentUserId: currentUser._id
+            }));
+
+            setChats(chatsWithCurrentUser);
+        }
         } catch (error) {
             console.error('Error fetching chats:', error);
         } finally {
@@ -188,6 +200,8 @@ export default function ChatList({ onChatSelect }) {
                     </div>
                 ) : (
                     chats.map((chat) => {
+                        
+
                         const otherParticipant = chat.participants.find(p => p._id !== chat.currentUserId);
                         return (
                             <div
