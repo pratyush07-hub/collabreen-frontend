@@ -208,26 +208,25 @@ import PhotographerProfile from './PhotographerProfile';
 import { createChat } from '../../../api/client';
 import ProjectsDashboard from './ProjectsDashboard';
 import CommunityDashboard from './CommunityDashboard';
+import GroupChatWindow from './GroupChatWindow';
 
-export default function MainContent({ activeSection, selectedChatId, onChatSelect, onBackToChats, onSetupComplete }) {
+export default function MainContent({
+    activeSection,
+    selectedChatId,
+    onChatSelect,
+    onBackToChats,
+    onSetupComplete
+}) {
     const [loading, setLoading] = useState(false);
+    const [activeGroupChatId, setActiveGroupChatId] = useState(null);
 
     const handleStartConversation = async (profileId) => {
         try {
             setLoading(true);
-            console.log('Starting conversation with:', profileId);
-            
-            // Create chat with the selected profile
             const response = await createChat(profileId);
-            
             if (response.data.success) {
                 const chatId = response.data.data._id;
-                console.log('Chat created:', chatId);
-                
-                // Navigate to chat section and select the new chat
                 onChatSelect(chatId);
-                // You might need to add a function to switch to chat section
-                // This would require updating the parent component (CreatorToCreatorMain)
             }
         } catch (error) {
             console.error('Error creating chat:', error);
@@ -237,20 +236,13 @@ export default function MainContent({ activeSection, selectedChatId, onChatSelec
         }
     };
 
-    const handleCloseProfile = () => {
-        console.log('Closing profile');
-    };
-
-    const handleLikeProfile = (profileId) => {
-        console.log('Liked profile:', profileId);
-    };
+    const handleCloseProfile = () => {};
+    const handleLikeProfile = (profileId) => {};
 
     const renderContent = () => {
         switch (activeSection) {
             case 'setup':
-                return (
-                    <ProfileSetup onSetupComplete={onSetupComplete} />
-                );
+                return <ProfileSetup onSetupComplete={onSetupComplete} />;
             case 'explore':
                 return (
                     <ExploreCreators
@@ -266,10 +258,20 @@ export default function MainContent({ activeSection, selectedChatId, onChatSelec
                 ) : (
                     <ChatList onChatSelect={onChatSelect} />
                 );
+            case 'community':
+                return activeGroupChatId ? (
+                    <GroupChatWindow
+                        groupId={activeGroupChatId}
+                        currentUser={null} // You can pass current user if needed
+                        onBack={() => setActiveGroupChatId(null)}
+                    />
+                ) : (
+                    <CommunityDashboard
+                        onOpenGroupChat={(groupId) => setActiveGroupChatId(groupId)}
+                    />
+                );
             case 'profile':
                 return <PhotographerProfile />;
-            case 'community':
-                return <CommunityDashboard />;
             case 'projects':
                 return <ProjectsDashboard />;
             case 'settings':
@@ -292,7 +294,6 @@ export default function MainContent({ activeSection, selectedChatId, onChatSelec
                 );
         }
     };
-    
 
     return (
         <div className="flex-1 bg-gray-50 min-h-screen">

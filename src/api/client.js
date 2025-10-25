@@ -191,6 +191,9 @@ export const getGroupById = (id) => api.get(`/groups/${id}`);
 export const joinGroup = (groupId, userId) => api.post(`/groups/${groupId}/join`, { userId });
 export const leaveGroup = (groupId, userId) => api.post(`/groups/${groupId}/leave`, { userId });
 
+export const getGroupMessages = (groupId) => api.get(`/groups/${groupId}/messages`);
+export const sendGroupMessage = (groupId, content) =>
+  api.post(`/groups/${groupId}/message`, { groupId, content });
 
 export const getAllProfiles = () => api.get('/creatorprofiles');
 // export const likeProfile = (profileId) => api.post(`/creatorprofiles/${profileId}/like`);
