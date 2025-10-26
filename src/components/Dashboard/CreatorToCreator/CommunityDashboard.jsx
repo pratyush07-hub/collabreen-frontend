@@ -6,7 +6,8 @@ import {
   leaveGroup,
 } from "../../../api/client";
 import CreateNewGroupPage from "./CreateNewGroupPage";
-import GroupChatWindow from "./GroupChatWindow";
+import GroupChatWindow from "./groupChatWindow";
+
 
 const CommunityDashboard = () => {
   const [activeView, setActiveView] = useState("groups"); // "groups" | "createGroup"
