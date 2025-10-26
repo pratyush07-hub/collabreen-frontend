@@ -208,7 +208,7 @@ import PhotographerProfile from './PhotographerProfile';
 import { createChat } from '../../../api/client';
 import ProjectsDashboard from './ProjectsDashboard';
 import CommunityDashboard from './CommunityDashboard';
-import GroupChatWindow from './GroupChatWindow';
+import GroupChatWindow from './groupChatWindow';
 
 export default function MainContent({
     activeSection,
