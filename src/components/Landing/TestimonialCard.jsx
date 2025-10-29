@@ -4,7 +4,7 @@ import profilepic from "../../assets/profilepic.png"
 
 function TestimonialCard({ name, quote, profilePic, borderColor }) {
   return (
-    <div className={`text-white w-[529px] h-[352px] border-[10px] font-roboto rounded-tr-[80px] rounded-bl-[80px] rounded-tl-[10px] rounded-br-[10px] border-[${borderColor}] p-6`}>
+    <div className={`text-white w-[260px] md:w-[529px] h-[460px] md:h-[302px] border-[10px] font-roboto rounded-tr-[80px] rounded-bl-[80px] rounded-tl-[10px] rounded-br-[10px] border-[${borderColor}] p-6`}>
       <div>
         <img src={quotes} alt="quotes" />
       </div>

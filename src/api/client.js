@@ -177,6 +177,8 @@ export const createGroup = (data) => {
   const formData = new FormData();
   formData.append("name", data.name);
   formData.append("description", data.description);
+  formData.append("category", data.category); // added
+  formData.append("privacy", data.privacy);   // added
   formData.append("createdBy", data.createdBy);
 
   if (data.image) formData.append("image", data.image);
@@ -185,6 +187,7 @@ export const createGroup = (data) => {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
+
 
 export const getAllGroups = () => api.get("/groups");
 export const getGroupById = (id) => api.get(`/groups/${id}`);

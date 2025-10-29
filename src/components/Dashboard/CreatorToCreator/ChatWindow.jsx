@@ -866,13 +866,13 @@ export default function ChatWindow({ chatId, onBack }) {
               Send Collaboration Request
             </button>
 
-            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            {/* <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
               <Phone size={20} className="text-gray-600" />
             </button>
 
             <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
               <Video size={20} className="text-gray-600" />
-            </button>
+            </button> */}
 
             <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
               <MoreVertical size={20} className="text-gray-600" />

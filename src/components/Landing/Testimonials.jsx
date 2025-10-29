@@ -7,7 +7,7 @@ function Testimonials() {
       id: 1,
       name: "John Smith",
       quote:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. orem Ipsum is simply dummy text of the printing and typesetting industry.orem Ipsum is simply dummy text of the printing and typesetting industry.",
       profilePic: "../../assets/profilepic.png",
       borderColor: "#93B076",
     },
@@ -15,7 +15,7 @@ function Testimonials() {
       id: 2,
       name: "Jane Doe",
       quote:
-        "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+        "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
       profilePic: "../../assets/profilepic.png",
       borderColor: "#F5ADB2",
     },
@@ -23,7 +23,7 @@ function Testimonials() {
       id: 3,
       name: "Alice Johnson",
       quote:
-        "When an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+        "When an unknown printer took a galley of type and scrambled it to make a type specimen book. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
       profilePic: "../../assets/profilepic.png",
       borderColor: "#EFAC16",
     },
@@ -50,17 +50,36 @@ function Testimonials() {
   };
 
   return (
-    <div className="mt-40">
-      <div className="mb-40">
-        <h1 className="text-white font-medium text-6xl font-sf">
+    <div className="mt-24 md:mt-40">
+      <div className="">
+        <h1 className="text-white font-medium text-4xl md:text-6xl font-sf">
           What Our Client’s Say
         </h1>
-        <p className="text-white font-light text-xl font-roboto mt-4">
+        <p className="text-white font-light text-md md:text-xl font-roboto mt-4">
           Lorem ipsum dolor sit amet consectetur.
         </p>
       </div>
-      {/* Scroll buttons */}
-      <div className="flex justify-between mt-4">
+
+      <div className="overflow-hidden w-full mt-20 relative">
+        {/* Scrolling testimonials container */}
+        <div
+          ref={scrollRef}
+          className="flex gap-8 overflow-x-auto scrollbar-hide"
+        >
+          {testimonials.map((testimonial) => (
+            <div key={testimonial.id} className="flex-shrink-0">
+              <TestimonialCard
+                name={testimonial.name}
+                quote={testimonial.quote}
+                image={testimonial.profilePic}
+                borderColor={testimonial.borderColor}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+            {/* Scroll buttons */}
+      <div className="flex justify-between mt-16">
         <button
           onClick={handleScrollLeft}
           className="border px-6 rounded-full text-white opacity-50 hover:opacity-100"
@@ -80,36 +99,20 @@ function Testimonials() {
           className="border px-6 rounded-full text-white opacity-50 hover:opacity-100"
         >
           <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="48"
-          height="48"
-          viewBox="0 0 24 24"
-          className="inline-block mr-2"
-        >
-          <path d="M10 7l5 5-5 5V7z" fill="currentColor" />
-        </svg>
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            className="inline-block mr-2"
+          >
+            <path d="M10 7l5 5-5 5V7z" fill="currentColor" />
+          </svg>
         </button>
-      </div>
-      <div className="overflow-hidden w-full mt-20 relative">
-        {/* Scrolling testimonials container */}
-        <div
-          ref={scrollRef}
-          className="flex gap-8 overflow-x-auto scrollbar-hide"
-        >
-          {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="flex-shrink-0">
-              <TestimonialCard
-                name={testimonial.name}
-                quote={testimonial.quote}
-                image={testimonial.profilePic}
-                borderColor={testimonial.borderColor}
-              />
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
 }
 
 export default Testimonials;
+
+

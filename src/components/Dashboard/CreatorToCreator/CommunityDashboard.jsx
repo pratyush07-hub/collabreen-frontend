@@ -101,28 +101,25 @@ const CommunityDashboard = () => {
   // Normal group dashboard view
   // ================================
   return (
-    <div className="flex-1 flex flex-col bg-gray-50 min-h-screen p-6">
+    <div className="flex-1 flex flex-col mt-16 bg-gray-50 min-h-screen p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
-          {activeView === "groups" ? "Community Dashboard" : "Create New Group"}
-        </h1>
+        {activeView === "groups" && (
+  <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+    Community Dashboard
+  </h1>
+)}
 
-        {activeView === "groups" ? (
-          <button
-            className="px-4 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600"
-            onClick={() => setActiveView("createGroup")}
-          >
-            New Group
-          </button>
-        ) : (
-          <button
-            className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
-            onClick={() => setActiveView("groups")}
-          >
-            Back to Dashboard
-          </button>
-        )}
+
+        {activeView === "groups" && (
+  <button
+    className="px-4 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600"
+    onClick={() => setActiveView("createGroup")}
+  >
+    New Group
+  </button>
+)}
+
       </div>
 
       {/* Search + Filter */}
@@ -166,9 +163,12 @@ const CommunityDashboard = () => {
                     alt={group.name}
                     className="w-12 h-12 rounded-full object-cover"
                   />
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800">
+                  <div>
+                  <h3 className="text-lg sm:text-xl font-semibold mb-2 text-gray-800">
                     {group.name}
                   </h3>
+                   <span className="text-sm text-black font-semibold px-6 py-2 rounded-full bg-[#84868B]">{group.category}</span>
+                  </div>
                 </div>
 
                 <p className="text-gray-600 mb-2">{group.description}</p>

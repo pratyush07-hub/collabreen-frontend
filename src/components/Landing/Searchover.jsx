@@ -12,7 +12,7 @@ function Searchover() {
                         <img className="w-96" src={Search} alt="mockup" />
                     </div>
                     <div className="mr-auto place-self-center md:col-span-6 relative">
-                        <h1 className="max-w-4xl mb-4 text-[#F5ADB2] text-left text-3xl font-normal md:text-4xl xl:text-5xl relative">Collab-Reen </h1>
+                        <h1 className="max-w-4xl mb-4 text-[#F5ADB2] text-left text-3xl font-normal md:text-4xl xl:text-5xl relative">Winkiz</h1>
                         <div className="flex flex-col items-start gap-4 md:gap-0">
                             <p className="text-left text-gray-300 text-lg lg:text-xl md:w-10/12 py-2 font-roboto">Lorem ipsum dolor sit amet consectetur. Commodo ultricies facilisi ornare justo malesuada pretium purus consequat dui.
                             </p>
