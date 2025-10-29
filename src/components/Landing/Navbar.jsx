@@ -189,14 +189,17 @@ import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { HiArrowUpRight } from "react-icons/hi2";
 import logo from "../../assets/Winkizlogo.png";
+import FormModal from "./FormModal";
 
 function Navbar() {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   return (
+    <>
     <nav className="bg-[#171717] text-white fixed h-[10vh] md:h-[12vh] w-full z-20 top-0 start-0">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-6 md:p-2">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-6 md:px-10 lg:px-6 md:p-2">
         {/* Logo */}
         <NavLink to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <div className="px-0 md:px-2">
@@ -311,7 +314,7 @@ function Navbar() {
                 <div
                   className={`bg-[#171717] ${
                     navbarOpen ? "relative mt-2" : "absolute"
-                  } z-10 font-normal divide-y divide-gray-100 rounded-lg shadow lg:w-44 flex justify-center items-center flex-col`}
+                  } z-10 font-normal divide-y divide-gray-100 lg:mt-40 rounded-lg shadow lg:w-44 flex justify-center items-center flex-col`}
                 >
                   <ul className="py-2 text-sm flex flex-col items-center justify-center w-full">
                     <li>
@@ -370,12 +373,12 @@ function Navbar() {
 
             {/* Desktop & Mobile Buttons */}
             <li className="flex flex-col lg:flex-row gap-3 mt-4 lg:mt-0 lg:ml-4">
-              <NavLink
-                to="/signup"
-                className="bg-[#EFAC16] hover:bg-[#EFAC16] inline-flex items-center justify-center px-4 py-2 text-sm lg:text-base text-black font-medium text-center rounded-tr-3xl rounded-l-2xl focus:ring-1 focus:ring-gray-100"
-              >
-                Join Now
-              </NavLink>
+              <button
+                  onClick={() => setShowForm(true)}
+                  className="bg-[#EFAC16] hover:bg-[#EFAC16] inline-flex items-center justify-center px-4 py-2 text-sm lg:text-base text-black font-medium text-center rounded-tr-3xl rounded-l-2xl"
+                >
+                  Join Now
+                </button>
               <NavLink
                 to="/signup"
                 className="bg-[#F5ADB2] hover:bg-[#EFAC16] inline-flex items-center justify-center px-4 py-2 text-sm lg:text-base text-black font-medium text-center rounded-tr-3xl rounded-l-2xl focus:ring-1 focus:ring-gray-100"
@@ -387,6 +390,8 @@ function Navbar() {
         </div>
       </div>
     </nav>
+    <FormModal isOpen={showForm} onClose={() => setShowForm(false)} />
+      </>
   );
 }
 
