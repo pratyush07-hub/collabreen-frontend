@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import Search from '../../assets/Search.png'
+import Search from '../../assets/Search.jpeg'
 function Searchover() {
     return (
         <>
@@ -9,7 +9,7 @@ function Searchover() {
 
                 <div className="grid items-center justify-center gap-14 lg:gap-8 xl:gap-0 py-16 md:grid-cols-12">
                     <div className="lg:mt-0 md:col-span-6 flex items-center justify-center">
-                        <img className="w-96" src={Search} alt="mockup" />
+                        <img className="w-96 rounded-xl" src={Search} alt="mockup" />
                     </div>
                     <div className="mr-auto place-self-center md:col-span-6 relative">
                         <h1 className="max-w-4xl mb-4 text-[#F5ADB2] text-left text-3xl font-normal md:text-4xl xl:text-5xl relative">Winkiz</h1>
