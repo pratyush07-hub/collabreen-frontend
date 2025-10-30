@@ -213,3 +213,5 @@ export const likeProfile = (profileId) => api.post(
 export const getPendingLikeRequests = () => api.get('/creatorprofiles/like-requests/pending');
 export const respondLikeRequest = (requestId, action) =>
   api.put(`/creatorprofiles/like-requests/${requestId}/respond`, { action });
+
+export const joinNow = (formData) => api.post('/join-now', formData);

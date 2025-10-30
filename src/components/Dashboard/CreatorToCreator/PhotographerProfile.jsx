@@ -669,6 +669,25 @@ const PhotographerProfile = () => {
           {activeTab === "portfolio" && renderPortfolioContent()}
           {activeTab === "status" && renderStatusContent()}
         </div>
+        <div className="pb-8">
+  {isEditing
+    ? <ProfileEditForm 
+        formData={formData} 
+        onChange={handleInputChange}
+        onSave={handleSave}
+        onCancel={() => setIsEditing(false)}
+        loading={loading}
+      />
+    : (
+      <>
+        {activeTab === "profile" && renderProfileContent()}
+        {activeTab === "portfolio" && renderPortfolioContent()}
+        {activeTab === "status" && renderStatusContent()}
+      </>
+    )
+  }
+</div>
+
       </div>
     </div>
   );
