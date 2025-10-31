@@ -616,10 +616,13 @@ import {
   Paperclip,
   Mic,
   Send,
+  Play,
+  StopCircle,
 } from "lucide-react";
 import CollaborationModal from "./CollaborationModal";
 import { getChatMessages, sendMessage } from "../../../api/client";
 import io from "socket.io-client";
+import ReactAudioPlayer from "react-audio-player";
 import Cookies from "js-cookie";
 
 export default function ChatWindow({ chatId, onBack }) {
@@ -629,6 +632,10 @@ export default function ChatWindow({ chatId, onBack }) {
   const [loading, setLoading] = useState(true);
   const [showCollaborationModal, setShowCollaborationModal] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
 
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -763,42 +770,116 @@ export default function ChatWindow({ chatId, onBack }) {
       setLoading(false);
     }
   };
+  const handleMicClick = async () => {
+    if (isRecording) {
+      // Stop recording
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    } else {
+      // Request mic access
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+        audioChunksRef.current = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+          setAudioBlob(blob);
+        };
+
+        mediaRecorder.start();
+        setIsRecording(true);
+      } catch (error) {
+        console.error("Mic access denied:", error);
+        alert("Microphone access is required to send voice messages.");
+      }
+    }
+  };
+
+  const handleSendAudio = async () => {
+    if (!audioBlob) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("audio", audioBlob, "voiceMessage.webm");
+      formData.append("chatId", chatId);
+
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}/send-audio`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("jwt")}`,
+          },
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      console.log("Audio message sent response:", data.data.audioUrl);
+
+      if (data.success) {
+        setMessages((prev) => [...prev, data.data]);
+        setAudioBlob(null);
+
+        // also send via socket for real-time
+        if (socketRef.current) {
+          socketRef.current.emit("sendMessage", {
+            chatId,
+            messageType: "audio",
+            audioUrl: data.data.audioUrl, // backend should return URL
+          });
+        }
+      } else {
+        console.error("Audio upload failed:", data);
+      }
+    } catch (error) {
+      console.error("Error sending audio:", error);
+    }
+  };
 
   const handleSendMessage = async () => {
     if (!message.trim()) return;
 
     const messageContent = message.trim();
-    setMessage(''); // Clear input immediately
+    setMessage(""); // Clear input immediately
 
     try {
-        // Send via WebSocket
-        if (socketRef.current && socketRef.current.connected) {
-            socketRef.current.emit('sendMessage', {
-                chatId: chatId,
-                content: messageContent
-            });
+      // Send via WebSocket
+      if (socketRef.current && socketRef.current.connected) {
+        socketRef.current.emit("sendMessage", {
+          chatId: chatId,
+          content: messageContent,
+        });
 
-            // Only reload messages if chatInfo is not yet set
-            if (!chatInfo) {
-                await fetchMessages();
-            }
-        } else {
-            // Fallback to REST API
-            const response = await sendMessage(chatId, messageContent);
-            if (response.data.success) {
-                setMessages(prev => [...prev, response.data.data]);
-                if (!chatInfo) {
-                    await fetchMessages();
-                }
-            }
+        // Only reload messages if chatInfo is not yet set
+        if (!chatInfo) {
+          await fetchMessages();
         }
+      } else {
+        // Fallback to REST API
+        const response = await sendMessage(chatId, messageContent);
+        if (response.data.success) {
+          setMessages((prev) => [...prev, response.data.data]);
+          if (!chatInfo) {
+            await fetchMessages();
+          }
+        }
+      }
     } catch (error) {
-        console.error('Error sending message:', error);
-        setMessage(messageContent); // restore on error
+      console.error("Error sending message:", error);
+      setMessage(messageContent); // restore on error
     }
-};
-
-
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -884,47 +965,61 @@ export default function ChatWindow({ chatId, onBack }) {
       {/* Messages */}
       <div className="flex-1 p-4 space-y-4 overflow-y-auto">
         {messages.map((msg) => (
-          <div
-            key={msg._id}
-            className={`flex ${
-              msg.sender._id === currentUserId ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`flex items-end space-x-2 max-w-xs sm:max-w-sm md:max-w-md ${
-                msg.sender._id === currentUserId
-                  ? "flex-row-reverse space-x-reverse"
-                  : ""
-              }`}
-            >
-              {msg.sender._id !== currentUserId && (
-                <img
-                  src={msg.sender.profilePic || "/default-avatar.png"}
-                  alt="Avatar"
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-              )}
+  <div
+    key={msg._id}
+    className={`flex ${
+      msg.sender._id === currentUserId ? "justify-end" : "justify-start"
+    }`}
+  >
+    <div
+      className={`flex flex-col items-${
+        msg.sender._id === currentUserId ? "end" : "start"
+      } space-y-1 max-w-[80%] sm:max-w-md`}
+    >
+      {/* Avatar and bubble */}
+      <div
+        className={`flex items-end space-x-2 ${
+          msg.sender._id === currentUserId
+            ? "flex-row-reverse space-x-reverse"
+            : ""
+        }`}
+      >
+        <img
+          src={msg.sender.profilePic || "/default-avatar.png"}
+          alt="Avatar"
+          className="w-8 h-8 rounded-full object-cover"
+        />
 
-              <div
-                className={`px-4 py-2 rounded-2xl text-sm sm:text-base ${
-                  msg.sender._id === currentUserId
-                    ? "bg-orange-500 text-white"
-                    : "bg-orange-400 text-white"
-                }`}
-              >
-                <p>{msg.content}</p>
-              </div>
-
-              {msg.sender._id === currentUserId && (
-                <img
-                  src={msg.sender.profilePic || "/default-avatar.png"}
-                  alt="Avatar"
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-              )}
+        <div
+          className={`px-3 py-2 rounded-2xl text-sm sm:text-base ${
+            msg.sender._id === currentUserId
+              ? "bg-orange-500 text-white"
+              : "bg-orange-400 text-white"
+          }`}
+        >
+          {msg.messageType === "audio" ? (
+            <div className="w-[180px] sm:w-[240px]">
+              <ReactAudioPlayer
+                src={msg.audioUrl}
+                controls
+                className="w-full rounded-md"
+              />
             </div>
-          </div>
-        ))}
+          ) : (
+            <p>{msg.content}</p>
+          )}
+        </div>
+      </div>
+
+      {/* Sender name visible on mobile */}
+      <p className="text-xs text-gray-400 sm:hidden px-2">
+        {msg.sender._id === currentUserId ? "You" : msg.sender.name}
+      </p>
+    </div>
+  </div>
+))}
+
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -945,9 +1040,31 @@ export default function ChatWindow({ chatId, onBack }) {
             </button>
           </div>
 
-          <button className="p-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors">
-            <Mic size={20} className="text-white" />
+          {/* Mic button */}
+          <button
+            onClick={handleMicClick}
+            className={`p-3 rounded-full transition-colors ${
+              isRecording
+                ? "bg-red-500 hover:bg-red-600"
+                : "bg-green-500 hover:bg-green-600"
+            }`}
+          >
+            {isRecording ? (
+              <StopCircle size={20} className="text-white" />
+            ) : (
+              <Mic size={20} className="text-white" />
+            )}
           </button>
+
+          {/* Show send audio button if recorded */}
+          {audioBlob && (
+            <button
+              onClick={handleSendAudio}
+              className="p-3 bg-blue-500 rounded-full hover:bg-blue-600 transition-colors"
+            >
+              <Play size={20} className="text-white" />
+            </button>
+          )}
 
           <button
             onClick={handleSendMessage}
