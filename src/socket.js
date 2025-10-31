@@ -4,7 +4,7 @@ let socket;
 
 export const initializeSocket = () => {
   if (!socket) {
-    socket = io("http://localhost:8000", {
+    socket = io(import.meta.env.VITE_BACKEND_URL, {
       auth: { token: localStorage.getItem("token") },
       transports: ["websocket"],
     });
