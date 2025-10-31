@@ -649,7 +649,7 @@ export default function ChatWindow({ chatId, onBack }) {
     if (token) {
       // Initialize socket connection with authentication
       socketRef.current = io(
-        import.meta.VITE_BACKEND_URL || "http://localhost:8000",
+        import.meta.env.VITE_BACKEND_URL || "http://localhost:8000",
         {
           auth: {
             token: token,
