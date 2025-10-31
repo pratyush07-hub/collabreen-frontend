@@ -647,32 +647,15 @@ export default function ChatWindow({ chatId, onBack }) {
     const token = Cookies.get("jwt");
 
     if (token) {
-  const backendURL =
-    import.meta.env.VITE_BACKEND_URL?.trim() ||
-    "https://collabreen-backend.onrender.com";
+      // Initialize socket connection with authentication
+      const backendURL =
+        import.meta.env.VITE_BACKEND_URL?.trim() ||
+        "https://collabreen-backend.onrender.com";
 
-  socketRef.current = io(backendURL, {
-    auth: { token },
-    transports: ["websocket", "polling"], // allow fallback for Render
-    reconnection: true,                    // auto-reconnect if lost
-    reconnectionAttempts: 5,               // retry 5 times
-    reconnectionDelay: 2000,               // wait 2s between retries
-    timeout: 20000,                        // fail fast on long delay
-  });
-
-  socketRef.current.on("connect", () => {
-    console.log("WebSocket connected:", socketRef.current.id);
-  });
-
-  socketRef.current.on("disconnect", (reason) => {
-    console.warn("WebSocket disconnected:", reason);
-  });
-
-  socketRef.current.on("connect_error", (err) => {
-    console.error("WebSocket connection error:", err.message);
-  });
-}
-
+      socketRef.current = io(backendURL, {
+        auth: { token },
+        transports: ["websocket", "polling"],
+      });
 
       // Connection established
       socketRef.current.on("connect", () => {
