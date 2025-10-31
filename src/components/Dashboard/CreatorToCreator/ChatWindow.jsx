@@ -648,15 +648,15 @@ export default function ChatWindow({ chatId, onBack }) {
 
     if (token) {
       // Initialize socket connection with authentication
-      socketRef.current = io(
-        import.meta.env.VITE_BACKEND_URL || "http://localhost:8000",
-        {
-          auth: {
-            token: token,
-          },
-          transports: ["websocket", "polling"],
-        }
-      );
+      const backendURL =
+  import.meta.env.VITE_BACKEND_URL?.trim() ||
+  "https://collabreen-backend.onrender.com";
+
+socketRef.current = io(backendURL, {
+  auth: { token },
+  transports: ["websocket", "polling"],
+});
+
 
       // Connection established
       socketRef.current.on("connect", () => {
