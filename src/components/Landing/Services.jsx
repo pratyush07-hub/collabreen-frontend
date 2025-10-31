@@ -75,6 +75,7 @@
 
 
 import React from "react";
+import { motion } from "framer-motion";
 import influencerVector from "../../assets/Influencervector.png";
 import CampaignGenerator from "../../assets/campaignGenerator.png";
 import services from "../../assets/Services.png";
@@ -90,7 +91,12 @@ function Services() {
       >
         <div className="flex flex-wrap gap-10">
           {/* Box 1 */}
-          <div className="text-white flex p-8 items-center justify-between w-full sm:w-[376px] h-[144px] sm:top-[112px] sm:left-[1083px] gap-0 rounded-tl-[30px] bg-gradient-to-r from-[#6a6a6a]/10 to-[#6a6a6a]/10 rounded-tr-[30px] rounded-bl-[30px]">
+          <motion.div 
+          initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.4 }}
+          className="text-white flex p-8 items-center justify-between w-full sm:w-[376px] h-[144px] sm:top-[112px] sm:left-[1083px] gap-0 rounded-tl-[30px] bg-gradient-to-r from-[#6a6a6a]/10 to-[#6a6a6a]/10 rounded-tr-[30px] rounded-bl-[30px]">
             <img
               src={influencerVector}
               alt="Campaign Generator"
@@ -105,10 +111,15 @@ function Services() {
                 placerat cras duis.
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Box 2 */}
-          <div className="text-white mt-10 sm:ml-60 flex p-8 items-center justify-between w-full sm:w-[376px] h-[144px] bg-gradient-to-r from-[#000000]/10 to-[#6a6a6a]/40 sm:top-[112px] sm:left-[1083px] gap-0 rounded-tl-[30px] rounded-tr-[30px] rounded-br-[30px]">
+          <motion.div 
+          initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.4 }}
+          className="text-white mt-10 sm:ml-60 flex p-8 items-center justify-between w-full sm:w-[376px] h-[144px] bg-gradient-to-r from-[#000000]/10 to-[#6a6a6a]/40 sm:top-[112px] sm:left-[1083px] gap-0 rounded-tl-[30px] rounded-tr-[30px] rounded-br-[30px]">
             <div className="ml-6">
               <h3 className="font-roboto text-lg font-semibold">
                 Campaign Generator
@@ -123,11 +134,16 @@ function Services() {
               alt="Campaign Generator"
               className="w-[70px] h-[70px] object-contain"
             />
-          </div>
+          </motion.div>
         </div>
 
         {/* Box 3 */}
-        <div className="text-white mt-12 flex p-8 items-center justify-between w-full sm:w-[376px] h-[144px] bg-gradient-to-r from-[#6a6a6a]/10 to-[#6a6a6a]/10 sm:top-[112px] sm:left-[1083px] gap-0 rounded-tl-[30px] rounded-bl-[30px] rounded-br-[30px]">
+        <motion.div
+        initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.4 }}
+         className="text-white mt-12 flex p-8 items-center justify-between w-full sm:w-[376px] h-[144px] bg-gradient-to-r from-[#6a6a6a]/10 to-[#6a6a6a]/10 sm:top-[112px] sm:left-[1083px] gap-0 rounded-tl-[30px] rounded-bl-[30px] rounded-br-[30px]">
           <div className="ml-6">
             <h3 className="font-roboto text-lg font-semibold">
               Campaign Insights
@@ -142,7 +158,7 @@ function Services() {
             alt="Campaign Insights"
             className="w-[70px] h-[70px] object-contain"
           />
-        </div>
+        </motion.div>
       </div>
 
       {/* ===== Mobile & Tablet version ===== */}
