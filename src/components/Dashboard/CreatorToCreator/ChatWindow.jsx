@@ -647,15 +647,31 @@ export default function ChatWindow({ chatId, onBack }) {
     const token = Cookies.get("jwt");
 
     if (token) {
-      // Initialize socket connection with authentication
-      const backendURL =
-  import.meta.env.VITE_BACKEND_URL?.trim() ||
-  "https://collabreen-backend.onrender.com";
+  const backendURL =
+    import.meta.env.VITE_BACKEND_URL?.trim() ||
+    "https://collabreen-backend.onrender.com";
 
-socketRef.current = io(backendURL, {
-  auth: { token },
-  transports: ["websocket", "polling"],
-});
+  socketRef.current = io(backendURL, {
+    auth: { token },
+    transports: ["websocket", "polling"], // allow fallback for Render
+    reconnection: true,                    // auto-reconnect if lost
+    reconnectionAttempts: 5,               // retry 5 times
+    reconnectionDelay: 2000,               // wait 2s between retries
+    timeout: 20000,                        // fail fast on long delay
+  });
+
+  socketRef.current.on("connect", () => {
+    console.log("WebSocket connected:", socketRef.current.id);
+  });
+
+  socketRef.current.on("disconnect", (reason) => {
+    console.warn("WebSocket disconnected:", reason);
+  });
+
+  socketRef.current.on("connect_error", (err) => {
+    console.error("WebSocket connection error:", err.message);
+  });
+}
 
 
       // Connection established
@@ -965,60 +981,59 @@ socketRef.current = io(backendURL, {
       {/* Messages */}
       <div className="flex-1 p-4 space-y-4 overflow-y-auto">
         {messages.map((msg) => (
-  <div
-    key={msg._id}
-    className={`flex ${
-      msg.sender._id === currentUserId ? "justify-end" : "justify-start"
-    }`}
-  >
-    <div
-      className={`flex flex-col items-${
-        msg.sender._id === currentUserId ? "end" : "start"
-      } space-y-1 max-w-[80%] sm:max-w-md`}
-    >
-      {/* Avatar and bubble */}
-      <div
-        className={`flex items-end space-x-2 ${
-          msg.sender._id === currentUserId
-            ? "flex-row-reverse space-x-reverse"
-            : ""
-        }`}
-      >
-        <img
-          src={msg.sender.profilePic || "/default-avatar.png"}
-          alt="Avatar"
-          className="w-8 h-8 rounded-full object-cover"
-        />
+          <div
+            key={msg._id}
+            className={`flex ${
+              msg.sender._id === currentUserId ? "justify-end" : "justify-start"
+            }`}
+          >
+            <div
+              className={`flex flex-col items-${
+                msg.sender._id === currentUserId ? "end" : "start"
+              } space-y-1 max-w-[80%] sm:max-w-md`}
+            >
+              {/* Avatar and bubble */}
+              <div
+                className={`flex items-end space-x-2 ${
+                  msg.sender._id === currentUserId
+                    ? "flex-row-reverse space-x-reverse"
+                    : ""
+                }`}
+              >
+                <img
+                  src={msg.sender.profilePic || "/default-avatar.png"}
+                  alt="Avatar"
+                  className="w-8 h-8 rounded-full object-cover"
+                />
 
-        <div
-          className={`px-3 py-2 rounded-2xl text-sm sm:text-base ${
-            msg.sender._id === currentUserId
-              ? "bg-orange-500 text-white"
-              : "bg-orange-400 text-white"
-          }`}
-        >
-          {msg.messageType === "audio" ? (
-            <div className="w-[180px] sm:w-[240px]">
-              <ReactAudioPlayer
-                src={msg.audioUrl}
-                controls
-                className="w-full rounded-md"
-              />
+                <div
+                  className={`px-3 py-2 rounded-2xl text-sm sm:text-base ${
+                    msg.sender._id === currentUserId
+                      ? "bg-orange-500 text-white"
+                      : "bg-orange-400 text-white"
+                  }`}
+                >
+                  {msg.messageType === "audio" ? (
+                    <div className="w-[180px] sm:w-[240px]">
+                      <ReactAudioPlayer
+                        src={msg.audioUrl}
+                        controls
+                        className="w-full rounded-md"
+                      />
+                    </div>
+                  ) : (
+                    <p>{msg.content}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Sender name visible on mobile */}
+              <p className="text-xs text-gray-400 sm:hidden px-2">
+                {msg.sender._id === currentUserId ? "You" : msg.sender.name}
+              </p>
             </div>
-          ) : (
-            <p>{msg.content}</p>
-          )}
-        </div>
-      </div>
-
-      {/* Sender name visible on mobile */}
-      <p className="text-xs text-gray-400 sm:hidden px-2">
-        {msg.sender._id === currentUserId ? "You" : msg.sender.name}
-      </p>
-    </div>
-  </div>
-))}
-
+          </div>
+        ))}
 
         <div ref={messagesEndRef} />
       </div>
