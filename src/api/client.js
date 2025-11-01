@@ -213,5 +213,18 @@ export const likeProfile = (profileId) => api.post(
 export const getPendingLikeRequests = () => api.get('/creatorprofiles/like-requests/pending');
 export const respondLikeRequest = (requestId, action) =>
   api.put(`/creatorprofiles/like-requests/${requestId}/respond`, { action });
+export const deleteMessageForMe = (messageId) =>
+  api.delete(`/chats/${messageId}/delete-for-me`);
+
+// 🗑️ Delete message for everyone
+export const deleteMessageForEveryone = (messageId) =>
+  api.delete(`/chats/${messageId}/delete-for-everyone`);
+
+export const deleteGroupMessageForMe = (messageId) =>
+  api.delete(`/groups/messages/${messageId}/delete-for-me`);
+
+export const deleteGroupMessageForEveryone = (messageId) =>
+  api.delete(`/groups/messages/${messageId}/delete-for-everyone`);
+
 
 export const joinNow = (formData) => api.post('/join-now', formData);
