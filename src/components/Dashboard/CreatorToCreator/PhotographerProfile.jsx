@@ -669,7 +669,7 @@ const PhotographerProfile = () => {
         
         <div className="pb-8">
   {isEditing
-    ? <ProfileEditForm 
+    ? <ProfileEditForm
         formData={formData} 
         onChange={handleInputChange}
         onSave={handleSave}

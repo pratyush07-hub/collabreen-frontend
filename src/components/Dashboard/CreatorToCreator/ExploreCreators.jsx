@@ -98,15 +98,15 @@ export default function ExploreCreators() {
     }
   };
 
-  const handleRespondRequest = async (requestId, action) => {
-    try {
-      const res = await respondLikeRequest(requestId, action);
-      console.log("Responded to request:", res.data);
-      setIncomingRequests((prev) => prev.filter((r) => r._id !== requestId));
-    } catch (err) {
-      console.error("Error responding to request:", err);
-    }
-  };
+  // const handleRespondRequest = async (requestId, action) => {
+  //   try {
+  //     const res = await respondLikeRequest(requestId, action);
+  //     console.log("Responded to request:", res.data);
+  //     setIncomingRequests((prev) => prev.filter((r) => r._id !== requestId));
+  //   } catch (err) {
+  //     console.error("Error responding to request:", err);
+  //   }
+  // };
 
   if (loading) return <div>⏳ Loading profiles...</div>;
   if (!profiles.length || currentIndex >= profiles.length)
@@ -125,7 +125,7 @@ export default function ExploreCreators() {
       />
 
       {/* Incoming Like Requests */}
-      {incomingRequests.length > 0 && (
+      {/* {incomingRequests.length > 0 && (
         <div className="fixed top-4 right-4 w-72 bg-white border rounded shadow z-50 p-4">
           <h2 className="font-semibold mb-2">New Likes</h2>
           {incomingRequests.map((req) => (
@@ -158,7 +158,7 @@ export default function ExploreCreators() {
             </div>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 }

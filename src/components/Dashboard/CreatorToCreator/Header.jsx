@@ -74,6 +74,7 @@
 import React from "react";
 import { Bell, Menu } from "lucide-react";
 import logo from "../../../assets/Winkizlogo.png";
+import getImageUrl from "../../utils/getImgUrl/getImgUrl";
 
 export default function Header({ user, onNotificationsClick, onHamburgerClick, onProfileClick, }) {
   return (
@@ -106,7 +107,7 @@ export default function Header({ user, onNotificationsClick, onHamburgerClick, o
           >
             <img
               src={
-                user?.profilePicture ||
+                getImageUrl(user?.profilePicture) ||
                 "https://ui-avatars.com/api/?name=User&background=random"
               }
               alt="User avatar"

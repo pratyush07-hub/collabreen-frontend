@@ -65,6 +65,7 @@
 import React, { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
 import { Search, MessageCircle, User, FolderOpen, Settings, LogOut, Users } from "lucide-react";
+import getImageUrl from "../../utils/getImgUrl/getImgUrl";
 
 export default function Sidebar({ user, onProfileClick, activeItem, onItemClick, isFirstTime, isOpen, onClose, onNotificationsClick }) {
   const menuItems = [
@@ -169,7 +170,7 @@ export default function Sidebar({ user, onProfileClick, activeItem, onItemClick,
           >
             <img
               src={
-                user?.profilePicture ||
+                getImageUrl(user?.profilePicture) ||
                 "https://ui-avatars.com/api/?name=User&background=random"
               }
               alt="User avatar"
