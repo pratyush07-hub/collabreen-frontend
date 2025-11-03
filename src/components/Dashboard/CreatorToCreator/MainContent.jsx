@@ -239,6 +239,7 @@ export default function MainContent({
     const handleCloseProfile = () => {};
     const handleLikeProfile = (profileId) => {};
 
+
     const renderContent = () => {
         switch (activeSection) {
             case 'setup':

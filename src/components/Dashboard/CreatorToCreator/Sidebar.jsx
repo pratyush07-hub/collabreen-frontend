@@ -66,7 +66,7 @@ import React, { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
 import { Search, MessageCircle, User, FolderOpen, Settings, LogOut, Users } from "lucide-react";
 
-export default function Sidebar({ activeItem, onItemClick, isFirstTime, isOpen, onClose, onNotificationsClick }) {
+export default function Sidebar({ user, onProfileClick, activeItem, onItemClick, isFirstTime, isOpen, onClose, onNotificationsClick }) {
   const menuItems = [
     { id: "explore", label: "Explore", icon: Search },
     { id: "chat", label: "Chat", icon: MessageCircle, hasNotification: true },
@@ -163,11 +163,19 @@ export default function Sidebar({ activeItem, onItemClick, isFirstTime, isOpen, 
           <div className="flex justify-between">
 
           <div className="pb-4 pl-4">
+            <button
+            onClick={onProfileClick}
+            className="relative pr-2 focus:outline-none"
+          >
             <img
-              src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=100"
+              src={
+                user?.profilePicture ||
+                "https://ui-avatars.com/api/?name=User&background=random"
+              }
               alt="User avatar"
-              className="w-8 h-8 rounded-full border-2 mt-2 border-white object-cover"
-              />
+              className="w-8 h-8 rounded-full border-2 mt-2 border-white object-cover hover:scale-105 transition-transform"
+            />
+          </button>
           {/* </div>
         </div> */}
     </div>

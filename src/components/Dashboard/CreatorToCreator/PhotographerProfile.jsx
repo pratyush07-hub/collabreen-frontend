@@ -300,6 +300,7 @@ import {
 } from "lucide-react";
 import client from "../../../api/client";
 import getImageUrl from "../../utils/getImgUrl/getImgUrl";
+import { useNavigate } from "react-router-dom";
 
 const PhotographerProfile = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -308,6 +309,8 @@ const PhotographerProfile = () => {
   const [formData, setFormData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -620,11 +623,11 @@ const PhotographerProfile = () => {
                 Notification
               </button>
               <button
-                onClick={() => setIsEditing(true)}
-                className="px-6 py-2 bg-[#84868B] text-white rounded-tr-md rounded-bl-md hover:bg-gray-600"
-              >
-                Edit Profile
-              </button>
+        onClick={() => navigate("/edit-profile")}
+        className="px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50"
+      >
+        Edit Profile
+      </button>
             </div>
           </div>
         </div>
@@ -663,12 +666,7 @@ const PhotographerProfile = () => {
           </button>
         </div>
 
-        {/* Tab Content */}
-        <div className="pb-8">
-          {activeTab === "profile" && renderProfileContent()}
-          {activeTab === "portfolio" && renderPortfolioContent()}
-          {activeTab === "status" && renderStatusContent()}
-        </div>
+        
         <div className="pb-8">
   {isEditing
     ? <ProfileEditForm 

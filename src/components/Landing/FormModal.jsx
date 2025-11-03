@@ -90,7 +90,7 @@ export default function FormModal({ isOpen, onClose }) {
         </button>
 
         <h2 className="text-xl sm:text-2xl font-sf text-[#EFAC16] md-4 md:mb-2 text-center">
-          Join Winkiz Community
+          For Brands Who Need Influencers
         </h2>
 
         <form className="flex flex-col space-y-3 sm:space-y-4" onSubmit={handleSubmit} noValidate>

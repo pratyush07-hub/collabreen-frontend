@@ -275,7 +275,7 @@ function Navbar() {
               <NavLink
                 to="/about"
                 className={({ isActive }) =>
-                  `block px-1 py-2 lg:px-3 rounded text-white hover:text-[#F5ADB2] inline-block hover:border-b-2 ${
+                  `block px-1 py-2 lg:px-3 rounded text-white hover:text-[#F5ADB2] hover:border-b-2 ${
                     isActive && !dropdownOpen ? "border-b-2" : ""
                   }`
                 }
@@ -285,7 +285,7 @@ function Navbar() {
             </li>
 
             {/* Products Dropdown */}
-            <li className="relative flex flex-col items-center justify-center">
+            {/* <li className="relative flex flex-col items-center justify-center">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className={`flex items-center justify-center px-1 py-2 lg:px-3 rounded text-white hover:text-[#F5ADB2] hover:border-b-2 ${
@@ -356,9 +356,9 @@ function Navbar() {
                   </ul>
                 </div>
               )}
-            </li>
+            </li> */}
 
-            <li>
+            {/* <li>
               <NavLink
                 to="/services"
                 className={({ isActive }) =>
@@ -369,7 +369,7 @@ function Navbar() {
               >
                 Services
               </NavLink>
-            </li>
+            </li> */}
 
             {/* Desktop & Mobile Buttons */}
             <li className="flex flex-col lg:flex-row gap-3 mt-4 lg:mt-0 lg:ml-4">
@@ -377,7 +377,7 @@ function Navbar() {
                   onClick={() => setShowForm(true)}
                   className="bg-[#EFAC16] hover:bg-[#EFAC16] inline-flex items-center justify-center px-4 py-2 text-sm lg:text-base text-black font-medium text-center rounded-tr-3xl rounded-l-2xl"
                 >
-                  Join Now
+                  For Brands
                 </button>
               <NavLink
                 to="/signup"

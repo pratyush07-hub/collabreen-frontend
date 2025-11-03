@@ -1,6 +1,6 @@
 // ================= App.jsx =================
 // import { useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { useNavigate, Route, Routes, useLocation } from "react-router-dom";
 // import { getSocket, initializeSocket } from "./socket.js" // import the socket instance
 import "./App.css";
 
@@ -30,6 +30,8 @@ import EditProfile from "./components/Dashboard/InfluencerDashboard/EditProfile"
 import CreatorToCreatorMain from "./components/Dashboard/CreatorToCreator/CreatorToCreatorMain";
 import ErrorBoundary from "./components/Dashboard/CreatorToCreator/ErrorBoundary";
 import CollabReqAcceptReject from "./components/Dashboard/CreatorToCreator/CollabReqAcceptReject";
+import About from "./components/Landing/About";
+import ProfileEdit from "./components/Dashboard/CreatorToCreator/ProfileEdit";
 
 function App() {
   const location = useLocation();
@@ -41,6 +43,7 @@ function App() {
     "/creator-to-creator",
   ];
 
+  const navigate = useNavigate();
   
 
   return (
@@ -49,6 +52,7 @@ function App() {
 
       <Routes>
         <Route exact path="/" element={<Landing />} />
+        <Route exact path="about" element={<About />} />
         <Route exact path="/signup" element={<Signup />} />
         <Route exact path="/signin" element={<Signin />} />
         <Route exact path="/register-as" element={<RegisterAs />} />
@@ -74,6 +78,10 @@ function App() {
         <Route exact path="/influencerdashboard/editprofile" element={<EditProfile />} />
 
         {/* Creator-to-Creator */}
+        <Route
+  path="/edit-profile"
+  element={<ProfileEdit onEditComplete={() => navigate('/profile')} />}
+/>
         <Route
           exact
           path="/creator-to-creator"

@@ -60,6 +60,7 @@ import Header from './Header';
 import MainContent from './MainContent';
 import LogoutModal from './LogoutModal';
 import { handleLogout } from '../../../api/logout';
+import client from "../../../api/client";
 
 export default function CreatorToCreatorMain() {
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ export default function CreatorToCreatorMain() {
   const [selectedChatId, setSelectedChatId] = useState(null);
   const [isFirstTime, setIsFirstTime] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   // Mobile sidebar toggle
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -81,6 +83,27 @@ export default function CreatorToCreatorMain() {
       checkProfileStatus();
     }
   }, [location.state]);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await client.get("/creatorprofiles/me");
+        setCurrentUser(response.data.data);
+        
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+useEffect(() => {
+  if (currentUser) {
+    console.log("🎯 currentUser updated:", currentUser);
+    console.log("👤 Profile Picture URL:", currentUser.profilePicture || "No profile picture set");
+  }
+}, [currentUser]);
+
 
   const checkProfileStatus = async () => {
     try {
@@ -134,6 +157,9 @@ export default function CreatorToCreatorMain() {
       console.error("Logout failed:", err);
     }
   };
+  const handleProfileClick = () => {
+  setActiveSection("profile");
+};
 
   const handleSetupComplete = () => {
     setIsFirstTime(false);
@@ -153,17 +179,21 @@ export default function CreatorToCreatorMain() {
     <div className="flex flex-col min-w-screen bg-gray-100">
       {/* Header */}
       <Header
+        user={currentUser}
         activeItem={activeSection}
         onNotificationsClick={() => setActiveSection('notifications')}
         onHamburgerClick={() => setIsMobileSidebarOpen(true)} // open mobile sidebar
+        onProfileClick={handleProfileClick}
       />
 
       <div className="flex-1 flex flex-row min-h-screen">
   {/* Sidebar */}
   <Sidebar
+    user={currentUser}
     activeItem={activeSection}
     onItemClick={handleSidebarItemClick}
     isFirstTime={isFirstTime}
+    onProfileClick={handleProfileClick}
     onNotificationsClick={() => setActiveSection('notifications')}
     isOpen={isMobileSidebarOpen} // Mobile toggle
     onClose={() => setIsMobileSidebarOpen(false)}

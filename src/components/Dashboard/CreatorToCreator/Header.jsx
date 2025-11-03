@@ -75,7 +75,7 @@ import React from "react";
 import { Bell, Menu } from "lucide-react";
 import logo from "../../../assets/Winkizlogo.png";
 
-export default function Header({ onNotificationsClick, onHamburgerClick }) {
+export default function Header({ user, onNotificationsClick, onHamburgerClick, onProfileClick, }) {
   return (
     <div className="fixed top-0 left-0 w-full z-50 bg-[#0c0c0c] border-b border-gray-600 p-4 flex justify-between items-center h-[10vh]">
       {/* Logo */}
@@ -99,13 +99,20 @@ export default function Header({ onNotificationsClick, onHamburgerClick }) {
             </button>
           </div>
           <div className="w-0.5 h-6 bg-white mt-3"></div>
-          <div className="relative pr-2">
+
+          <button
+            onClick={onProfileClick}
+            className="relative pr-2 focus:outline-none"
+          >
             <img
-              src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=100"
+              src={
+                user?.profilePicture ||
+                "https://ui-avatars.com/api/?name=User&background=random"
+              }
               alt="User avatar"
-              className="w-8 h-8 rounded-full border-2 mt-2 border-white object-cover"
+              className="w-8 h-8 rounded-full border-2 mt-2 border-white object-cover hover:scale-105 transition-transform"
             />
-          </div>
+          </button>
         </div>
 
         {/* Mobile Hamburger */}

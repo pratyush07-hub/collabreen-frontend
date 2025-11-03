@@ -226,5 +226,10 @@ export const deleteGroupMessageForMe = (messageId) =>
 export const deleteGroupMessageForEveryone = (messageId) =>
   api.delete(`/groups/messages/${messageId}/delete-for-everyone`);
 
+export const sendGroupAudioMessage = (groupId, formData) =>
+  api.post(`/groups/send-audio/${groupId}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
 
 export const joinNow = (formData) => api.post('/join-now', formData);

@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowLeft, Paperclip, Mic, Send } from "lucide-react";
+import { ArrowLeft, Paperclip, Send, MoreVertical } from "lucide-react";
 import {
   getGroupMessages,
   sendGroupMessage,
   getGroupById,
+  deleteGroupMessageForMe,
+  deleteGroupMessageForEveryone,
+  sendGroupAudioMessage, // ✅ Added
 } from "../../../api/client";
 import io from "socket.io-client";
 import Cookies from "js-cookie";
-import { Phone, Video, MoreVertical } from "lucide-react";
-import {
-  deleteGroupMessageForMe,
-  deleteGroupMessageForEveryone,
-} from "../../../api/client";
 
 export default function GroupChatWindow({ groupId, currentUser, onBack }) {
   const [message, setMessage] = useState("");
@@ -19,11 +17,14 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
   const [groupInfo, setGroupInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [typingUsers, setTypingUsers] = useState([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState(null);
+  const [audioChunks, setAudioChunks] = useState([]);
 
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
 
-  // Initialize socket connection
+  // 🧠 Initialize Socket Connection
   useEffect(() => {
     const token = Cookies.get("jwt");
     if (!token) return;
@@ -47,6 +48,11 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
       scrollToBottom();
     });
 
+    socket.on("receiveGroupAudioMessage", (newMessage) => {
+      setMessages((prev) => [...prev, newMessage]);
+      scrollToBottom();
+    });
+
     socket.on("userTypingGroup", ({ userId, isTyping }) => {
       setTypingUsers((prev) => {
         if (isTyping && !prev.includes(userId)) return [...prev, userId];
@@ -56,26 +62,21 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
       });
     });
 
-    // Define the handler once
     const handleGroupMessageDeleted = ({ messageId }) => {
-      console.log("Deleting message:", messageId);
       setMessages((prev) => prev.filter((m) => m._id !== messageId));
     };
-
     socket.on("groupMessageDeleted", handleGroupMessageDeleted);
 
-    // Proper cleanup
     return () => {
       if (socket) {
         socket.off("groupMessageDeleted", handleGroupMessageDeleted);
         socket.emit("leaveGroupChat", groupId);
         socket.disconnect();
-        console.log("Disconnected socket for group:", groupId);
       }
     };
   }, [groupId]);
 
-  // Fetch messages + group info
+  // 📦 Fetch messages and group info
   useEffect(() => {
     fetchGroupAndMessages();
   }, [groupId]);
@@ -87,18 +88,10 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
         getGroupById(groupId),
         getGroupMessages(groupId),
       ]);
-      console.log("Group data response:", groupRes);
-      console.log("Messages data response:", msgRes);
-
-      if (groupRes.data.success) {
+      if (groupRes.data.success)
         setGroupInfo(groupRes.data.group || groupRes.data.data);
-      }
-
-      if (msgRes.data.success) {
-        setMessages(msgRes.data.data || []); // Make sure you use the 'data' field
-      }
-
-      console.log("Fetched messages:", msgRes.data.data);
+      if (msgRes.data.success)
+        setMessages(msgRes.data.data || msgRes.data.messages || []);
     } catch (err) {
       console.error("Failed to fetch group data:", err);
     } finally {
@@ -111,40 +104,31 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // 📨 Send text message
   const handleSendMessage = async () => {
     if (!message.trim()) return;
     const msgContent = message.trim();
-    console.log("Attempting to send message:", msgContent);
     setMessage("");
 
     try {
       if (socketRef.current && socketRef.current.connected) {
-        console.log("Sending message via socket:", {
-          groupId,
-          content: msgContent,
-        });
         socketRef.current.emit("sendGroupMessage", {
           groupId,
           content: msgContent,
+          type: "text",
         });
       } else {
-        console.log("Sending message via API:", {
-          groupId,
-          content: msgContent,
-        });
         const res = await sendGroupMessage(groupId, msgContent);
-        console.log("Sent message response:", res);
-        if (res.data.success) setMessages((prev) => [...prev, res.data.data]);
+        if (res.data.success) setMessages((p) => [...p, res.data.data]);
       }
     } catch (err) {
       console.error("Failed to send message:", err);
-      setMessage(msgContent); // restore input if error
     }
   };
 
+  // ✏️ Typing event
   const handleTyping = (e) => {
     setMessage(e.target.value);
-    console.log("User typing:", e.target.value);
     if (socketRef.current) {
       socketRef.current.emit("typingGroup", {
         groupId,
@@ -152,21 +136,23 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
       });
     }
   };
-  const handleDeleteForMe = async (messageId) => {
+
+  // 🗑 Delete
+  const handleDeleteForMe = async (id) => {
     try {
-      await deleteGroupMessageForMe(messageId);
-      setMessages((prev) => prev.filter((m) => m._id !== messageId));
+      await deleteGroupMessageForMe(id);
+      setMessages((p) => p.filter((m) => m._id !== id));
     } catch (err) {
-      console.error("Error deleting for me:", err);
+      console.error(err);
     }
   };
 
-  const handleDeleteForEveryone = async (messageId) => {
+  const handleDeleteForEveryone = async (id) => {
     try {
-      await deleteGroupMessageForEveryone(messageId);
-      setMessages((prev) =>
-        prev.map((m) =>
-          m._id === messageId
+      await deleteGroupMessageForEveryone(id);
+      setMessages((p) =>
+        p.map((m) =>
+          m._id === id
             ? {
                 ...m,
                 isDeletedForEveryone: true,
@@ -176,7 +162,59 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
         )
       );
     } catch (err) {
-      console.error("Error deleting for everyone:", err);
+      console.error(err);
+    }
+  };
+
+  // 🎙️ Record Audio Logic
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const chunks = [];
+
+      recorder.ondataavailable = (e) => {
+        chunks.push(e.data);
+      };
+
+      recorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        const file = new File([blob], "audioMessage.webm", {
+          type: "audio/webm",
+        });
+
+        const formData = new FormData();
+        formData.append("audio", file);
+
+        try {
+          const res = await sendGroupAudioMessage(groupId, formData);
+          console.log("Audio message response:", res);
+          const newAudioMessage = res.data.data;
+          console.log("Audio message sent:", newAudioMessage);
+
+          // Emit through socket
+          socketRef.current.emit("sendGroupAudioMessage", newAudioMessage);
+
+          // Add instantly
+          setMessages((prev) => [...prev, newAudioMessage]);
+        } catch (error) {
+          console.error("Error sending audio:", error);
+        }
+      };
+
+      recorder.start();
+      setIsRecording(true);
+      setMediaRecorder(recorder);
+      setAudioChunks(chunks);
+    } catch (err) {
+      console.error("Recording failed:", err);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      setIsRecording(false);
     }
   };
 
@@ -196,13 +234,10 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
 
   return (
     <div className="flex-1 flex flex-col h-[90vh] bg-gray-900 fixed top-[10vh] md:left-[16%] right-0">
-      {/* Header (10vh equivalent space handled above) */}
+      {/* Header */}
       <div className="bg-white border-b p-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <button
-            onClick={onBack}
-            className="p-2 hover:bg-gray-100 rounded-full"
-          >
+          <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-full">
             <ArrowLeft size={20} className="text-gray-600" />
           </button>
           {groupInfo && (
@@ -216,90 +251,79 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
             </>
           )}
         </div>
-
-        <div className="flex items-center space-x-2">
-          {/* <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <Phone size={20} className="text-gray-600" />
-          </button>
-
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <Video size={20} className="text-gray-600" />
-          </button> */}
-
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <MoreVertical size={20} className="text-gray-600" />
-          </button>
-        </div>
+        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+          <MoreVertical size={20} className="text-gray-600" />
+        </button>
       </div>
 
-      {/* Messages Section (scrollable only) */}
+      {/* Chat Section */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-900">
-        {messages.map((msg) => (
-  <div
-    key={msg._id}
-    className={`flex ${
-      msg.sender._id === currentUser?._id ? "justify-end" : "justify-start"
-    } mb-3`}
-  >
-    <div
-      className={`flex flex-col items-${
-        msg.sender._id === currentUser?._id ? "end" : "start"
-      } max-w-xs sm:max-w-sm md:max-w-md`}
-    >
-      {/* Avatar + Message Bubble */}
-      <div
-        className={`flex items-end space-x-2 ${
-          msg.sender._id === currentUser?._id
-            ? "flex-row-reverse space-x-reverse"
-            : ""
-        }`}
-      >
-        {/* Avatar */}
-        <img
-          src={msg.sender.profilePic || "/default-avatar.png"}
-          alt="Avatar"
-          className="w-8 h-8 rounded-full object-cover"
-        />
+        {messages.map((msg) => {
+  // Prevent crash if message or sender is missing
+  if (!msg || !msg.sender) return null;
 
-        {/* Message bubble */}
+  const isOwnMessage = msg.sender._id === currentUser?._id;
+
+  return (
+    <div
+      key={msg._id || Math.random()}
+      className={`flex ${isOwnMessage ? "justify-end" : "justify-start"} mb-3`}
+    >
+      <div
+        className={`flex flex-col items-${
+          isOwnMessage ? "end" : "start"
+        } max-w-xs sm:max-w-sm md:max-w-md`}
+      >
         <div
-          className={`px-4 py-2 rounded-2xl text-sm sm:text-base break-words ${
-            msg.sender._id === currentUser?._id
-              ? "bg-orange-500 text-white"
-              : "bg-orange-400 text-white"
+          className={`flex items-end space-x-2 ${
+            isOwnMessage ? "flex-row-reverse space-x-reverse" : ""
           }`}
         >
-          <p>
-            {msg.isDeletedForEveryone
-              ? "🚫 This message was deleted"
-              : msg.content}
-          </p>
-        </div>
-      </div>
+          <img
+            src={msg.sender.profilePic || "/default-avatar.png"}
+            alt="Avatar"
+            className="w-8 h-8 rounded-full object-cover"
+          />
 
-      {/* ↓ Delete buttons below message */}
-      {!msg.isDeletedForEveryone && (
-        <div className="flex gap-2 mt-2">
-          <button
-            onClick={() => handleDeleteForMe(msg._id)}
-            className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded"
+          {/* 💬 TEXT / 🎧 AUDIO message */}
+          <div
+            className={`px-4 py-2 rounded-2xl text-sm sm:text-base break-words ${
+              isOwnMessage ? "bg-orange-500 text-white" : "bg-orange-400 text-white"
+            }`}
           >
-            Delete for Me
-          </button>
-
-          {msg.sender._id === currentUser?._id && (
-            <button
-              onClick={() => handleDeleteForEveryone(msg._id)}
-              className="text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
-            >
-              Delete for Everyone
-            </button>
-          )}
+            {msg.isDeletedForEveryone ? (
+              <p>🚫 This message was deleted</p>
+            ) : msg.type === "audio" ? (
+              <audio controls src={msg.content} className="w-48" />
+            ) : (
+              <p>{msg.content}</p>
+            )}
+          </div>
         </div>
-      )}
+
+        {/* 🗑 Delete options */}
+        {!msg.isDeletedForEveryone && (
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={() => handleDeleteForMe(msg._id)}
+              className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded"
+            >
+              Delete for Me
+            </button>
+            {isOwnMessage && (
+              <button
+                onClick={() => handleDeleteForEveryone(msg._id)}
+                className="text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
+              >
+                Delete for Everyone
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-))}
+  );
+})}
 
 
         {typingUsers.length > 0 && (
@@ -310,7 +334,7 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Section (fixed bottom) */}
+      {/* Footer Input */}
       <div className="p-4 bg-gray-900 flex items-center space-x-3 border-t border-gray-800">
         <div className="flex-1 relative">
           <input
@@ -325,9 +349,24 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
             <Paperclip size={18} className="text-gray-400" />
           </button>
         </div>
-        <button className="p-3 bg-green-500 rounded-full hover:bg-green-600">
-          <Mic size={20} className="text-white" />
-        </button>
+
+        {/* 🎙️ Record / Stop button */}
+        {!isRecording ? (
+          <button
+            onClick={startRecording}
+            className="p-3 bg-orange-500 rounded-full hover:bg-orange-600"
+          >
+            🎙️
+          </button>
+        ) : (
+          <button
+            onClick={stopRecording}
+            className="p-3 bg-red-600 rounded-full hover:bg-red-700"
+          >
+            ⏹️
+          </button>
+        )}
+
         <button
           onClick={handleSendMessage}
           className="p-3 bg-orange-500 rounded-full hover:bg-orange-600"

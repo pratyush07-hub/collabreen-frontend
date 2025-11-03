@@ -620,7 +620,12 @@ import {
   StopCircle,
 } from "lucide-react";
 import CollaborationModal from "./CollaborationModal";
-import { deleteMessageForEveryone, deleteMessageForMe, getChatMessages, sendMessage } from "../../../api/client";
+import {
+  deleteMessageForEveryone,
+  deleteMessageForMe,
+  getChatMessages,
+  sendMessage,
+} from "../../../api/client";
 import io from "socket.io-client";
 import ReactAudioPlayer from "react-audio-player";
 import Cookies from "js-cookie";
@@ -686,26 +691,31 @@ export default function ChatWindow({ chatId, onBack }) {
         console.log("WebSocket disconnected:", reason);
       });
       socketRef.current.on("messageDeletedForEveryone", ({ messageId }) => {
-      console.log("Received messageDeletedForEveryone event:", messageId);
-      setMessages((prev) =>
-        prev.map((m) =>
-          m._id === messageId
-            ? { ...m, isDeletedForEveryone: true, content: "This message was deleted", audioUrl: "" }
-            : m
-        )
-      );
-    });
+        console.log("Received messageDeletedForEveryone event:", messageId);
+        setMessages((prev) =>
+          prev.map((m) =>
+            m._id === messageId
+              ? {
+                  ...m,
+                  isDeletedForEveryone: true,
+                  content: "This message was deleted",
+                  audioUrl: "",
+                }
+              : m
+          )
+        );
+      });
 
       // Cleanup on unmount
       return () => {
-      if (socketRef.current) {
-        socketRef.current.off("receiveMessage");
-        socketRef.current.off("messageDeletedForEveryone"); // 🧹 cleanup new event
-        socketRef.current.disconnect();
-      }
-    };
-  }
-}, [chatId]);
+        if (socketRef.current) {
+          socketRef.current.off("receiveMessage");
+          socketRef.current.off("messageDeletedForEveryone"); // 🧹 cleanup new event
+          socketRef.current.disconnect();
+        }
+      };
+    }
+  }, [chatId]);
 
   // Join chat room when chatId changes
   useEffect(() => {
@@ -901,35 +911,39 @@ export default function ChatWindow({ chatId, onBack }) {
       setMessage(messageContent); // restore on error
     }
   };
-  
-const handleDeleteForMe = async (messageId) => {
-  try {
-    const res = await deleteMessageForMe(messageId);
-    if (res.data.success) {
-      setMessages((prev) => prev.filter((m) => m._id !== messageId));
-    }
-  } catch (err) {
-    console.error("Error deleting message for me:", err);
-  }
-};
 
-const handleDeleteForEveryone = async (messageId) => {
-  try {
-    const res = await deleteMessageForEveryone(messageId);
-    if (res.data.success) {
-      setMessages((prev) =>
-        prev.map((m) =>
-          m._id === messageId
-            ? { ...m, isDeletedForEveryone: true, content: "This message was deleted", audioUrl: "" }
-            : m
-        )
-      );
+  const handleDeleteForMe = async (messageId) => {
+    try {
+      const res = await deleteMessageForMe(messageId);
+      if (res.data.success) {
+        setMessages((prev) => prev.filter((m) => m._id !== messageId));
+      }
+    } catch (err) {
+      console.error("Error deleting message for me:", err);
     }
-  } catch (err) {
-    console.error("Error deleting message for everyone:", err);
-  }
-};
-  
+  };
+
+  const handleDeleteForEveryone = async (messageId) => {
+    try {
+      const res = await deleteMessageForEveryone(messageId);
+      if (res.data.success) {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m._id === messageId
+              ? {
+                  ...m,
+                  isDeletedForEveryone: true,
+                  content: "This message was deleted",
+                  audioUrl: "",
+                }
+              : m
+          )
+        );
+      }
+    } catch (err) {
+      console.error("Error deleting message for everyone:", err);
+    }
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -1015,85 +1029,85 @@ const handleDeleteForEveryone = async (messageId) => {
       {/* Messages */}
       <div className="flex-1 p-4 space-y-4 overflow-y-auto">
         {messages.map((msg) => (
-    <div
-      key={msg._id}
-      className={`flex ${
-        msg.sender._id === currentUserId ? "justify-end" : "justify-start"
-      }`}
-    >
-      <div
-        className={`flex flex-col items-${
-          msg.sender._id === currentUserId ? "end" : "start"
-        } space-y-1 max-w-[80%] sm:max-w-md group relative`}
-      >
-        {/* Avatar and bubble */}
-        <div
-          className={`flex items-end space-x-2 ${
-            msg.sender._id === currentUserId
-              ? "flex-row-reverse space-x-reverse"
-              : ""
-          }`}
-        >
-          <img
-            src={msg.sender.profilePic || "/default-avatar.png"}
-            alt="Avatar"
-            className="w-8 h-8 rounded-full object-cover"
-          />
-
           <div
-            className={`px-3 py-2 rounded-2xl text-sm sm:text-base ${
-              msg.sender._id === currentUserId
-                ? "bg-orange-500 text-white"
-                : "bg-orange-400 text-white"
+            key={msg._id}
+            className={`flex ${
+              msg.sender._id === currentUserId ? "justify-end" : "justify-start"
             }`}
           >
-            {/* Handle deleted message */}
-            {!msg.isDeletedForEveryone &&
-            !msg.deletedFor?.includes(currentUserId) ? (
-              msg.messageType === "audio" ? (
-                <div className="w-[180px] sm:w-[240px]">
-                  <ReactAudioPlayer
-                    src={msg.audioUrl}
-                    controls
-                    className="w-full rounded-md"
-                  />
-                </div>
-              ) : (
-                <p>{msg.content}</p>
-              )
-            ) : (
-              <p className="italic text-gray-200 text-xs">
-                This message was deleted
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Sender name visible on mobile */}
-        <p className="text-xs text-gray-400 sm:hidden px-2">
-          {msg.sender._id === currentUserId ? "You" : msg.sender.name}
-        </p>
-
-        {/* Hover Delete Menu */}
-        <div className="absolute top-0 right-0 hidden group-hover:flex flex-col bg-gray-800 rounded shadow p-1 text-xs z-10">
-          <button
-            onClick={() => handleDeleteForMe(msg._id)}
-            className="hover:bg-gray-700 p-1 rounded text-gray-200"
-          >
-            Delete for me
-          </button>
-          {msg.sender._id === currentUserId && (
-            <button
-              onClick={() => handleDeleteForEveryone(msg._id)}
-              className="hover:bg-red-700 p-1 rounded text-red-400"
+            <div
+              className={`flex flex-col items-${
+                msg.sender._id === currentUserId ? "end" : "start"
+              } space-y-1 max-w-[80%] sm:max-w-md group relative`}
             >
-              Delete for everyone
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  ))}
+              {/* Avatar and bubble */}
+              <div
+                className={`flex items-end space-x-2 ${
+                  msg.sender._id === currentUserId
+                    ? "flex-row-reverse space-x-reverse"
+                    : ""
+                }`}
+              >
+                <img
+                  src={msg.sender.profilePic || "/default-avatar.png"}
+                  alt="Avatar"
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+
+                <div
+                  className={`px-3 py-2 rounded-2xl text-sm sm:text-base ${
+                    msg.sender._id === currentUserId
+                      ? "bg-orange-500 text-white"
+                      : "bg-orange-400 text-white"
+                  }`}
+                >
+                  {/* Handle deleted message */}
+                  {!msg.isDeletedForEveryone &&
+                  !msg.deletedFor?.includes(currentUserId) ? (
+                    msg.messageType === "audio" ? (
+                      <div className="w-[180px] sm:w-[240px]">
+                        <ReactAudioPlayer
+                          src={msg.audioUrl}
+                          controls
+                          className="w-full rounded-md"
+                        />
+                      </div>
+                    ) : (
+                      <p>{msg.content}</p>
+                    )
+                  ) : (
+                    <p className="italic text-gray-200 text-xs">
+                      This message was deleted
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Sender name visible on mobile */}
+              <p className="text-xs text-gray-400 sm:hidden px-2">
+                {msg.sender._id === currentUserId ? "You" : msg.sender.name}
+              </p>
+
+              {/* Hover Delete Menu */}
+              <div className="absolute top-0 right-0 hidden group-hover:flex flex-col bg-gray-800 rounded shadow p-1 text-xs z-10">
+                <button
+                  onClick={() => handleDeleteForMe(msg._id)}
+                  className="hover:bg-gray-700 p-1 rounded text-gray-200"
+                >
+                  Delete for me
+                </button>
+                {msg.sender._id === currentUserId && (
+                  <button
+                    onClick={() => handleDeleteForEveryone(msg._id)}
+                    className="hover:bg-red-700 p-1 rounded text-red-400"
+                  >
+                    Delete for everyone
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
 
         <div ref={messagesEndRef} />
       </div>
