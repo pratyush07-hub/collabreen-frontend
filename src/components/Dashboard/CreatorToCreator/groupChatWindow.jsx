@@ -292,12 +292,13 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
             }`}
           >
             {msg.isDeletedForEveryone ? (
-              <p>🚫 This message was deleted</p>
-            ) : msg.type === "audio" ? (
-              <audio controls src={msg.content} className="w-48" />
-            ) : (
-              <p>{msg.content}</p>
-            )}
+  <p>🚫 This message was deleted</p>
+) : msg.type === "audio" ? (
+  <audio controls src={msg.audioUrl} className="w-48" />
+) : (
+  <p>{msg.content}</p>
+)}
+
           </div>
         </div>
 

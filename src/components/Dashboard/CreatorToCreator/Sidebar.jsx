@@ -84,7 +84,7 @@ export default function Sidebar({ user, onProfileClick, activeItem, onItemClick,
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden md:fixed md:top-16 md:left-0 md:w-64 md:h-[92vh] md:flex md:flex-col md:border-r md:border-gray-600 md:bg-[#0c0c0c] md:p-3 z-40">
+      <div className="hidden md:fixed md:top-16 md:left-0 md:w-34 lg:w-64 md:h-[92vh] md:flex md:flex-col md:border-r md:border-gray-600 md:bg-[#0c0c0c] md:p-3 z-40">
         {isFirstTime && (
           <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 mb-4">
             <p className="text-sm text-yellow-800">

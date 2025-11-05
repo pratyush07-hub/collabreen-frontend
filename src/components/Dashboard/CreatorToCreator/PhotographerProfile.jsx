@@ -284,7 +284,7 @@
 // export default PhotographerProfile;
 
 
-// PhotographerProfile.jsx
+// Photographer
 import React, { useState, useEffect } from "react";
 import {
   Camera,
@@ -294,9 +294,6 @@ import {
   Play,
   Upload,
   Paperclip,
-  Save,
-  DollarSign,
-  Link,
 } from "lucide-react";
 import client from "../../../api/client";
 import getImageUrl from "../../utils/getImgUrl/getImgUrl";
@@ -380,14 +377,14 @@ const PhotographerProfile = () => {
     setLoading(false);
   };
 
-  // --- TAB CONTENT ---
+  // --- Render Sections ---
+
   const renderProfileContent = () => (
     <div className="space-y-6">
-      {/* About */}
       <div className="bg-white rounded-lg p-6 border border-[#84868B]">
         <h3 className="text-lg font-semibold mb-4">About</h3>
         <p className="text-gray-600 mb-6">{profileData?.bio}</p>
-        <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <h4 className="font-medium mb-2">Joined</h4>
             <p className="text-gray-500">
@@ -403,7 +400,6 @@ const PhotographerProfile = () => {
         </div>
       </div>
 
-      {/* Skills */}
       <div className="bg-white rounded-lg p-6 border border-[#84868B]">
         <h3 className="text-lg font-semibold mb-4">Skills</h3>
         <div className="flex flex-wrap gap-2">
@@ -418,7 +414,6 @@ const PhotographerProfile = () => {
         </div>
       </div>
 
-      {/* Looking For */}
       <div className="bg-white rounded-lg p-6 border border-[#84868B]">
         <h3 className="text-lg font-semibold mb-4">Looking For</h3>
         <p className="text-gray-600 mb-4">{profileData?.lookingFor}</p>
@@ -436,19 +431,14 @@ const PhotographerProfile = () => {
     </div>
   );
 
-  
   const renderPortfolioContent = () => (
     <div className="space-y-6">
-      {/* My Work Section */}
       <div>
         <h3 className="text-xl font-semibold mb-4">My Work</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {profileData?.portfolio?.map((item, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-lg overflow-hidden border"
-            >
-              <div className="relative h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+            <div key={index} className="bg-white rounded-lg overflow-hidden border">
+              <div className="relative h-40 sm:h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
                 <Play className="w-12 h-12 text-white" />
               </div>
               <div className="p-4">
@@ -460,10 +450,9 @@ const PhotographerProfile = () => {
         </div>
       </div>
 
-      {/* Add Work Section */}
       <div>
         <h3 className="text-xl font-semibold mb-4">Add Work</h3>
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-white">
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center bg-white">
           <Upload className="w-8 h-8 text-gray-400 mx-auto mb-4" />
           <h4 className="text-lg font-medium mb-2">Upload Files</h4>
           <p className="text-gray-500 mb-4">
@@ -475,7 +464,7 @@ const PhotographerProfile = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <div>
             <label className="block text-sm font-medium mb-2">Add Title</label>
             <input
@@ -541,28 +530,30 @@ const PhotographerProfile = () => {
     </div>
   );
 
-  if (loading) return <div className="p-8 text-center">Loading profile...</div>;
-  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
+  if (loading)
+    return <div className="p-8 text-center">Loading profile...</div>;
+  if (error)
+    return <div className="p-8 text-center text-red-500">{error}</div>;
 
   return (
-    <div className="min-h-screen mx-auto w-[94%] bg-gray-50">
+    <div className="min-h-screen mx-auto w-[95%] bg-gray-50">
       {/* Header Banner */}
-      <div className="h-[30vh] sm:h-[25vh] mt-24 relative">
+      <div className="relative h-[20vh] sm:h-[25vh] md:h-[30vh] mt-24">
         <img
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover rounded-md"
           src={getImageUrl(profileData?.bannerImage)}
           alt="Banner"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+        <div className="absolute inset-0 bg-black/30 rounded-md"></div>
       </div>
 
       {/* Profile Info */}
-      <div className="max-w-8xl mx-auto px-4 relative z-10">
-        <div className="bg-white rounded-lg py-6 px-4 sm:px-6">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-40 gap-6">
-            {/* Left section */}
-            <div className="flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
-              <div className="w-32 h-32 bg-gray-300 rounded-full overflow-hidden mx-auto sm:mx-0">
+      <div className="max-w-8xl mx-auto px-3 sm:px-6 relative z-10">
+        <div className="bg-white rounded-lg py-6 px-4 sm:px-6 mt-4">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-32 gap-6">
+            {/* Left Section */}
+            <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
+              <div className="w-28 sm:w-32 h-28 sm:h-32 bg-gray-300 rounded-full overflow-hidden mx-auto sm:mx-0">
                 <img
                   src={
                     getImageUrl(profileData?.profilePicture) ||
@@ -574,21 +565,21 @@ const PhotographerProfile = () => {
               </div>
 
               <div className="flex-1 text-center sm:text-left">
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
                   {profileData?.user?.name}
                 </h1>
-                <div className="flex justify-center sm:justify-start items-center text-gray-600 mt-1">
+                <div className="flex justify-center sm:justify-start items-center text-gray-600 mt-1 text-sm sm:text-base">
                   <MapPin className="w-4 h-4 mr-1" />
                   <span>{profileData?.location}</span>
                 </div>
 
-                <div className="flex flex-wrap justify-center sm:justify-start items-center mt-2 space-x-4">
+                <div className="flex flex-wrap justify-center sm:justify-start items-center mt-2 space-x-4 text-sm">
                   <div className="flex items-center">
                     <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
                     <span className="font-medium">
                       {profileData?.rating || 0}
                     </span>
-                    <span className="text-gray-500 text-sm ml-1">
+                    <span className="text-gray-500 text-xs ml-1">
                       ({profileData?.stats?.totalReviews || 0})
                     </span>
                   </div>
@@ -604,7 +595,7 @@ const PhotographerProfile = () => {
                   {profileData?.skills?.map((tag, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-orange-100 text-orange-600 rounded-full text-sm border"
+                      className="px-3 py-1 bg-orange-100 text-orange-600 rounded-full text-xs sm:text-sm border"
                     >
                       {tag}
                     </span>
@@ -613,79 +604,62 @@ const PhotographerProfile = () => {
               </div>
             </div>
 
-            {/* Right section (buttons) */}
-            <div className="flex flex-col sm:flex-row justify-center lg:justify-end mt-4 sm:mt-16 gap-3 sm:space-x-8">
-              <button className="px-6 py-2 border-2 flex gap-2 items-center justify-center border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50">
+            {/* Right Section */}
+            <div className="flex flex-col sm:flex-row justify-center lg:justify-end mt-4 sm:mt-16 gap-3 sm:gap-4">
+              <button className="px-4 sm:px-6 py-2 border-2 flex gap-2 items-center justify-center border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50">
                 <div className="w-2 h-2 bg-[#93B076] mt-1 rounded-full"></div>
-                <div>{profileData?.availability || "N/A"}</div>
+                <div className="text-sm sm:text-base">
+                  {profileData?.availability || "N/A"}
+                </div>
               </button>
-              <button className="px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50">
+              <button className="px-4 sm:px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50 text-sm sm:text-base">
                 Notification
               </button>
               <button
-        onClick={() => navigate("/edit-profile")}
-        className="px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50"
-      >
-        Edit Profile
-      </button>
+                onClick={() => navigate("/edit-profile")}
+                className="px-4 sm:px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50 text-sm sm:text-base"
+              >
+                Edit Profile
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex flex-col sm:flex-row justify-around mb-6 gap-4 mt-4">
-          <button
-            onClick={() => setActiveTab("profile")}
-            className={`px-20 sm:px-40 py-2 rounded-tr-md rounded-bl-md font-medium transition-colors ${
-              activeTab === "profile"
-                ? "bg-gradient-to-r from-[#EFAC16] to-[#F77128] text-white"
-                : "bg-[#84868B] text-white hover:bg-gray-500"
-            }`}
-          >
-            Profile
-          </button>
-          <button
-            onClick={() => setActiveTab("portfolio")}
-            className={`px-20 sm:px-40 py-2 rounded-tr-md rounded-bl-md font-medium transition-colors ${
-              activeTab === "portfolio"
-                ? "bg-gradient-to-r from-[#EFAC16] to-[#F77128] text-white"
-                : "bg-[#84868B] text-white hover:bg-gray-500"
-            }`}
-          >
-            Portfolio
-          </button>
-          <button
-            onClick={() => setActiveTab("status")}
-            className={`px-20 sm:px-40 py-2 rounded-tr-md rounded-bl-md font-medium transition-colors ${
-              activeTab === "status"
-                ? "bg-gradient-to-r from-[#EFAC16] to-[#F77128] text-white"
-                : "bg-[#84868B] text-white hover:bg-gray-500"
-            }`}
-          >
-            Status
-          </button>
+        {/* Tabs */}
+        <div className="flex flex-wrap justify-center sm:justify-around mb-6 gap-3 mt-6 overflow-x-auto no-scrollbar">
+          {["profile", "portfolio", "status"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`min-w-[120px] sm:min-w-[180px] md:min-w-[220px] px-6 sm:px-10 py-2 rounded-tr-md rounded-bl-md font-medium transition-colors ${
+                activeTab === tab
+                  ? "bg-gradient-to-r from-[#EFAC16] to-[#F77128] text-white"
+                  : "bg-[#84868B] text-white hover:bg-gray-500"
+              }`}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
         </div>
 
-        
+        {/* Content */}
         <div className="pb-8">
-  {isEditing
-    ? <ProfileEditForm
-        formData={formData} 
-        onChange={handleInputChange}
-        onSave={handleSave}
-        onCancel={() => setIsEditing(false)}
-        loading={loading}
-      />
-    : (
-      <>
-        {activeTab === "profile" && renderProfileContent()}
-        {activeTab === "portfolio" && renderPortfolioContent()}
-        {activeTab === "status" && renderStatusContent()}
-      </>
-    )
-  }
-</div>
-
+          {isEditing ? (
+            <ProfileEditForm
+              formData={formData}
+              onChange={handleInputChange}
+              onSave={handleSave}
+              onCancel={() => setIsEditing(false)}
+              loading={loading}
+            />
+          ) : (
+            <>
+              {activeTab === "profile" && renderProfileContent()}
+              {activeTab === "portfolio" && renderPortfolioContent()}
+              {activeTab === "status" && renderStatusContent()}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -200,7 +200,7 @@ useEffect(() => {
   />
 
   {/* Main Content */}
-  <div className="flex-1 md:w-[84%] md:ml-[16%]">
+  <div className="flex-1 md:w-[74%] xl:w-[84%] md:ml-[26%] xl:ml-[16%]">
     <MainContent
       activeSection={activeSection}
       selectedChatId={selectedChatId}
