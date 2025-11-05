@@ -80,7 +80,7 @@ function App() {
         {/* Creator-to-Creator */}
         <Route
   path="/edit-profile"
-  element={<ProfileEdit onEditComplete={() => navigate('/profile')} />}
+  element={<ProfileEdit onEditComplete={() => navigate('/creator-to-creator')} />}
 />
         <Route
           exact
