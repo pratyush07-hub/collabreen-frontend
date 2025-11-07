@@ -294,12 +294,16 @@ import {
   Play,
   Upload,
   Paperclip,
+  Instagram,
+  Youtube,
+  Linkedin,
+  Twitter
 } from "lucide-react";
 import client from "../../../api/client";
 import getImageUrl from "../../utils/getImgUrl/getImgUrl";
 import { useNavigate } from "react-router-dom";
 
-const PhotographerProfile = () => {
+const PhotographerProfile = ({ onNotificationsClick }) => {
   const [activeTab, setActiveTab] = useState("profile");
   const [profileData, setProfileData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -382,23 +386,123 @@ const PhotographerProfile = () => {
   const renderProfileContent = () => (
     <div className="space-y-6">
       <div className="bg-white rounded-lg p-6 border border-[#84868B]">
-        <h3 className="text-lg font-semibold mb-4">About</h3>
-        <p className="text-gray-600 mb-6">{profileData?.bio}</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <h4 className="font-medium mb-2">Joined</h4>
-            <p className="text-gray-500">
-              {profileData?.createdAt
-                ? new Date(profileData.createdAt).toLocaleDateString()
-                : "N/A"}
-            </p>
-          </div>
-          <div>
-            <h4 className="font-medium mb-2">Availability</h4>
-            <p className="text-gray-500">{profileData?.availability || "N/A"}</p>
-          </div>
-        </div>
-      </div>
+  <h3 className="text-lg font-semibold mb-4">About</h3>
+  <p className="text-gray-600 mb-6">{profileData?.bio}</p>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <h4 className="font-medium mb-2">Joined</h4>
+      <p className="text-gray-500">
+        {profileData?.createdAt
+          ? new Date(profileData.createdAt).toLocaleDateString()
+          : "N/A"}
+      </p>
+    </div>
+
+    <div>
+      <h4 className="font-medium mb-2">Availability</h4>
+      <p className="text-gray-500">{profileData?.availability || "N/A"}</p>
+    </div>
+
+    <div>
+      <h4 className="font-medium mb-2">Location</h4>
+      <p className="text-gray-500">{profileData?.location || "N/A"}</p>
+    </div>
+
+    <div>
+      <h4 className="font-medium mb-2">Hometown</h4>
+      <p className="text-gray-500">{profileData?.hometown || "N/A"}</p>
+    </div>
+
+    <div>
+      <h4 className="font-medium mb-2">Gender</h4>
+      <p className="text-gray-500 capitalize">{profileData?.gender || "N/A"}</p>
+    </div>
+
+    <div>
+      <h4 className="font-medium mb-2">Portfolio</h4>
+      {profileData?.portfolio ? (
+        <a
+          href={profileData.portfolio}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 underline"
+        >
+          View Portfolio
+        </a>
+      ) : (
+        <p className="text-gray-500">N/A</p>
+      )}
+    </div>
+
+  </div>
+  <div className="flex mt-8 gap-4">
+    <div>
+      {/* <h4 className="font-medium mb-2">Instagram</h4> */}
+      {profileData?.instagram ? (
+        <a
+          href={profileData.instagram}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#F77128] underline"
+        >
+          <Instagram className="text-pink-500 hover:scale-110 transition" size={22} />
+        </a>
+      ) : (
+        <p className="text-gray-500">N/A</p>
+      )}
+    </div>
+
+    <div>
+      {/* <h4 className="font-medium mb-2">YouTube</h4> */}
+      {profileData?.youtube ? (
+        <a
+          href={profileData.youtube}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#F77128] underline"
+        >
+          <Youtube className="text-red-600 hover:scale-110 transition" size={22} />
+        </a>
+      ) : (
+        <p className="text-gray-500">N/A</p>
+      )}
+    </div>
+
+    <div>
+      {/* <h4 className="font-medium mb-2">LinkedIn</h4> */}
+      {profileData?.linkedin ? (
+        <a
+          href={profileData.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#F77128] underline"
+        >
+          <Linkedin className="text-blue-500 hover:scale-110 transition" size={22} />
+        </a>
+      ) : (
+        <p className="text-gray-500">N/A</p>
+      )}
+    </div>
+
+    <div>
+      {/* <h4 className="font-medium mb-2">Twitter</h4> */}
+      {profileData?.twitter ? (
+        <a
+          href={profileData.twitter}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#F77128] underline"
+        >
+          <Twitter className="text-blue-500 hover:scale-110 transition" size={22} />
+        </a>
+      ) : (
+        <p className="text-gray-500">N/A</p>
+      )}
+    </div>
+    </div>
+</div>
+
 
       <div className="bg-white rounded-lg p-6 border border-[#84868B]">
         <h3 className="text-lg font-semibold mb-4">Skills</h3>
@@ -431,60 +535,60 @@ const PhotographerProfile = () => {
     </div>
   );
 
-  const renderPortfolioContent = () => (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-xl font-semibold mb-4">My Work</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {profileData?.portfolio?.map((item, index) => (
-            <div key={index} className="bg-white rounded-lg overflow-hidden border">
-              <div className="relative h-40 sm:h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                <Play className="w-12 h-12 text-white" />
-              </div>
-              <div className="p-4">
-                <h4 className="font-medium mb-1">{item.title}</h4>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+  // const renderPortfolioContent = () => (
+  //   <div className="space-y-6">
+  //     <div>
+  //       <h3 className="text-xl font-semibold mb-4">My Work</h3>
+  //       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+  //         {profileData?.portfolio?.map((item, index) => (
+  //           <div key={index} className="bg-white rounded-lg overflow-hidden border">
+  //             <div className="relative h-40 sm:h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+  //               <Play className="w-12 h-12 text-white" />
+  //             </div>
+  //             <div className="p-4">
+  //               <h4 className="font-medium mb-1">{item.title}</h4>
+  //               <p className="text-sm text-gray-600">{item.description}</p>
+  //             </div>
+  //           </div>
+  //         ))}
+  //       </div>
+  //     </div>
 
-      <div>
-        <h3 className="text-xl font-semibold mb-4">Add Work</h3>
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center bg-white">
-          <Upload className="w-8 h-8 text-gray-400 mx-auto mb-4" />
-          <h4 className="text-lg font-medium mb-2">Upload Files</h4>
-          <p className="text-gray-500 mb-4">
-            Drag files here or click to browse
-          </p>
-          <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm">
-            <Paperclip className="w-4 h-4 mr-2" />
-            Choose files
-          </button>
-        </div>
+  //     <div>
+  //       <h3 className="text-xl font-semibold mb-4">Add Work</h3>
+  //       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center bg-white">
+  //         <Upload className="w-8 h-8 text-gray-400 mx-auto mb-4" />
+  //         <h4 className="text-lg font-medium mb-2">Upload Files</h4>
+  //         <p className="text-gray-500 mb-4">
+  //           Drag files here or click to browse
+  //         </p>
+  //         <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm">
+  //           <Paperclip className="w-4 h-4 mr-2" />
+  //           Choose files
+  //         </button>
+  //       </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Add Title</label>
-            <input
-              type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Add Description
-            </label>
-            <input
-              type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  //       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+  //         <div>
+  //           <label className="block text-sm font-medium mb-2">Add Title</label>
+  //           <input
+  //             type="text"
+  //             className="w-full px-3 py-2 border border-gray-300 rounded-md"
+  //           />
+  //         </div>
+  //         <div>
+  //           <label className="block text-sm font-medium mb-2">
+  //             Add Description
+  //           </label>
+  //           <input
+  //             type="text"
+  //             className="w-full px-3 py-2 border border-gray-300 rounded-md"
+  //           />
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
 
   const renderStatusContent = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
@@ -604,30 +708,47 @@ const PhotographerProfile = () => {
               </div>
             </div>
 
-            {/* Right Section */}
-            <div className="flex flex-col sm:flex-row justify-center lg:justify-end mt-4 sm:mt-16 gap-3 sm:gap-4">
-              <button className="px-4 sm:px-6 py-2 border-2 flex gap-2 items-center justify-center border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50">
-                <div className="w-2 h-2 bg-[#93B076] mt-1 rounded-full"></div>
-                <div className="text-sm sm:text-base">
-                  {profileData?.availability || "N/A"}
-                </div>
-              </button>
-              <button className="px-4 sm:px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50 text-sm sm:text-base">
-                Notification
-              </button>
-              <button
-                onClick={() => navigate("/edit-profile")}
-                className="px-4 sm:px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50 text-sm sm:text-base"
-              >
-                Edit Profile
-              </button>
-            </div>
+            <div className="flex flex-col items-center sm:items-end mt-4 sm:mt-16 gap-3 sm:gap-4">
+  {/* First Row */}
+  <div className="flex flex-col sm:flex-row justify-center lg:justify-end gap-3 sm:gap-4">
+    <button className="px-4 sm:px-6 py-2 border-2 flex gap-2 items-center justify-center border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50">
+      <div className="w-2 h-2 bg-[#93B076] mt-1 rounded-full"></div>
+      <div className="text-sm sm:text-base">
+        {profileData?.availability || "N/A"}
+      </div>
+    </button>
+    <button
+      onClick={onNotificationsClick}
+      className="px-4 sm:px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50 text-sm sm:text-base"
+    >
+      Notification
+    </button>
+  </div>
+
+  {/* Second Row */}
+  <div className="flex flex-col sm:flex-row justify-center lg:justify-end gap-3 sm:gap-4">
+    <button
+      onClick={() => navigate("/edit-profile")}
+      className="px-4 sm:px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50 text-sm sm:text-base"
+    >
+      Edit Profile
+    </button>
+
+    <button
+      onClick={() => navigate("/profile-preview")}
+      className="px-4 sm:px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50 text-sm sm:text-base"
+    >
+      Profile Preview
+    </button>
+  </div>
+</div>
+
           </div>
         </div>
 
         {/* Tabs */}
         <div className="flex flex-wrap justify-center sm:justify-around mb-6 gap-3 mt-6 overflow-x-auto no-scrollbar">
-          {["profile", "portfolio", "status"].map((tab) => (
+          {["profile", "status"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}

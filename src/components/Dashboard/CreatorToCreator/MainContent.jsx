@@ -215,10 +215,12 @@ export default function MainContent({
     selectedChatId,
     onChatSelect,
     onBackToChats,
-    onSetupComplete
+    onSetupComplete,
+    onNotificationsClick
 }) {
     const [loading, setLoading] = useState(false);
     const [activeGroupChatId, setActiveGroupChatId] = useState(null);
+    
 
     const handleStartConversation = async (profileId) => {
         try {
@@ -238,6 +240,7 @@ export default function MainContent({
 
     const handleCloseProfile = () => {};
     const handleLikeProfile = (profileId) => {};
+    
 
 
     const renderContent = () => {
@@ -272,7 +275,9 @@ export default function MainContent({
                     />
                 );
             case 'profile':
-                return <PhotographerProfile />;
+                return <PhotographerProfile
+            onNotificationsClick={onNotificationsClick}
+        />
             case 'projects':
                 return <ProjectsDashboard />;
             case 'settings':

@@ -32,6 +32,7 @@ import ErrorBoundary from "./components/Dashboard/CreatorToCreator/ErrorBoundary
 import CollabReqAcceptReject from "./components/Dashboard/CreatorToCreator/CollabReqAcceptReject";
 import About from "./components/Landing/About";
 import ProfileEdit from "./components/Dashboard/CreatorToCreator/ProfileEdit";
+import ProfilePreview from "./components/Dashboard/CreatorToCreator/ProfilePreview";
 
 function App() {
   const location = useLocation();
@@ -82,6 +83,8 @@ function App() {
   path="/edit-profile"
   element={<ProfileEdit onEditComplete={() => navigate('/creator-to-creator')} />}
 />
+        <Route exact path="/profile-preview" element={<ProfilePreview />} />
+
         <Route
           exact
           path="/creator-to-creator"

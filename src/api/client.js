@@ -207,6 +207,8 @@ export const likeProfile = (profileId) => api.post(
   { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
 );
 
+export const getMyProfile = () => api.get('/creatorprofiles/me');
+
 
 
 // export const likeProfile = (profileId) => api.post(`/creatorprofiles/${profileId}/like`, {});

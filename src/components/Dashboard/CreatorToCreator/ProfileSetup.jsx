@@ -214,9 +214,8 @@
 //     );
 // }
 
-// ProfileSetup.jsx
 import React, { useState } from 'react';
-import { Save, Camera, MapPin, DollarSign, Link } from 'lucide-react';
+import { Save, Camera, MapPin, DollarSign, Link, User, Globe, Home } from 'lucide-react';
 import api from '../../../api/client';
 import Cookies from "js-cookie";
 
@@ -224,16 +223,23 @@ export default function ProfileSetup({ onSetupComplete }) {
     const [formData, setFormData] = useState({
         bio: '',
         skills: '',
-        availability: '',
+        gender: '',
+        age: '',
         location: '',
+        hometown: '',
+        languages: '',
+        availability: '',
         instagram: '',
+        linkedin: '',
         twitter: '',
         youtube: '',
+        portfolio: '',
         hourlyRate: 0,
         projectRate: 0,
         profilePicture: null,
         bannerImage: null,
     });
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -256,7 +262,7 @@ export default function ProfileSetup({ onSetupComplete }) {
         try {
             const submitData = new FormData();
             Object.keys(formData).forEach(key => {
-                if (key === 'skills') {
+                if (key === 'skills' || key === 'languages') {
                     submitData.append(key, formData[key] || '');
                 } else if (key === 'profilePicture' || key === 'bannerImage') {
                     if (formData[key]) submitData.append(key, formData[key]);
@@ -347,16 +353,76 @@ export default function ProfileSetup({ onSetupComplete }) {
                         />
                     </div>
 
-                    {/* Location */}
-                    <div className="flex items-center gap-2">
-                        <MapPin size={20} className="text-gray-500" />
+                    {/* Personal Details */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Gender</label>
+                            <select
+                                name="gender"
+                                value={formData.gender}
+                                onChange={handleInputChange}
+                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                                required
+                            >
+                                <option value="">Select...</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Age</label>
+                            <input
+                                type="number"
+                                name="age"
+                                value={formData.age}
+                                onChange={handleInputChange}
+                                placeholder="Enter your age"
+                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    {/* Location + Hometown */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="flex items-center gap-2">
+                            <MapPin size={20} className="text-gray-500" />
+                            <input
+                                type="text"
+                                name="location"
+                                value={formData.location}
+                                onChange={handleInputChange}
+                                placeholder="Current location (e.g., Delhi)"
+                                className="flex-1 p-2 sm:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                                required
+                            />
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Home size={20} className="text-gray-500" />
+                            <input
+                                type="text"
+                                name="hometown"
+                                value={formData.hometown}
+                                onChange={handleInputChange}
+                                placeholder="Your hometown (e.g., Jaipur)"
+                                className="flex-1 p-2 sm:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    {/* Languages */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Languages</label>
                         <input
                             type="text"
-                            name="location"
-                            value={formData.location}
+                            name="languages"
+                            value={formData.languages}
                             onChange={handleInputChange}
-                            placeholder="Your location (e.g., Jaipur)"
-                            className="flex-1 p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            placeholder="e.g., English, Hindi"
+                            className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
                             required
                         />
                     </div>
@@ -390,7 +456,7 @@ export default function ProfileSetup({ onSetupComplete }) {
                                 name="hourlyRate"
                                 value={formData.hourlyRate}
                                 onChange={handleInputChange}
-                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
                             />
                         </div>
                         <div>
@@ -402,14 +468,14 @@ export default function ProfileSetup({ onSetupComplete }) {
                                 name="projectRate"
                                 value={formData.projectRate}
                                 onChange={handleInputChange}
-                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
                             />
                         </div>
                     </div>
 
                     {/* Social Links */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {['instagram', 'twitter', 'youtube'].map((social) => (
+                        {['instagram', 'linkedin', 'twitter', 'youtube'].map((social) => (
                             <div key={social}>
                                 <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2 flex items-center gap-1">
                                     <Link size={16} /> {social.charAt(0).toUpperCase() + social.slice(1)}
@@ -424,6 +490,21 @@ export default function ProfileSetup({ onSetupComplete }) {
                                 />
                             </div>
                         ))}
+                    </div>
+
+                    {/* Portfolio Link */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2 flex items-center gap-1">
+                            <Link size={16} /> Portfolio Link
+                        </label>
+                        <input
+                            type="url"
+                            name="portfolio"
+                            value={formData.portfolio}
+                            onChange={handleInputChange}
+                            placeholder="https://yourportfolio.com"
+                            className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                        />
                     </div>
 
                     <button

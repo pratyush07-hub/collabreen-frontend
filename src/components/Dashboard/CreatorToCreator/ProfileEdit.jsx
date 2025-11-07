@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Save, Camera, MapPin, DollarSign, Link } from "lucide-react";
+import {
+  Save,
+  Camera,
+  MapPin,
+  DollarSign,
+  Link as LinkIcon,
+  User,
+  Home,
+} from "lucide-react";
 import api from "../../../api/client";
-import Cookies from "js-cookie";
 import getImageUrl from "../../utils/getImgUrl/getImgUrl";
 
 export default function ProfileEdit({ onEditComplete, existingProfile }) {
@@ -10,9 +17,13 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
     skills: "",
     availability: "",
     location: "",
+    hometown: "",
+    gender: "",
+    portfolio: "",
     instagram: "",
     twitter: "",
     youtube: "",
+    linkedin: "",
     hourlyRate: 0,
     projectRate: 0,
     profilePicture: null,
@@ -21,7 +32,7 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // ✅ Fetch logged-in user's profile details automatically
+  // ✅ Fetch existing profile data if available
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -36,9 +47,13 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
             : data.skills || "",
           availability: data.availability || "",
           location: data.location || "",
+          hometown: data.hometown || "",
+          gender: data.gender || "",
+          portfolio: data.portfolio || "",
           instagram: data.instagram || "",
           twitter: data.twitter || "",
           youtube: data.youtube || "",
+          linkedin: data.linkedin || "",
           hourlyRate: data.hourlyRate || 0,
           projectRate: data.projectRate || 0,
           profilePicture: getImageUrl(data.profilePicture),
@@ -52,29 +67,20 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
       }
     };
 
-    // If no pre-passed profile, fetch from backend
     if (!existingProfile) {
       fetchProfile();
     } else {
-      // Pre-fill with prop data if provided
       setFormData({
-        bio: existingProfile.bio || "",
+        ...formData,
+        ...existingProfile,
         skills: Array.isArray(existingProfile.skills)
           ? existingProfile.skills.join(", ")
           : existingProfile.skills || "",
-        availability: existingProfile.availability || "",
-        location: existingProfile.location || "",
-        instagram: existingProfile.instagram || "",
-        twitter: existingProfile.twitter || "",
-        youtube: existingProfile.youtube || "",
-        hourlyRate: existingProfile.hourlyRate || 0,
-        projectRate: existingProfile.projectRate || 0,
-        profilePicture: getImageUrl(existingProfile.profilePicture),
-        bannerImage: getImageUrl(existingProfile.bannerImage),
       });
     }
   }, [existingProfile]);
 
+  // ✅ Handle input changes
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
     setFormData((prev) => ({
@@ -83,6 +89,7 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
     }));
   };
 
+  // ✅ Submit updated profile
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -91,39 +98,29 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
     try {
       const updateData = new FormData();
       Object.keys(formData).forEach((key) => {
-        if (key === "skills") {
-          updateData.append(key, formData[key]);
-        } else if (key === "profilePicture" || key === "bannerImage") {
-          if (formData[key] instanceof File) {
-            updateData.append(key, formData[key]);
-          }
-        } else {
-          updateData.append(key, formData[key] || "");
-        }
+        if (key === "skills") updateData.append(key, formData[key]);
+        else if (["profilePicture", "bannerImage"].includes(key)) {
+          if (formData[key] instanceof File) updateData.append(key, formData[key]);
+        } else updateData.append(key, formData[key] || "");
       });
-    //   console.log("Submitting update with data:");
-    //   for (let [key, value] of updateData.entries()) {
-    //     console.log(key, value);
-    //   }
 
       const response = await api.put("/creatorprofiles/update", updateData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      console.log("Update response:", response);
       if (response.data.success) {
         onEditComplete?.();
         alert("Profile updated successfully!");
       }
     } catch (error) {
       console.error("Update error:", error);
-      setError(error.response?.data?.message || "Update failed");
+      setError(error.response?.data?.message || "Profile update failed");
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading && !formData.bio && !formData.skills) {
+  if (loading && !formData.bio) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500">
         Loading your profile...
@@ -133,24 +130,20 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
 
   return (
     <div className="min-h-screen mt-16 bg-gray-50 p-4 sm:p-8">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+      <div className="max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-lg space-y-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
           Edit Your Creator Profile
         </h1>
-        <p className="text-gray-600 mb-6 sm:mb-8">
-          Update your details to keep your profile fresh and relevant.
+        <p className="text-gray-600">
+          Update your profile to showcase your best work and reach more collaborations.
         </p>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4 sm:space-y-6 bg-white p-4 sm:p-6 rounded-lg shadow"
-        >
-          {/* (All your existing form inputs remain the same below) */}
-          {/* Profile Picture, Banner, Bio, Skills, etc. */}
-          {/* ... */}
+        {error && <div className="text-red-500">{error}</div>}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Profile Picture */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
+            <label className="block font-medium text-gray-700 mb-2">
               Profile Picture
             </label>
             <div className="flex items-center gap-3">
@@ -160,29 +153,25 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
                 name="profilePicture"
                 onChange={handleInputChange}
                 accept="image/*"
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
+                className="file-input"
               />
             </div>
-            {formData.profilePicture &&
-              typeof formData.profilePicture === "string" && (
-                <img
-                  src={formData.profilePicture}
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full mt-2 object-cover border"
-                />
-              )}
-            {formData.profilePicture instanceof File && (
+            {formData.profilePicture && (
               <img
-                src={URL.createObjectURL(formData.profilePicture)}
-                alt="Preview"
-                className="w-24 h-24 rounded-full mt-2 object-cover border"
+                src={
+                  formData.profilePicture instanceof File
+                    ? URL.createObjectURL(formData.profilePicture)
+                    : formData.profilePicture
+                }
+                alt="Profile Preview"
+                className="w-24 h-24 rounded-full mt-3 object-cover border"
               />
             )}
           </div>
 
-          {/* Banner Image */}
+          {/* Banner */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
+            <label className="block font-medium text-gray-700 mb-2">
               Banner Image
             </label>
             <div className="flex items-center gap-3">
@@ -192,126 +181,117 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
                 name="bannerImage"
                 onChange={handleInputChange}
                 accept="image/*"
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
+                className="file-input"
               />
             </div>
-            {formData.bannerImage &&
-              typeof formData.bannerImage === "string" && (
-                <img
-                  src={formData.bannerImage}
-                  alt="Banner"
-                  className="w-full h-32 object-cover mt-2 rounded-md border"
-                />
-              )}
-            {formData.bannerImage instanceof File && (
+            {formData.bannerImage && (
               <img
-                src={URL.createObjectURL(formData.bannerImage)}
-                alt="Preview"
-                className="w-full h-32 object-cover mt-2 rounded-md border"
+                src={
+                  formData.bannerImage instanceof File
+                    ? URL.createObjectURL(formData.bannerImage)
+                    : formData.bannerImage
+                }
+                alt="Banner"
+                className="w-full h-32 object-cover mt-3 rounded-md border"
               />
             )}
           </div>
 
           {/* Bio */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-              Bio
-            </label>
+            <label className="block font-medium text-gray-700 mb-2">Bio</label>
             <textarea
               name="bio"
               value={formData.bio}
               onChange={handleInputChange}
               rows={3}
               placeholder="Tell us about yourself..."
-              className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
               required
             />
           </div>
 
+          {/* Location, Hometown, Gender */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block font-medium text-gray-700 mb-1 flex items-center gap-1">
+                <MapPin size={16} /> Location
+              </label>
+              <input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                placeholder="City, State"
+                className="input-field"
+              />
+            </div>
+            <div>
+              <label className="block font-medium text-gray-700 mb-1 flex items-center gap-1">
+                <Home size={16} /> Hometown
+              </label>
+              <input
+                type="text"
+                name="hometown"
+                value={formData.hometown}
+                onChange={handleInputChange}
+                placeholder="Your hometown"
+                className="input-field"
+              />
+            </div>
+            <div>
+              <label className="block font-medium text-gray-700 mb-1 flex items-center gap-1">
+                <User size={16} /> Gender
+              </label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                className="input-field"
+              >
+                <option value="">Select...</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
           {/* Skills */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-              Skills
-            </label>
+            <label className="block font-medium text-gray-700 mb-2">Skills</label>
             <input
               type="text"
               name="skills"
               value={formData.skills}
               onChange={handleInputChange}
-              placeholder="e.g., photography, video editing"
-              className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              placeholder="Photography, Editing, Videography..."
+              className="input-field w-[40vw]"
               required
             />
           </div>
 
-          {/* Location */}
-          <div className="flex items-center gap-2">
-            <MapPin size={20} className="text-gray-500" />
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleInputChange}
-              placeholder="Your location (e.g., Jaipur)"
-              className="flex-1 p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-              required
-            />
-          </div>
-
-          {/* Availability */}
+          {/* Portfolio Link */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-              Availability
+            <label className="block font-medium text-gray-700 mb-2 flex items-center gap-1">
+              <LinkIcon size={16} /> Portfolio Link
             </label>
-            <select
-              name="availability"
-              value={formData.availability}
+            <input
+              type="url"
+              name="portfolio"
+              value={formData.portfolio}
               onChange={handleInputChange}
-              className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-              required
-            >
-              <option value="">Select...</option>
-              <option value="full-time">Full-time</option>
-              <option value="part-time">Part-time</option>
-              <option value="weekends">Weekends</option>
-              <option value="project-based">Project-based</option>
-            </select>
-          </div>
-
-          {/* Rates */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2 flex items-center gap-1">
-                <DollarSign size={16} /> Hourly Rate
-              </label>
-              <input
-                type="number"
-                name="hourlyRate"
-                value={formData.hourlyRate}
-                onChange={handleInputChange}
-                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2 flex items-center gap-1">
-                <DollarSign size={16} /> Project Rate
-              </label>
-              <input
-                type="number"
-                name="projectRate"
-                value={formData.projectRate}
-                onChange={handleInputChange}
-                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
+              placeholder="https://yourportfolio.com"
+              className="input-field w-[32vw]"
+            />
           </div>
 
           {/* Social Links */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {["instagram", "twitter", "youtube"].map((social) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {["instagram", "youtube", "linkedin", "twitter"].map((social) => (
               <div key={social}>
-                <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2 flex items-center gap-1">
-                  <Link size={16} />{" "}
+                <label className="block font-medium text-gray-700 mb-2 flex items-center gap-1">
+                  <LinkIcon size={16} />{" "}
                   {social.charAt(0).toUpperCase() + social.slice(1)}
                 </label>
                 <input
@@ -320,15 +300,45 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
                   value={formData[social]}
                   onChange={handleInputChange}
                   placeholder={`https://${social}.com/username`}
-                  className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                  className="input-field"
                 />
               </div>
             ))}
           </div>
+
+          {/* Rates */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-medium text-gray-700 mb-2 flex items-center gap-1">
+                <DollarSign size={16} /> Hourly Rate
+              </label>
+              <input
+                type="number"
+                name="hourlyRate"
+                value={formData.hourlyRate}
+                onChange={handleInputChange}
+                className="input-field"
+              />
+            </div>
+            <div>
+              <label className="block font-medium text-gray-700 mb-2 flex items-center gap-1">
+                <DollarSign size={16} /> Project Rate
+              </label>
+              <input
+                type="number"
+                name="projectRate"
+                value={formData.projectRate}
+                onChange={handleInputChange}
+                className="input-field"
+              />
+            </div>
+          </div>
+
+          {/* Save Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition flex items-center justify-center gap-2"
           >
             <Save size={20} />
             <span>{loading ? "Saving..." : "Save Changes"}</span>

@@ -61,6 +61,7 @@ import MainContent from './MainContent';
 import LogoutModal from './LogoutModal';
 import { handleLogout } from '../../../api/logout';
 import client from "../../../api/client";
+import PhotographerProfile from './PhotographerProfile';
 
 export default function CreatorToCreatorMain() {
   const navigate = useNavigate();
@@ -75,27 +76,41 @@ export default function CreatorToCreatorMain() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   // Check if this is first time visit or setup required
-  useEffect(() => {
-    if (location.state?.showSetup) {
+ useEffect(() => {
+  const fetchProfileAndStatus = async () => {
+    try {
+      // Fetch user profile
+      const response = await client.get("/creatorprofiles/me");
+      setCurrentUser(response.data.data);
+
+      // Now check profile completion
+      const statusRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/creatorprofiles/check-status`, {
+        headers: {
+          Authorization: `Bearer ${document.cookie.split('jwt=')[1]?.split(';')[0]}`,
+        },
+      });
+
+      const data = await statusRes.json();
+
+      if (data.success) {
+        if (!data.hasProfile || !data.isComplete) {
+          setActiveSection('setup');
+          setIsFirstTime(true);
+        } else {
+          setActiveSection('explore');
+          setIsFirstTime(false);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching profile or status:", error);
       setActiveSection('setup');
       setIsFirstTime(true);
-    } else {
-      checkProfileStatus();
     }
-  }, [location.state]);
+  };
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await client.get("/creatorprofiles/me");
-        setCurrentUser(response.data.data);
-        
-      } catch (err) {
-        console.error("Error fetching profile:", err);
-      }
-    };
-    fetchProfile();
-  }, []);
+  fetchProfileAndStatus();
+}, []);
+
 
 useEffect(() => {
   if (currentUser) {
@@ -207,6 +222,7 @@ useEffect(() => {
       onChatSelect={handleChatSelect}
       onBackToChats={handleBackToChats}
       onSetupComplete={handleSetupComplete}
+      onNotificationsClick={() => setActiveSection('notifications')}
     />
   </div>
 
@@ -217,7 +233,6 @@ useEffect(() => {
     onConfirm={handleConfirmLogout}
   />
 </div>
-
     </div>
   );
 }
