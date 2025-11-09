@@ -1,4 +1,5 @@
 import React from "react";
+import Logout from "../../../assets/Authentication/Logoutmodal.png";
 
 export default function LogoutModal({ isOpen, onClose, onConfirm }) {
   if (!isOpen) return null;
@@ -10,7 +11,7 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }) {
         {/* Image */}
         <div className="flex-shrink-0">
           <img 
-            src="/src/assets/Authentication/Logoutmodal.png" 
+            src={Logout} 
             alt="Logout" 
             className="mx-auto max-h-40 sm:max-h-96 object-contain" 
           />

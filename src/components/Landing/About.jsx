@@ -8,7 +8,7 @@ function About() {
           Well Your Search Is Over!
         </h1>
         <p className="text-gray-300 text-sm lg:text-base font-roboto py-2 text-center">
-          Lorem ipsum dolor sit amet consectetur.
+          Winkiz connects creators and brands on one powerful platform — where collaboration meets creativity.
         </p>
 
         <div className="grid items-center justify-center gap-14 lg:gap-8 xl:gap-0 py-16 md:grid-rows-2">
