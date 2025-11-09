@@ -78,8 +78,17 @@ export default function FormModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-70 backdrop-blur-sm p-4">
-      <div className="bg-[#171717] text-white w-full max-w-xl md:max-w-2xl p-6 sm:p-8 rounded-3xl relative border border-[#EFAC16]/40 shadow-lg max-h-[90vh] md:max-h-[94vh]">
+    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm p-3 sm:p-4">
+      <div
+        className="
+          bg-[#171717] text-white 
+          w-full max-w-md sm:max-w-lg md:max-w-xl
+          p-5 sm:p-6 md:p-7
+          rounded-2xl
+          relative border border-[#EFAC16]/40 shadow-lg
+          flex flex-col justify-center
+        "
+      >
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -89,104 +98,84 @@ export default function FormModal({ isOpen, onClose }) {
           &times;
         </button>
 
-        <h2 className="text-xl sm:text-2xl font-sf text-[#EFAC16] md-4 md:mb-2 text-center">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#EFAC16] mb-3 text-center">
           For Brands Who Need Influencers
         </h2>
 
-        <form className="flex flex-col space-y-3 sm:space-y-4" onSubmit={handleSubmit} noValidate>
-          <input
-            type="text"
-            name="fullName"
-            value={form.fullName}
-            onChange={handleChange}
-            placeholder="Full Name"
-            pattern="^[A-Za-z\s]{2,40}$"
-            title="Only letters and spaces, 2–40 characters."
-            className="p-2 sm:p-3 md:p-2 rounded-lg bg-[#222222] text-white text-sm sm:text-base border border-[#EFAC16]/40 focus:outline-none focus:border-[#F5ADB2]"
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Email Address"
-            pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
-            title="Enter a valid email address."
-            className="p-2 sm:p-3 md:p-2 rounded-lg bg-[#222222] text-white text-sm sm:text-base border border-[#EFAC16]/40 focus:outline-none focus:border-[#F5ADB2]"
-            required
-          />
-          <input
-            type="text"
-            name="company"
-            value={form.company}
-            onChange={handleChange}
-            placeholder="Company / Brand"
-            pattern="^[A-Za-z0-9\s&.-]{2,50}$"
-            title="Letters, numbers, spaces, and .-& allowed (2–50 chars)."
-            className="p-2 sm:p-3 md:p-2 rounded-lg bg-[#222222] text-white text-sm sm:text-base border border-[#EFAC16]/40 focus:outline-none focus:border-[#F5ADB2]"
-          />
-          <input
-            type="url"
-            name="website"
-            value={form.website}
-            onChange={handleChange}
-            placeholder="Website url"
-            pattern="^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/\S*)?$"
-            title="Enter a valid URL (e.g., https://example.com)."
-            className="p-2 sm:p-3 md:p-2 rounded-lg bg-[#222222] text-white text-sm sm:text-base border border-[#EFAC16]/40 focus:outline-none focus:border-[#F5ADB2]"
-          />
-          <input
-            type="text"
-            name="position"
-            value={form.position}
-            onChange={handleChange}
-            placeholder="Your Position"
-            pattern="^[A-Za-z\s]{2,40}$"
-            title="Only letters and spaces, 2–40 characters."
-            className="p-2 sm:p-3 md:p-2 rounded-lg bg-[#222222] text-white text-sm sm:text-base border border-[#EFAC16]/40 focus:outline-none focus:border-[#F5ADB2]"
-          />
-          <input
-            type="text"
-            name="niche"
-            value={form.niche}
-            onChange={handleChange}
-            placeholder="What's your niche?"
-            pattern="^[A-Za-z\s]{2,40}$"
-            title="Only letters and spaces, 2–40 characters."
-            className="p-2 sm:p-3 md:p-2 rounded-lg bg-[#222222] text-white text-sm sm:text-base border border-[#EFAC16]/40 focus:outline-none focus:border-[#F5ADB2]"
-          />
-          <input
-            type="tel"
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-            placeholder="Phone Number"
-            pattern="^\+?[0-9]{7,15}$"
-            title="Enter a valid phone number (7–15 digits, optional +)."
-            className="p-2 sm:p-3 md:p-2 rounded-lg bg-[#222222] text-white text-sm sm:text-base border border-[#EFAC16]/40 focus:outline-none focus:border-[#F5ADB2]"
-          />
+        <form
+          className="flex flex-col space-y-2 sm:space-y-3"
+          onSubmit={handleSubmit}
+          noValidate
+        >
+          {[
+            { type: "text", name: "fullName", placeholder: "Full Name", required: true },
+            { type: "email", name: "email", placeholder: "Email Address", required: true },
+            { type: "text", name: "company", placeholder: "Company / Brand" },
+            { type: "url", name: "website", placeholder: "Website URL" },
+            { type: "text", name: "position", placeholder: "Your Position" },
+            { type: "text", name: "niche", placeholder: "What's your niche?" },
+            { type: "tel", name: "phone", placeholder: "Phone Number" },
+          ].map((field) => (
+            <input
+              key={field.name}
+              type={field.type}
+              name={field.name}
+              value={form[field.name]}
+              onChange={handleChange}
+              placeholder={field.placeholder}
+              required={field.required || false}
+              className="
+                p-2 sm:p-2.5 
+                rounded-lg bg-[#222222]
+                text-white text-sm sm:text-base 
+                border border-[#EFAC16]/40
+                focus:outline-none focus:border-[#F5ADB2]
+                transition-all duration-150
+              "
+            />
+          ))}
+
           <textarea
             name="goals"
             value={form.goals}
             onChange={handleChange}
             placeholder="Tell us about your goals..."
-            rows="3"
-            pattern=".{5,300}"
-            title="Must be at least 5 characters long."
-            className="p-2 sm:p-3 rounded-lg bg-[#222222] text-white text-sm sm:text-base border border-[#EFAC16]/40 focus:outline-none focus:border-[#F5ADB2]"
+            rows="2"
+            className="
+              p-2 sm:p-2.5 
+              rounded-lg bg-[#222222]
+              text-white text-sm sm:text-base 
+              border border-[#EFAC16]/40
+              focus:outline-none focus:border-[#F5ADB2]
+              resize-none
+            "
           ></textarea>
 
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 sm:mt-4 bg-[#F5ADB2] hover:bg-[#EFAC16] text-black font-semibold py-2 sm:py-3 rounded-xl transition-all duration-200 text-sm sm:text-base"
+            className="
+              mt-2 sm:mt-3 
+              bg-[#F5ADB2] hover:bg-[#EFAC16]
+              text-black font-semibold
+              py-2 sm:py-2.5
+              rounded-xl transition-all duration-200
+              text-sm sm:text-base
+            "
           >
             {loading ? "Submitting..." : "Submit"}
           </button>
 
-          {errorMsg && <p className="text-red-500 mt-2 text-center text-sm sm:text-base">{errorMsg}</p>}
-          {successMsg && <p className="text-green-400 mt-2 text-center text-sm sm:text-base">{successMsg}</p>}
+          {errorMsg && (
+            <p className="text-red-500 mt-1 text-center text-sm sm:text-base">
+              {errorMsg}
+            </p>
+          )}
+          {successMsg && (
+            <p className="text-green-400 mt-1 text-center text-sm sm:text-base">
+              {successMsg}
+            </p>
+          )}
         </form>
       </div>
     </div>
