@@ -91,7 +91,8 @@ function Signup() {
         const data = await response.json();
         console.log(data);
         Cookies.set("jwt", data.token);
-         Cookies.set("user", data.userDetails);
+        //  Cookies.set("user", data.userDetails);
+        Cookies.set("user", JSON.stringify(data.userDetails));
         setShowOtpSection(true); // Show OTP section
         setTimeout(() => {
           window.scrollTo({
