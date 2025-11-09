@@ -21,29 +21,27 @@ function About() {
           </div>
 
           <div className="mx-auto place-self-center md:col-span-6 relative text-center">
-  <h1 className="max-w-4xl mb-4 text-[#F5ADB2] text-3xl font-normal md:text-4xl xl:text-5xl mx-auto">
-    Winkiz
-  </h1>
+            <h1 className="max-w-4xl mb-4 text-[#F5ADB2] text-3xl font-normal md:text-4xl xl:text-5xl mx-auto">
+              Winkiz
+            </h1>
 
-  <div className="flex flex-col items-center gap-4 md:gap-0">
-    <p className="text-gray-300 text-lg lg:text-xl md:w-10/12 py-2 font-roboto text-center">
-      Lorem ipsum dolor sit amet consectetur. Commodo ultricies
-      facilisi ornare justo malesuada pretium purus consequat dui.
-      Lorem ipsum dolor sit amet consectetur. Commodo ultricies
-      facilisi ornare justo malesuada pretium purus consequat dui.
-      Lorem ipsum dolor sit amet consectetur. Commodo ultricies
-      facilisi ornare justo malesuada pretium purus consequat dui.
-      Lorem ipsum dolor sit amet consectetur. Commodo ultricies
-      facilisi ornare justo malesuada pretium purus consequat dui.
-    </p>
+            <div className="flex flex-col items-center gap-4 md:gap-0">
+              <p className="text-gray-300 text-lg lg:text-xl md:w-10/12 py-2 font-roboto text-center">
+                In today’s digital world, creators shape conversations, trends,
+                and communities. Yet finding the right collaboration still feels
+                complicated — endless scrolling, mismatched deals, and wasted
+                time. That’s exactly where Winkiz comes in. Winkiz is a match
+                making collaboration platform that bridges the gap between
+                brands and creators. Our goal is simple — to make influencer
+                marketing easy, transparent, and result-driven for everyone
+                involved. Whether you’re a brand looking to reach your ideal
+                audience or a creator searching for meaningful partnerships,
+                Winkiz gives you all the tools you need to grow faster, smarter,
+                and together.
+              </p>
 
-    <p className="text-gray-300 text-lg lg:text-xl md:w-10/12 py-2 font-roboto text-center">
-      Consequat leo nulla egestas mollis dui facilisis nulla eu.
-      Consequat leo nulla egestas mollis dui facilisis nulla eu.
-    </p>
-
-    {/* Uncomment if you want the button */}
-    {/* <span className="flex items-center justify-center">
+              {/* Uncomment if you want the button */}
+              {/* <span className="flex items-center justify-center">
       <Link
         href="/explore"
         className="bg-[#F5ADB2] hover:bg-[#EFAC16] w-36 md:w-auto flex items-center justify-center text-base font-medium text-center text-gray-900 py-2 px-3 mt-4 rounded-bl-3xl rounded-t-3xl focus:ring-1 focus:ring-gray-100"
@@ -51,11 +49,10 @@ function About() {
         Learn More
       </Link>
     </span> */}
-  </div>
+            </div>
 
-  <span className="w-6 h-6 absolute left-3/4 -translate-x-1/2 rounded-full bg-[#93B076] mt-4"></span>
-</div>
-
+            <span className="w-6 h-6 absolute left-3/4 -translate-x-1/2 rounded-full bg-[#93B076] mt-4"></span>
+          </div>
         </div>
       </section>
     </>

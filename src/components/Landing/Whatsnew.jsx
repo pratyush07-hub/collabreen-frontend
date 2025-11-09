@@ -45,7 +45,6 @@ function Whatsnew() {
           alt="Background"
         />
         <div className="flex flex-col md:flex-row justify-evenly items-center text-white font-roboto p-4 h-full bg-transparent max-w-screen-xl mx-auto relative">
-
           {/* Left Column (slide from left) */}
           <div className="bg-transparent w-full flex flex-col justify-evenly items-center gap-8 md:gap-24">
             <motion.div
@@ -53,9 +52,9 @@ function Whatsnew() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
               viewport={{ once: true, amount: 0.4 }}
-              className="rounded-2xl w-52 p-4 bg-gradient-to-r from-stone-700 to-stone-950 opacity-70"
+              className="rounded-2xl w-56 p-4 bg-gradient-to-r from-stone-700 to-stone-950 opacity-70"
             >
-              Regular updates that keeps you informed?
+              Talk collabs, clout & creativity — all in one feed
             </motion.div>
 
             <motion.div
@@ -65,7 +64,7 @@ function Whatsnew() {
               viewport={{ once: true, amount: 0.4 }}
               className="rounded-2xl w-52 p-4 bg-gradient-to-r from-stone-700 to-stone-950 opacity-70"
             >
-              What’s really trending?
+              From DMs to deals — this is where it starts
             </motion.div>
           </div>
 
@@ -78,7 +77,7 @@ function Whatsnew() {
               viewport={{ once: true, amount: 0.4 }}
               className="rounded-2xl w-52 p-4 bg-gradient-to-r from-stone-700 to-stone-950 opacity-70"
             >
-              Looking for something unique?
+              Looking for your next perfect brand match?
             </motion.div>
 
             <motion.div
@@ -88,7 +87,7 @@ function Whatsnew() {
               viewport={{ once: true, amount: 0.4 }}
               className="rounded-2xl w-52 p-4 bg-gradient-to-r from-stone-700 to-stone-950 opacity-70"
             >
-              Regular updates that keeps you informed?
+              Stay informed. Stay inspired. Stay Winkiz
             </motion.div>
           </div>
         </div>
@@ -111,16 +110,16 @@ function Whatsnew() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 justify-items-center mb-6">
           <div className="rounded-2xl w-52 p-4 bg-gradient-to-r from-stone-700 to-stone-950 opacity-70 text-white">
-            Regular updates that keeps you informed?
+            Talk collabs, clout & creativity — all in one feed
           </div>
           <div className="rounded-2xl w-52 p-4 bg-gradient-to-r from-stone-700 to-stone-950 opacity-70 text-white">
-            What&apos;s really trending?
+            From DMs to deals — this is where it starts
           </div>
           <div className="rounded-2xl w-52 p-4 bg-gradient-to-r from-stone-700 to-stone-950 opacity-70 text-white">
-            Looking for something unique?
+            Looking for your next perfect brand match?
           </div>
           <div className="rounded-2xl w-52 p-4 bg-gradient-to-r from-stone-700 to-stone-950 opacity-70 text-white">
-            Regular updates that keeps you informed?
+            Stay informed. Stay inspired. Stay Winkiz
           </div>
         </div>
       </section>
