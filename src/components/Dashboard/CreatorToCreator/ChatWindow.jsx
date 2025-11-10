@@ -762,7 +762,7 @@ export default function ChatWindow({ chatId, onBack }) {
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     scrollToBottom();
-    console.log(messages);
+    // console.log(messages);
   }, [messages]);
 
   const scrollToBottom = () => {

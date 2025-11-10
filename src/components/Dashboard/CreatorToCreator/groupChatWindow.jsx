@@ -25,6 +25,13 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   // 🧠 Initialize Socket Connection
   useEffect(() => {
     const token = Cookies.get("jwt");
