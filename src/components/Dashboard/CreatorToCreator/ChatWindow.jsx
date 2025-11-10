@@ -753,10 +753,11 @@ export default function ChatWindow({ chatId, onBack }) {
   }, []);
 
   useEffect(() => {
-    if (chatId) {
-      fetchMessages();
-    }
-  }, [chatId]);
+  if (chatId && currentUserId) {
+    fetchMessages();
+  }
+}, [chatId, currentUserId]);
+
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -769,28 +770,40 @@ export default function ChatWindow({ chatId, onBack }) {
   };
 
   const fetchMessages = async () => {
-    try {
-      setLoading(true);
-      const response = await getChatMessages(chatId);
-      if (response.data.success) {
-        setMessages(response.data.data);
-        console.log("Fetched messages:", response.data.data);
+  try {
+    setLoading(true);
+    const response = await getChatMessages(chatId);
 
-        if (response.data.data.length > 0) {
-          const otherParticipant = response.data.data[0].sender;
+    if (response.data.success) {
+      const msgs = response.data.data;
+      setMessages(msgs);
+      console.log("Fetched messages:", msgs);
+      console.log("current user", currentUserId)
+
+      if (msgs.length > 0) {
+        // find the first user who is NOT the current user
+        const receiver = msgs.find((m) => m.sender._id !== currentUserId)?.sender;
+
+        if (receiver) {
+          console.log("Receiver detected:", receiver);
           setChatInfo({
-            id: otherParticipant._id,
-            name: otherParticipant.name,
-            avatar: otherParticipant.profilePic || "/default-avatar.png",
+            id: receiver._id,
+            name: receiver.name,
+            avatar: receiver.profilePic || "/default-avatar.png",
           });
+        } else {
+          console.warn("No receiver found (maybe all messages are from current user).");
         }
       }
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
   const handleMicClick = async () => {
     if (isRecording) {
       // Stop recording

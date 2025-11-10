@@ -53,7 +53,7 @@ export default function FormModal({ isOpen, onClose }) {
     try {
       const response = await joinNow(form);
       if (response.data.success) {
-        setSuccessMsg("Thank you for joining the Winkiz Community!");
+        setSuccessMsg("Thanks for submitting your information, we will contact you shortly!");
         setForm({
           fullName: "",
           email: "",

@@ -6,10 +6,11 @@ import {
   getGroupById,
   deleteGroupMessageForMe,
   deleteGroupMessageForEveryone,
-  sendGroupAudioMessage, // ✅ Added
+  sendGroupAudioMessage,
 } from "../../../api/client";
 import io from "socket.io-client";
 import Cookies from "js-cookie";
+import getImageUrl from "../../utils/getImgUrl/getImgUrl";
 
 export default function GroupChatWindow({ groupId, currentUser, onBack }) {
   const [message, setMessage] = useState("");
@@ -39,7 +40,6 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
     const socket = socketRef.current;
 
     socket.on("connect", () => {
-      console.log("Connected to socket:", socket.id);
       socket.emit("joinGroupChat", groupId);
     });
 
@@ -88,8 +88,8 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
         getGroupById(groupId),
         getGroupMessages(groupId),
       ]);
-      if (groupRes.data.success)
-        setGroupInfo(groupRes.data.group || groupRes.data.data);
+
+        setGroupInfo(groupRes.data);
       if (msgRes.data.success)
         setMessages(msgRes.data.data || msgRes.data.messages || []);
     } catch (err) {
@@ -148,23 +148,24 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
   };
 
   const handleDeleteForEveryone = async (id) => {
-    try {
-      await deleteGroupMessageForEveryone(id);
-      setMessages((p) =>
-        p.map((m) =>
-          m._id === id
-            ? {
-                ...m,
-                isDeletedForEveryone: true,
-                content: "🚫 This message was deleted",
-              }
-            : m
-        )
-      );
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  try {
+    await deleteGroupMessageForEveryone(id);
+    setMessages((prev) =>
+      prev.map((m) =>
+        m._id === id
+          ? {
+              ...m,
+              isDeletedForEveryone: true,
+              content: "🚫 This message was deleted",
+            }
+          : m
+      )
+    );
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 
   // 🎙️ Record Audio Logic
   const startRecording = async () => {
@@ -188,14 +189,9 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
 
         try {
           const res = await sendGroupAudioMessage(groupId, formData);
-          console.log("Audio message response:", res);
           const newAudioMessage = res.data.data;
-          console.log("Audio message sent:", newAudioMessage);
 
-          // Emit through socket
           socketRef.current.emit("sendGroupAudioMessage", newAudioMessage);
-
-          // Add instantly
           setMessages((prev) => [...prev, newAudioMessage]);
         } catch (error) {
           console.error("Error sending audio:", error);
@@ -233,46 +229,79 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
     );
 
   return (
-    <div className="flex-1 flex flex-col h-[90vh] bg-gray-900 fixed top-[10vh] md:left-[16%] right-0">
+    <div className="flex flex-col h-[100vh] bg-gray-900 fixed inset-0 md:left-[16%]">
       {/* Header */}
-      <div className="bg-white border-b p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-full">
-            <ArrowLeft size={20} className="text-gray-600" />
-          </button>
-          {groupInfo && (
-            <>
-              <img
-                src={groupInfo.image || "/default-group.png"}
-                alt={groupInfo.name}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-              <h2 className="font-semibold text-gray-900">{groupInfo.name}</h2>
-            </>
+<div className="bg-white/90 backdrop-blur mt-16 border-b shadow-sm p-3 sm:p-4 flex items-center justify-between sticky top-0 z-50 w-full">
+
+  <div className="flex items-center space-x-3 sm:space-x-4">
+    <button
+      onClick={onBack}
+      className="p-1 sm:p-2 hover:bg-gray-100 rounded-full"
+    >
+      <ArrowLeft size={20} className="text-gray-600" />
+    </button>
+
+    {groupInfo && (
+      <div className="flex items-center space-x-3">
+        {/* Group Image */}
+        {/* <p>{groupInfo}</p> */}
+        <img
+          src={groupInfo.image || "/default-group.png"}
+          alt={groupInfo.name}
+          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
+        />
+
+        <div className="flex flex-col">
+          {/* Group Name */}
+          <h2 className="font-semibold text-sm sm:text-base text-gray-900">
+            {groupInfo.name}
+          </h2>
+
+          {/* Group Members Avatars */}
+          {groupInfo.members && (
+            <div className="flex -space-x-2 mt-1">
+              {groupInfo.members.slice(0, 6).map((member) => (
+                <img
+                  key={member._id}
+                  src={getImageUrl(member.profilePic) || "/default-avatar.png"}
+                  alt={member.name}
+                  className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-white object-cover"
+                  title={member.name}
+                />
+              ))}
+              {groupInfo.members.length > 6 && (
+                <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-300 text-gray-700 text-[10px] sm:text-xs flex items-center justify-center rounded-full border-2 border-white">
+                  +{groupInfo.members.length - 6}
+                </div>
+              )}
+            </div>
           )}
         </div>
-        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-          <MoreVertical size={20} className="text-gray-600" />
-        </button>
       </div>
+    )}
+  </div>
+
+  <button className="p-2 hover:bg-gray-100 rounded-full">
+    <MoreVertical size={20} className="text-gray-600" />
+  </button>
+</div>
+
 
       {/* Chat Section */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-900">
+      <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-2 sm:py-4 space-y-3 sm:space-y-4 bg-gray-900">
         {messages.map((msg) => {
-  // Prevent crash if message or sender is missing
   if (!msg || !msg.sender) return null;
-
   const isOwnMessage = msg.sender._id === currentUser?._id;
 
   return (
     <div
       key={msg._id || Math.random()}
-      className={`flex ${isOwnMessage ? "justify-end" : "justify-start"} mb-3`}
+      className={`flex ${isOwnMessage ? "justify-end" : "justify-start"}`}
     >
       <div
         className={`flex flex-col items-${
           isOwnMessage ? "end" : "start"
-        } max-w-xs sm:max-w-sm md:max-w-md`}
+        } max-w-[80%] sm:max-w-[65%] md:max-w-[55%]`}
       >
         <div
           className={`flex items-end space-x-2 ${
@@ -282,53 +311,58 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
           <img
             src={msg.sender.profilePic || "/default-avatar.png"}
             alt="Avatar"
-            className="w-8 h-8 rounded-full object-cover"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover"
           />
 
-          {/* 💬 TEXT / 🎧 AUDIO message */}
           <div
-            className={`px-4 py-2 rounded-2xl text-sm sm:text-base break-words ${
-              isOwnMessage ? "bg-orange-500 text-white" : "bg-orange-400 text-white"
+            className={`group relative px-3 py-2 sm:px-4 sm:py-2 rounded-2xl text-sm sm:text-base break-words ${
+              isOwnMessage
+                ? "bg-orange-500 text-white"
+                : "bg-orange-400 text-white"
             }`}
           >
             {msg.isDeletedForEveryone ? (
-  <p>🚫 This message was deleted</p>
-) : msg.type === "audio" ? (
-  <audio controls src={msg.audioUrl} className="w-48" />
-) : (
-  <p>{msg.content}</p>
-)}
+              <p>🚫 This message was deleted</p>
+            ) : msg.type === "audio" ? (
+              <audio controls src={msg.audioUrl} className="w-40 sm:w-48" />
+            ) : (
+              <p>{msg.content}</p>
+            )}
 
-          </div>
-        </div>
-
-        {/* 🗑 Delete options */}
-        {!msg.isDeletedForEveryone && (
-          <div className="flex gap-2 mt-2">
-            <button
-              onClick={() => handleDeleteForMe(msg._id)}
-              className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded"
-            >
-              Delete for Me
-            </button>
-            {isOwnMessage && (
-              <button
-                onClick={() => handleDeleteForEveryone(msg._id)}
-                className="text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
+            {/* 🗑 Hover Delete Buttons */}
+            {!msg.isDeletedForEveryone && (
+              <div
+                className="absolute left-1/2 -translate-x-1/2 translate-y-2 opacity-0 
+                group-hover:translate-y-0 group-hover:opacity-100 
+                transition-all duration-200 flex flex-col gap-2 mt-1 bg-gray-800 p-1 rounded-lg shadow-lg z-10"
               >
-                Delete for Everyone
-              </button>
+                <button
+                  onClick={() => handleDeleteForMe(msg._id)}
+                  className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded"
+                >
+                  Delete for Me
+                </button>
+                {isOwnMessage && (
+                  <button
+                    onClick={() => handleDeleteForEveryone(msg._id)}
+                    className="text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
+                  >
+                    Delete for Everyone
+                  </button>
+                )}
+              </div>
             )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
 })}
 
 
+
         {typingUsers.length > 0 && (
-          <p className="text-gray-400 text-sm">
+          <p className="text-gray-400 text-xs sm:text-sm">
             {typingUsers.length} user(s) typing...
           </p>
         )}
@@ -336,7 +370,7 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
       </div>
 
       {/* Footer Input */}
-      <div className="p-4 bg-gray-900 flex items-center space-x-3 border-t border-gray-800">
+      <div className="p-3 sm:p-4 bg-gray-900 flex items-center gap-2 sm:gap-3 border-t border-gray-800 sticky bottom-0 z-50">
         <div className="flex-1 relative">
           <input
             type="text"
@@ -344,25 +378,24 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
             value={message}
             onChange={handleTyping}
             onKeyPress={handleKeyPress}
-            className="w-full bg-gray-800 text-white px-4 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-400 text-sm sm:text-base"
+            className="w-full bg-gray-800 text-white px-4 py-2 sm:py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-400 text-sm sm:text-base"
           />
           <button className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-700 rounded-full">
             <Paperclip size={18} className="text-gray-400" />
           </button>
         </div>
 
-        {/* 🎙️ Record / Stop button */}
         {!isRecording ? (
           <button
             onClick={startRecording}
-            className="p-3 bg-orange-500 rounded-full hover:bg-orange-600"
+            className="p-2 sm:p-3 bg-orange-500 rounded-full hover:bg-orange-600"
           >
             🎙️
           </button>
         ) : (
           <button
             onClick={stopRecording}
-            className="p-3 bg-red-600 rounded-full hover:bg-red-700"
+            className="p-2 sm:p-3 bg-red-600 rounded-full hover:bg-red-700"
           >
             ⏹️
           </button>
@@ -370,9 +403,9 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
 
         <button
           onClick={handleSendMessage}
-          className="p-3 bg-orange-500 rounded-full hover:bg-orange-600"
+          className="p-2 sm:p-3 bg-orange-500 rounded-full hover:bg-orange-600"
         >
-          <Send size={20} className="text-white" />
+          <Send size={18} className="text-white" />
         </button>
       </div>
     </div>
