@@ -107,9 +107,6 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
     }
   };
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   // 📨 Send text message
   const handleSendMessage = async () => {
