@@ -231,7 +231,7 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
   return (
     <div className="flex flex-col h-[100vh] bg-gray-900 fixed inset-0 md:left-[16%]">
       {/* Header */}
-<div className="bg-white/90 backdrop-blur mt-16 border-b shadow-sm p-3 sm:p-4 flex items-center justify-between sticky top-0 z-50 w-full">
+<div className="bg-white/90 backdrop-blur mt-24 border-b shadow-sm p-3 sm:p-4 flex items-center justify-between sticky top-0 z-50 w-full">
 
   <div className="flex items-center space-x-3 sm:space-x-4">
     <button
@@ -258,7 +258,7 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
           </h2>
 
           {/* Group Members Avatars */}
-          {groupInfo.members && (
+          {/* {groupInfo.members && (
             <div className="flex -space-x-2 mt-1">
               {groupInfo.members.slice(0, 6).map((member) => (
                 <img
@@ -275,7 +275,7 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
                 </div>
               )}
             </div>
-          )}
+          )} */}
         </div>
       </div>
     )}
