@@ -212,7 +212,7 @@ const Notifications = () => {
       </div>
 
       {/* Notification Type Cards */}
-      <div className="w-full bg-[#2A2A2A] grid grid-cols-2 p-3 lg:grid-cols-4 gap-3 md:gap-4">
+      <div className="w-full bg-[#2A2A2A] grid grid-cols-2 p-3 lg:grid-cols-3 gap-3 md:gap-4">
         <NotificationTypeCard
           icon={Users}
           title="New Matches"
@@ -230,12 +230,6 @@ const Notifications = () => {
           title="Messages"
           count={counts.messages}
           color="bg-[#F77128]"
-        />
-        <NotificationTypeCard
-          icon={RotateCcw}
-          title="Updates"
-          count={counts.updates}
-          color="bg-[#EFAC16]"
         />
       </div>
 
