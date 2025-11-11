@@ -9,6 +9,7 @@ const ProjectsDashboard = () => {
   const [acceptedCollabs, setAcceptedCollabs] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedCollab, setSelectedCollab] = useState(null);
+  const [loading, setLoading] = useState(false); 
 
   useEffect(() => {
     if (activeView === "projects") {
@@ -18,6 +19,7 @@ const ProjectsDashboard = () => {
 
   const fetchUserAndCollabs = async () => {
     try {
+      setLoading(true); 
       const userRes = await getCurrentUser();
       console.log("Fetched current user:", userRes.data.user);
       setCurrentUser(userRes.data.user);
@@ -30,13 +32,14 @@ const ProjectsDashboard = () => {
       setAcceptedCollabs(activeCollabs);
     } catch (error) {
       console.error("Error fetching collaborations:", error);
+    } finally {
+      setLoading(false); 
     }
   };
 
   return (
     <div className="p-6 max-w-5xl mt-24 mx-auto">
       {/* Header */}
-      {/* <CollabReqAcceptReject /> */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">
           {activeView === "projects"
@@ -45,28 +48,19 @@ const ProjectsDashboard = () => {
             ? "File Sharing"
             : "Collaboration Requests"}
         </h1>
-
-        {/* {activeView === "projects" ? (
-          <button
-            onClick={() => setActiveView("collaborationRequests")}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Collaboration Requests
-          </button>
-        ) : (
-          <button
-            onClick={() => setActiveView("projects")}
-            className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
-          >
-            Back to Projects
-          </button>
-        )} */}
       </div>
 
       {/* === Projects View === */}
       {activeView === "projects" && (
         <>
-          {acceptedCollabs.length > 0 ? (
+          {loading ? (
+            <div className="flex flex-col items-center justify-center mt-20 space-y-3">
+              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-gray-500 text-center animate-pulse">
+                Loading Projects for you, please wait...
+              </p>
+            </div>
+          ) : acceptedCollabs.length > 0 ? (
             <div className="space-y-4">
               {acceptedCollabs.map((collab) => {
                 if (!currentUser) return null;
@@ -100,7 +94,6 @@ const ProjectsDashboard = () => {
                       </p>
                     </div>
 
-                    {/* Right arrow → switch to file sharing */}
                     <div
                       className="w-1/12 flex justify-end cursor-pointer"
                       onClick={() => {
@@ -124,17 +117,25 @@ const ProjectsDashboard = () => {
 
       {/* === FileSharing View === */}
       {activeView === "filesharing" && selectedCollab && currentUser && (
-        <FileSharing collab={selectedCollab} currentUser={currentUser} onBack={() => setActiveView("projects")} />
+        <FileSharing
+          collab={selectedCollab}
+          currentUser={currentUser}
+          onBack={() => setActiveView("projects")}
+        />
       )}
 
       {/* === Collaboration Requests === */}
-      {/* {activeView === "collaborationRequests" && <CollabReqAcceptReject />} */}
       {activeView === "collaborationRequests" && currentUser && (
-  <CollabReqAcceptReject currentUser={currentUser} />
-)}
-
+        <CollabReqAcceptReject currentUser={currentUser} />
+      )}
     </div>
   );
 };
 
 export default ProjectsDashboard;
+
+
+
+
+
+

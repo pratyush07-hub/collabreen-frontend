@@ -96,7 +96,7 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
         getGroupMessages(groupId),
       ]);
 
-        setGroupInfo(groupRes.data);
+      setGroupInfo(groupRes.data);
       if (msgRes.data.success)
         setMessages(msgRes.data.data || msgRes.data.messages || []);
     } catch (err) {
@@ -106,7 +106,6 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
       scrollToBottom();
     }
   };
-
 
   // 📨 Send text message
   const handleSendMessage = async () => {
@@ -152,24 +151,23 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
   };
 
   const handleDeleteForEveryone = async (id) => {
-  try {
-    await deleteGroupMessageForEveryone(id);
-    setMessages((prev) =>
-      prev.map((m) =>
-        m._id === id
-          ? {
-              ...m,
-              isDeletedForEveryone: true,
-              content: "🚫 This message was deleted",
-            }
-          : m
-      )
-    );
-  } catch (err) {
-    console.error(err);
-  }
-};
-
+    try {
+      await deleteGroupMessageForEveryone(id);
+      setMessages((prev) =>
+        prev.map((m) =>
+          m._id === id
+            ? {
+                ...m,
+                isDeletedForEveryone: true,
+                content: "🚫 This message was deleted",
+              }
+            : m
+        )
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // 🎙️ Record Audio Logic
   const startRecording = async () => {
@@ -233,36 +231,35 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
     );
 
   return (
-    <div className="flex flex-col h-[100vh] bg-gray-900 fixed inset-0 md:left-[16%]">
+    <div className="flex flex-col h-[100vh] bg-gray-900 fixed inset-0 md:left-[16%] overflow-x-hidden">
       {/* Header */}
-<div className="bg-white/90 backdrop-blur mt-24 border-b shadow-sm p-3 sm:p-4 flex items-center justify-between sticky top-0 z-50 w-full">
+      <div className="bg-white/90 backdrop-blur mt-24 border-b shadow-sm p-3 sm:p-4 flex items-center justify-between sticky top-0 z-50 w-full overflow-x-hidden">
+        <div className="flex items-center space-x-3 sm:space-x-4">
+          <button
+            onClick={onBack}
+            className="p-1 sm:p-2 hover:bg-gray-100 rounded-full"
+          >
+            <ArrowLeft size={20} className="text-gray-600" />
+          </button>
 
-  <div className="flex items-center space-x-3 sm:space-x-4">
-    <button
-      onClick={onBack}
-      className="p-1 sm:p-2 hover:bg-gray-100 rounded-full"
-    >
-      <ArrowLeft size={20} className="text-gray-600" />
-    </button>
+          {groupInfo && (
+            <div className="flex items-center space-x-3">
+              {/* Group Image */}
+              {/* <p>{groupInfo}</p> */}
+              <img
+                src={groupInfo.image || "/default-group.png"}
+                alt={groupInfo.name}
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
+              />
 
-    {groupInfo && (
-      <div className="flex items-center space-x-3">
-        {/* Group Image */}
-        {/* <p>{groupInfo}</p> */}
-        <img
-          src={groupInfo.image || "/default-group.png"}
-          alt={groupInfo.name}
-          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
-        />
+              <div className="flex flex-col">
+                {/* Group Name */}
+                <h2 className="font-semibold text-sm sm:text-base text-gray-900">
+                  {groupInfo.name}
+                </h2>
 
-        <div className="flex flex-col">
-          {/* Group Name */}
-          <h2 className="font-semibold text-sm sm:text-base text-gray-900">
-            {groupInfo.name}
-          </h2>
-
-          {/* Group Members Avatars */}
-          {/* {groupInfo.members && (
+                {/* Group Members Avatars */}
+                {/* {groupInfo.members && (
             <div className="flex -space-x-2 mt-1">
               {groupInfo.members.slice(0, 6).map((member) => (
                 <img
@@ -280,90 +277,93 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
               )}
             </div>
           )} */}
+              </div>
+            </div>
+          )}
         </div>
+
+        <button className="p-2 hover:bg-gray-100 rounded-full">
+          <MoreVertical size={20} className="text-gray-600" />
+        </button>
       </div>
-    )}
-  </div>
-
-  <button className="p-2 hover:bg-gray-100 rounded-full">
-    <MoreVertical size={20} className="text-gray-600" />
-  </button>
-</div>
-
 
       {/* Chat Section */}
-      <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-2 sm:py-4 space-y-3 sm:space-y-4 bg-gray-900">
+      <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-2 sm:py-4 space-y-3 sm:space-y-4 bg-gray-900 overflow-x-hidden">
         {messages.map((msg) => {
-  if (!msg || !msg.sender) return null;
-  const isOwnMessage = msg.sender._id === currentUser?._id;
+          if (!msg || !msg.sender) return null;
+          const isOwnMessage = msg.sender._id === currentUser?._id;
 
-  return (
-    <div
-      key={msg._id || Math.random()}
-      className={`flex ${isOwnMessage ? "justify-end" : "justify-start"}`}
-    >
-      <div
-        className={`flex flex-col items-${
-          isOwnMessage ? "end" : "start"
-        } max-w-[80%] sm:max-w-[65%] md:max-w-[55%]`}
-      >
-        <div
-          className={`flex items-end space-x-2 ${
-            isOwnMessage ? "flex-row-reverse space-x-reverse" : ""
-          }`}
-        >
-          <img
-            src={msg.sender.profilePic || "/default-avatar.png"}
-            alt="Avatar"
-            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover"
-          />
-
-          <div
-            className={`group relative px-3 py-2 sm:px-4 sm:py-2 rounded-2xl text-sm sm:text-base break-words ${
-              isOwnMessage
-                ? "bg-orange-500 text-white"
-                : "bg-orange-400 text-white"
-            }`}
-          >
-            {msg.isDeletedForEveryone ? (
-              <p>🚫 This message was deleted</p>
-            ) : msg.type === "audio" ? (
-              <audio controls src={msg.audioUrl} className="w-40 sm:w-48" />
-            ) : (
-              <p>{msg.content}</p>
-            )}
-
-            {/* 🗑 Hover Delete Buttons */}
-            {!msg.isDeletedForEveryone && (
+          return (
+            <div
+              key={msg._id || Math.random()}
+              className={`flex ${
+                isOwnMessage ? "justify-end" : "justify-start"
+              }`}
+            >
               <div
-                className="absolute left-1/2 -translate-x-1/2 translate-y-2 opacity-0 
+                className={`flex flex-col items-${
+                  isOwnMessage ? "end" : "start"
+                } max-w-[80%] sm:max-w-[65%] md:max-w-[55%]`}
+              >
+                <div
+                  className={`flex items-end space-x-2 ${
+                    isOwnMessage ? "flex-row-reverse space-x-reverse" : ""
+                  }`}
+                >
+                  <img
+                    src={msg.sender.profilePic || "/default-avatar.png"}
+                    alt="Avatar"
+                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover"
+                  />
+
+                  <div
+                    className={`group relative px-3 py-2 sm:px-4 sm:py-2 rounded-2xl text-sm sm:text-base break-words ${
+                      isOwnMessage
+                        ? "bg-orange-500 text-white"
+                        : "bg-orange-400 text-white"
+                    }`}
+                  >
+                    {msg.isDeletedForEveryone ? (
+                      <p>🚫 This message was deleted</p>
+                    ) : msg.type === "audio" ? (
+                      <audio
+                        controls
+                        src={msg.audioUrl}
+                        className="w-40 sm:w-48"
+                      />
+                    ) : (
+                      <p>{msg.content}</p>
+                    )}
+
+                    {/* 🗑 Hover Delete Buttons */}
+                    {!msg.isDeletedForEveryone && (
+                      <div
+                        className="absolute left-1/2 -translate-x-1/2 translate-y-2 opacity-0 
                 group-hover:translate-y-0 group-hover:opacity-100 
                 transition-all duration-200 flex flex-col gap-2 mt-1 bg-gray-800 p-1 rounded-lg shadow-lg z-10"
-              >
-                <button
-                  onClick={() => handleDeleteForMe(msg._id)}
-                  className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded"
-                >
-                  Delete for Me
-                </button>
-                {isOwnMessage && (
-                  <button
-                    onClick={() => handleDeleteForEveryone(msg._id)}
-                    className="text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
-                  >
-                    Delete for Everyone
-                  </button>
-                )}
+                      >
+                        <button
+                          onClick={() => handleDeleteForMe(msg._id)}
+                          className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded"
+                        >
+                          Delete for Me
+                        </button>
+                        {isOwnMessage && (
+                          <button
+                            onClick={() => handleDeleteForEveryone(msg._id)}
+                            className="text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
+                          >
+                            Delete for Everyone
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-})}
-
-
+            </div>
+          );
+        })}
 
         {typingUsers.length > 0 && (
           <p className="text-gray-400 text-xs sm:text-sm">

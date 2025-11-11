@@ -35,7 +35,8 @@ const CreateNewGroupPage = ({ currentUser, onBack, refreshGroups }) => {
         createdBy: currentUser._id,
         privacy: isPrivate ? "private" : "public",
       };
-      await createGroup(data);
+      const createdGroup = await createGroup(data);
+      console.log("created group", createdGroup)
       setFormData({ name: "", description: "", category: "", image: null });
       setIsPrivate(false);
       refreshGroups();
@@ -160,31 +161,41 @@ const CreateNewGroupPage = ({ currentUser, onBack, refreshGroups }) => {
               </div>
 
               {/* Privacy Section */}
-              <div className="bg-gray-50 border rounded-lg p-4 sm:p-6 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gray-200 rounded-full">
-                    <Globe className="text-gray-700" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Privacy & Settings</h3>
-                    <p className="text-sm text-gray-500">
-                      Choose if your group will be public or private
-                    </p>
-                  </div>
-                </div>
-                <div
-                  onClick={() => setIsPrivate(!isPrivate)}
-                  className={`w-14 h-7 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-                    isPrivate ? "bg-gray-400" : "bg-green-500"
-                  }`}
-                >
-                  <div
-                    className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform ${
-                      isPrivate ? "translate-x-0" : "translate-x-7"
-                    }`}
-                  />
-                </div>
-              </div>
+<div className="bg-gray-50 border rounded-lg p-4 sm:p-6 flex flex-col gap-3">
+  <div className="flex items-center justify-between">
+    <div className="flex items-center gap-3">
+      <div className="p-2 bg-gray-200 rounded-full">
+        <Globe className="text-gray-700" />
+      </div>
+      <div>
+        <h3 className="font-semibold">Privacy & Settings</h3>
+        <p className="text-sm text-gray-500">
+          Choose if your group will be public or private
+        </p>
+      </div>
+    </div>
+    <div
+      onClick={() => setIsPrivate(!isPrivate)}
+      className={`w-14 h-7 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
+        isPrivate ? "bg-green-500" : "bg-gray-400"
+      }`}
+    >
+      <div
+        className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform ${
+          isPrivate ? "translate-x-7" : "translate-x-0"
+        }`}
+      />
+    </div>
+  </div>
+
+  {/* Message below toggle */}
+  {isPrivate && (
+    <p className="text-green-600 text-sm px-2 mt-2 font-medium">
+      🔒 This group is now private.
+    </p>
+  )}
+</div>
+
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
