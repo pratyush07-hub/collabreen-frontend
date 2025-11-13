@@ -272,9 +272,10 @@ export default function ProfileSetup({ onSetupComplete }) {
             });
 
             const response = await api.post('/creatorprofiles/setup', submitData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
+                headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${token}` },
             });
 
+            console.log(response)
             if (response.data.success) {
                 onSetupComplete();
                 alert('Profile setup complete!');

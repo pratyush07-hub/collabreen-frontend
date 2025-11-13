@@ -33,6 +33,8 @@ import CollabReqAcceptReject from "./components/Dashboard/CreatorToCreator/Colla
 import About from "./components/Landing/About";
 import ProfileEdit from "./components/Dashboard/CreatorToCreator/ProfileEdit";
 import ProfilePreview from "./components/Dashboard/CreatorToCreator/ProfilePreview";
+import AdminDashboard from "./admin-dash/AdminDashboard.jsx";
+
 
 function App() {
   const location = useLocation();
@@ -42,10 +44,11 @@ function App() {
     "/influencerdashboard",
     "/influencerdashboard/editprofile",
     "/creator-to-creator",
+    "/admin-dashboard",
+    "/edit-profile"
   ];
 
   const navigate = useNavigate();
-  
 
   return (
     <>
@@ -57,32 +60,64 @@ function App() {
         <Route exact path="/signup" element={<Signup />} />
         <Route exact path="/signin" element={<Signin />} />
         <Route exact path="/register-as" element={<RegisterAs />} />
-        <Route exact path="/influencer-register" element={<InfluencerSignup />} />
+        <Route
+          exact
+          path="/influencer-register"
+          element={<InfluencerSignup />}
+        />
         <Route exact path="/brand-register" element={<BrandSignup />} />
         <Route exact path="/profile" element={<Profile />} />
         <Route exact path="/ProfileDashboard" element={<DashboardLanding />} />
         <Route exact path="/BrandDashBoard" element={<BrandDashBoard />} />
-        <Route exact path="/influencer-insights" element={<InfluencerInsights />} />
-        <Route exact path="/campaign-register" element={<CampaignRegistration />} />
+        <Route
+          exact
+          path="/influencer-insights"
+          element={<InfluencerInsights />}
+        />
+        <Route
+          exact
+          path="/campaign-register"
+          element={<CampaignRegistration />}
+        />
         <Route exact path="/budget-planing" element={<BudgetPlaning />} />
         <Route exact path="/plans" element={<Plans />} />
         <Route exact path="/schedule-meeting" element={<ScheduleMeeting />} />
-        <Route exact path="/services/influencer-plans" element={<InfluencerPlans />} />
+        <Route
+          exact
+          path="/services/influencer-plans"
+          element={<InfluencerPlans />}
+        />
         <Route exact path="/services/payments" element={<Payment />} />
-        <Route exact path="/services/payment/influencer" element={<PayInfluencer />} />
+        <Route
+          exact
+          path="/services/payment/influencer"
+          element={<PayInfluencer />}
+        />
         <Route exact path="/blogs" element={<Blogs />} />
         <Route exact path="/blog" element={<Blog />} />
         <Route exact path="/kk" element={<CollabReqAcceptReject />} />
 
         {/* Influencer Dashboard */}
-        <Route exact path="/influencerdashboard" element={<InfluencerDashboardPage />} />
-        <Route exact path="/influencerdashboard/editprofile" element={<EditProfile />} />
+        <Route
+          exact
+          path="/influencerdashboard"
+          element={<InfluencerDashboardPage />}
+        />
+        <Route
+          exact
+          path="/influencerdashboard/editprofile"
+          element={<EditProfile />}
+        />
 
         {/* Creator-to-Creator */}
         <Route
-  path="/edit-profile"
-  element={<ProfileEdit onEditComplete={() => navigate('/creator-to-creator')} />}
-/>
+          path="/edit-profile"
+          element={
+            <ProfileEdit
+              onEditComplete={() => navigate("/creator-to-creator")}
+            />
+          }
+        />
         <Route exact path="/profile-preview" element={<ProfilePreview />} />
 
         <Route
@@ -96,6 +131,9 @@ function App() {
         />
 
         <Route exact path="/dashboard" element={<DashboardLanding />} />
+
+        {/* adminRoutes */}
+        <Route exact path="/admin-dashboard" element={<AdminDashboard />} />
       </Routes>
     </>
   );
