@@ -1178,14 +1178,13 @@ export default function ChatWindow({ chatId, onBack }) {
       </div>
 
       {/* Collaboration Modal */}
-      {chatInfo && (
-        <CollaborationModal
-          isOpen={showCollaborationModal}
-          onClose={() => setShowCollaborationModal(false)}
-          recipientName={chatInfo.name || " "}
-          chatId={chatId || " "}
-        />
-      )}
+      <CollaborationModal
+  isOpen={showCollaborationModal}
+  onClose={() => setShowCollaborationModal(false)}
+  recipientName={chatInfo?.name || "Collaborator"}
+  chatId={chatId}
+/>
+
     </div>
   );
 }

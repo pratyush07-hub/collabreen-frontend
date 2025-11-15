@@ -402,10 +402,10 @@ export default function ProfileCard({
 
   // ---------- Desktop Layout ----------
   const DesktopView = () => (
-    <div className="hidden lg:flex justify-center items-start w-full bg-white min-h-screen mt-12 rounded-2xl shadow-lg">
+    <div className="hidden lg:flex justify-center items-start w-full bg-white rounded-2xl shadow-lg">
       <div className="w-full max-w-6xl h-full rounded-2xl flex flex-col">
         {/* Search & Filter */}
-        <div className="flex items-center justify-between gap-6 p-6 border-b border-gray-200">
+        {/* <div className="flex items-center justify-between gap-6 p-6 border-b border-gray-200">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black" size={20} />
             <input
@@ -428,7 +428,7 @@ export default function ProfileCard({
             onClose={() => setShowFilterModal(false)}
             onApplyFilters={(filters) => console.log("Applied filters:", filters)}
           />
-        )}
+        )} */}
 
         {/* Scrollable Content */}
         <div className="flex-1 p-6 space-y-6">
@@ -600,9 +600,9 @@ export default function ProfileCard({
   
   const MobileView = () => (
 
-  <div className="lg:hidden w-full bg-white mt-6 pt-16 rounded-2xl overflow-hidden shadow-lg flex flex-col min-h-screen">
+  <div className="lg:hidden w-full bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col min-h-screen">
     {/* Search & Filter */}
-    <div className="flex items-center justify-between gap-2 px-4 pb-3 border-b border-gray-200">
+    {/* <div className="flex items-center justify-between gap-2 px-4 pb-3 border-b border-gray-200">
       <div className="flex-1 relative">
         <Search
           className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black"
@@ -628,7 +628,7 @@ export default function ProfileCard({
         onClose={() => setShowFilterModal(false)}
         onApplyFilters={(filters) => console.log("Applied filters:", filters)}
       />
-    )}
+    )} */}
 
     {/* Banner Section */}
     <div className="relative h-40 w-full">

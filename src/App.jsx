@@ -34,6 +34,10 @@ import About from "./components/Landing/About";
 import ProfileEdit from "./components/Dashboard/CreatorToCreator/ProfileEdit";
 import ProfilePreview from "./components/Dashboard/CreatorToCreator/ProfilePreview";
 import AdminDashboard from "./admin-dash/AdminDashboard.jsx";
+import UsersPage from "./admin-dash/UsersPage.jsx";
+import CreatorsPage from "./admin-dash/CreatorsPage.jsx";
+import Matches from "./admin-dash/Matches.jsx";
+import Communities from "./admin-dash/Communities.jsx";
 
 
 function App() {
@@ -45,7 +49,12 @@ function App() {
     "/influencerdashboard/editprofile",
     "/creator-to-creator",
     "/admin-dashboard",
-    "/edit-profile"
+    "/edit-profile",
+    "/all-users",
+    "/all-creators",
+    "/matches",
+    "/communities",
+    "/payments",
   ];
 
   const navigate = useNavigate();
@@ -134,6 +143,12 @@ function App() {
 
         {/* adminRoutes */}
         <Route exact path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/all-users" element={<UsersPage />} />
+        <Route path="/all-creators" element={<CreatorsPage />} />
+        <Route path="/matches" element={<Matches />} />
+        <Route path="/communities" element={<Communities />} />
+        <Route path="/payments" element={<Payment />} />
+
       </Routes>
     </>
   );

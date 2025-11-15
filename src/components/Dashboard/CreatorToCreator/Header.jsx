@@ -77,6 +77,7 @@ import logo from "../../../assets/Winkizlogo.png";
 import getImageUrl from "../../utils/getImgUrl/getImgUrl";
 
 export default function Header({ user, onNotificationsClick, onHamburgerClick, onProfileClick, }) {
+  // console.log("Header user prop:", user);
   return (
     <div className="fixed top-0 left-0 w-full z-50 bg-[#0c0c0c] border-b border-gray-600 p-4 flex justify-between items-center h-[10vh]">
       {/* Logo */}

@@ -211,27 +211,30 @@ const Notifications = () => {
         </h1>
       </div>
 
-      {/* Notification Type Cards */}
-      <div className="w-full bg-[#2A2A2A] grid grid-cols-2 p-3 lg:grid-cols-3 gap-3 md:gap-4">
-        <NotificationTypeCard
-          icon={Users}
-          title="New Matches"
-          count={counts.matches}
-          color="bg-[#F5ADB2]"
-        />
-        <NotificationTypeCard
-          icon={Diamond}
-          title="Collaborations"
-          count={counts.collaborations}
-          color="bg-[#93B076]"
-        />
-        <NotificationTypeCard
-          icon={MessageSquare}
-          title="Messages"
-          count={counts.messages}
-          color="bg-[#F77128]"
-        />
-      </div>
+      <div className="w-full bg-[#2A2A2A] grid grid-cols-2 p-4 lg:grid-cols-3 gap-4 md:gap-6">
+
+  <NotificationTypeCard
+    icon={Users}
+    title="New Matches"
+    count={counts.matches}
+    color="bg-[#FF8892]"
+  />
+
+  <NotificationTypeCard
+    icon={Diamond}
+    title="Collaboration Requests"
+    count={counts.collaborations}
+    color="bg-[#93B076]"
+  />
+
+  <NotificationTypeCard
+    icon={MessageSquare}
+    title="Unread Messages"
+    count={counts.messages}
+    color="bg-[#F77128]"
+  />
+
+</div>
 
       {/* Notification Feed */}
       <div className="min-h-screen bg-[#1F1F22] p-4 md:p-6 lg:p-8">
