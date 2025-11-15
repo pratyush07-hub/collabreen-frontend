@@ -108,7 +108,7 @@ const Communities = () => {
         </div>
 
         {/* Communities Table */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-md border border-gray-600">
           <table className="w-full text-left min-w-[700px] md:min-w-[900px]">
             <thead className="bg-[rgb(36,46,71)] text-gray-300">
               <tr>
@@ -126,7 +126,7 @@ const Communities = () => {
               {currentCommunities.map((community) => (
                 <tr
                   key={community.id}
-                  className="bg-[#1b2333] hover:bg-[rgb(36,46,71)] cursor-pointer transition"
+                  className="hover:bg-[rgb(36,46,71)] cursor-pointer transition"
                 >
                   <td className="p-2 md:p-3">{community.name}</td>
                   <td className="p-2 md:p-3">{community.owner}</td>
