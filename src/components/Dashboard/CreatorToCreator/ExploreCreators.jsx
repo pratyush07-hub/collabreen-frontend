@@ -1,34 +1,30 @@
 import React, { useEffect, useState } from "react";
 import ProfileCard from "./ProfileCard";
-import FilterModal from "./FilterModal"; // <-- Make sure this exists
 import {
   getAllProfiles,
   likeProfile,
   getPendingLikeRequests,
   getOrCreateChat,
 } from "../../../api/client";
-import { Search, Filter } from "lucide-react"; // <-- Filter Imported
 
 export default function ExploreCreators() {
   const [profiles, setProfiles] = useState([]);
-  const [filteredProfiles, setFilteredProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [incomingRequests, setIncomingRequests] = useState([]);
   const [likedProfiles, setLikedProfiles] = useState(
     () => JSON.parse(localStorage.getItem("likedProfiles") || "[]")
   );
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [search, setSearch] = useState("");
-  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch profiles
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
         const res = await getAllProfiles();
+        console.log("Fetched profiles:", res.data.profiles);
         if (res.data.success) {
           setProfiles(res.data.profiles);
-          setFilteredProfiles(res.data.profiles);
         }
       } catch (err) {
         console.error("Error fetching profiles:", err);
@@ -40,27 +36,7 @@ export default function ExploreCreators() {
     fetchProfiles();
   }, []);
 
-  // Filter profiles by search
-  useEffect(() => {
-  const q = search.toLowerCase();
-
-  const results = profiles.filter((p) => {
-    const name = p.user?.name?.toLowerCase() || "";
-    const location = p.location?.toLowerCase() || "";
-    const skills = (p.skills || []).join(" ").toLowerCase();
-
-    const isAlreadyLiked = likedProfiles.includes(String(p.user._id));
-
-    return (
-      !isAlreadyLiked && (name.includes(q) || location.includes(q) || skills.includes(q))
-    );
-  });
-
-  setFilteredProfiles(results);
-  setCurrentIndex(0);
-}, [search, profiles, likedProfiles]);
-
-  // Check pending requests
+  // Poll for pending like requests
   useEffect(() => {
     const fetchRequests = async () => {
       try {
@@ -85,6 +61,8 @@ export default function ExploreCreators() {
   };
 
   const showNextProfile = () => setCurrentIndex((prev) => prev + 1);
+  const showPreviousProfile = () =>
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : 0));
 
   const handleLike = async (profileId) => {
     try {
@@ -110,79 +88,67 @@ export default function ExploreCreators() {
     }
   };
 
-  if (loading) return <div className="pt-32">⏳ Loading profiles...</div>;
-
-  if (!filteredProfiles.length)
-  return (
-    <div className="flex flex-col h-screen w-full justify-center items-center pt-32 space-y-4">
-      <p className="text-lg font-semibold">😢 No profiles match your search!</p>
-
-      <button
-        onClick={() => setSearch("")}
-        className="px-6 py-2 border-2 border-[#93B076] rounded-full text-black hover:bg-[#93B076] hover:text-white transition"
-      >
-        🔙 Back
-      </button>
-    </div>
-  );
-
-  if (currentIndex >= filteredProfiles.length)
+  // ---------- Search Logic ----------
+  const filteredProfiles = profiles.filter((profile) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
     return (
-      <div className="flex h-screen w-full justify-center items-center pt-32">
+      profile.user?.name?.toLowerCase().includes(query) ||
+      profile.location?.toLowerCase().includes(query) ||
+      profile.skills?.some((skill) => skill.toLowerCase().includes(query))
+    );
+  });
+
+  const currentFilteredIndex =
+    currentIndex < filteredProfiles.length ? currentIndex : 0;
+  const currentProfile = filteredProfiles[currentFilteredIndex];
+
+  if (loading) return <div>⏳ Loading profiles...</div>;
+  if (!profiles.length)
+    return (
+      <div className="flex h-screen w-full justify-center items-center">
         <p>🎉 No more profiles!</p>
       </div>
     );
 
-  const currentProfile = filteredProfiles[currentIndex];
-
   return (
-    <div className="w-full flex flex-col items-center pt-24 space-y-6">
-
-      {/* 🔍 SEARCH BAR + FILTER BUTTON */}
-      <div className="flex items-center justify-between gap-4 px-6 w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-6xl">
-        <div className="flex-1 relative">
-          <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black"
-            size={20}
-          />
-          <input
-            type="text"
-            placeholder="Search by name, skill, location..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-black border-2 border-[#93B076] rounded-full focus:border-[#93B076] outline-none"
-          />
-        </div>
-
-        {/* FILTER BUTTON */}
-        <button
-          onClick={() => setShowFilterModal(true)}
-          className="p-3 border-2 border-[#93B076] rounded-lg hover:bg-gray-50 transition"
-        >
-          <Filter size={20} className="text-black" />
-        </button>
+    <div className="w-full flex flex-col items-center mt-24 space-y-4">
+      {/* Search Input */}
+      <div className="w-full flex justify-center mb-2">
+        <input
+          type="text"
+          placeholder="Search by name, skill, location..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setCurrentIndex(0); // reset index when search changes
+          }}
+          className="w-full max-w-6xl px-4 py-2 border-2 border-[#93B076] rounded-full focus:outline-none focus:border-[#93B076]"
+        />
       </div>
 
-      {/* FILTER MODAL */}
-      {showFilterModal && (
-        <FilterModal
-          isOpen={showFilterModal}
-          onClose={() => setShowFilterModal(false)}
-          onApplyFilters={(filters) => {
-            console.log("Applied Filters:", filters);
-            setShowFilterModal(false);
-          }}
-        />
+      {/* Back Button (only for search navigation) */}
+      {searchQuery && currentIndex > 0 && filteredProfiles.length > 0 && (
+        <div className="w-full flex justify-center mb-2">
+          <button
+            onClick={showPreviousProfile}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition"
+          >
+            ◀ Back
+          </button>
+        </div>
       )}
 
-      {/* PROFILE CARD */}
-      <ProfileCard
-        key={currentProfile._id}
-        profile={currentProfile}
-        onLike={() => handleLike(currentProfile.user._id)}
-        onDislike={() => handleDislike(currentProfile.user._id)}
-        onStartConversation={() => handleStartChat(currentProfile.user._id)}
-      />
+      {/* Profile Card */}
+      {currentProfile && (
+        <ProfileCard
+          key={currentProfile._id}
+          profile={currentProfile}
+          onLike={() => handleLike(currentProfile.user._id)}
+          onDislike={() => handleDislike(currentProfile.user._id)}
+          onStartConversation={() => handleStartChat(currentProfile.user._id)}
+        />
+      )}
     </div>
   );
 }

@@ -310,6 +310,8 @@ const PhotographerProfile = ({ onNotificationsClick }) => {
   const [formData, setFormData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [updating, setUpdating] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -711,19 +713,64 @@ const PhotographerProfile = ({ onNotificationsClick }) => {
             <div className="flex flex-col items-center sm:items-end mt-4 sm:mt-16 gap-3 sm:gap-4">
   {/* First Row */}
   <div className="flex flex-col sm:flex-row justify-center lg:justify-end gap-3 sm:gap-4">
-    <button className="px-4 sm:px-6 py-2 border-2 flex gap-2 items-center justify-center border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50">
-      <div className="w-2 h-2 bg-[#93B076] mt-1 rounded-full"></div>
-      <div className="text-sm sm:text-base">
-        {profileData?.availability || "N/A"}
-      </div>
-    </button>
-    <button
-      onClick={onNotificationsClick}
-      className="px-4 sm:px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50 text-sm sm:text-base"
+  {/* Availability Dropdown styled like a button */}
+  <div className="relative">
+    <select
+      value={profileData?.availability || ""}
+      onChange={async (e) => {
+        const newAvailability = e.target.value;
+        setUpdating(true); // loader state
+        const previousAvailability = profileData?.availability;
+
+        // Optimistically update UI
+        setProfileData((prev) => ({ ...prev, availability: newAvailability }));
+
+        try {
+          const formData = new FormData();
+          formData.append("availability", newAvailability);
+
+          const response = await client.put("/creatorprofiles/update", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+
+          if (!response.data.success) {
+            throw new Error("Update failed");
+          }
+        } catch (err) {
+          console.error("Failed to update availability:", err);
+          alert("Failed to update availability. Please try again.");
+          // Revert to previous value if failed
+          setProfileData((prev) => ({ ...prev, availability: previousAvailability }));
+        } finally {
+          setUpdating(false);
+        }
+      }}
+      className="appearance-none px-4 sm:px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50 text-sm sm:text-base cursor-pointer"
     >
-      Notification
-    </button>
+      <option value="">Select Availability</option>
+      <option value="full-time">Full-time</option>
+      <option value="part-time">Part-time</option>
+      <option value="weekends">Weekends</option>
+      <option value="project-based">Project-based</option>
+    </select>
+
+    {/* Green dot or loader */}
+    {updating ? (
+      <div className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 border-2 border-orange-500 rounded-full border-t-transparent animate-spin"></div>
+    ) : (
+      <div className="absolute right-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-[#93B076] rounded-full"></div>
+    )}
   </div>
+
+  {/* Notification Button */}
+  <button
+    onClick={onNotificationsClick}
+    className="px-4 sm:px-6 py-2 border-2 border-[#EFAC16] text-black rounded-tr-md rounded-bl-md hover:bg-orange-50 text-sm sm:text-base"
+  >
+    Notification
+  </button>
+</div>
+
 
   {/* Second Row */}
   <div className="flex flex-col sm:flex-row justify-center lg:justify-end gap-3 sm:gap-4">
