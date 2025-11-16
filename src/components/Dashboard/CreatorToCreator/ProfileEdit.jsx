@@ -26,6 +26,7 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
     linkedin: "",
     hourlyRate: 0,
     projectRate: 0,
+    lookingFor: "",
     profilePicture: null,
     bannerImage: null,
   });
@@ -56,6 +57,7 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
           linkedin: data.linkedin || "",
           hourlyRate: data.hourlyRate || 0,
           projectRate: data.projectRate || 0,
+          lookingFor: data.lookingFor || "",
           profilePicture: getImageUrl(data.profilePicture),
           bannerImage: getImageUrl(data.bannerImage),
         });
@@ -270,6 +272,20 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
               required
             />
           </div>
+          <div>
+  <label className="block font-medium text-gray-700 mb-2">
+    Looking For
+  </label>
+  <input
+    type="text"
+    name="lookingFor"
+    value={formData.lookingFor}
+    onChange={handleInputChange}
+    placeholder="e.g., collaborations, freelance work, opportunities"
+    className="input-field"
+  />
+</div>
+
 
           {/* Portfolio Link */}
           <div>

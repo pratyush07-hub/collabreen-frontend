@@ -21,18 +21,18 @@ function InfluencerSignup() {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const handleKeyDown = (e, index) => {
-  if (e.key === "Backspace") {
-    // Clear current value
-    const updatedOtp = [...otp];
-    updatedOtp[index] = "";
-    setOtp(updatedOtp);
+    if (e.key === "Backspace") {
+      // Clear current value
+      const updatedOtp = [...otp];
+      updatedOtp[index] = "";
+      setOtp(updatedOtp);
 
-    // Move focus to previous input if not first
-    if (index > 0 && !otp[index]) {
-      inputRefs.current[index - 1].focus();
+      // Move focus to previous input if not first
+      if (index > 0 && !otp[index]) {
+        inputRefs.current[index - 1].focus();
+      }
     }
-  }
-};
+  };
 
   const handleOtpChange = (e, index) => {
     const value = e.target.value;
@@ -56,25 +56,23 @@ function InfluencerSignup() {
     const otpCode = otp.join("");
     console.log(Cookies.get("jwt"));
     try {
-      const response = await fetch(
-        `${BACKEND_URL}/api/influencer/verify`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${Cookies.get("jwt")}`,
-          },
-          body: JSON.stringify({ otpCode }),
-        }
-      );
-    
+      const response = await fetch(`${BACKEND_URL}/api/influencer/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("jwt")}`,
+        },
+        body: JSON.stringify({ otpCode }),
+      });
 
       if (response.ok) {
         const data = await response.json();
         Cookies.set("jwt", data.token);
-    
+
         if (data.msg) {
-          navigate("/influencer-insights" , { state: { userDetails: data.userDetails } });
+          navigate("/influencer-insights", {
+            state: { userDetails: data.userDetails },
+          });
         }
       } else {
         console.error("Registration failed");
@@ -98,17 +96,14 @@ function InfluencerSignup() {
     };
 
     try {
-      const response = await fetch(
-        `${BACKEND_URL}/api/influencer/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${Cookies.get("jwt")}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/api/influencer/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("jwt")}`,
+        },
+        body: JSON.stringify(formData),
+      });
       console.log("Register Response", response);
 
       if (response.ok) {
@@ -120,7 +115,6 @@ function InfluencerSignup() {
     } catch (error) {
       console.error("Error:", error);
     }
-
   };
 
   return (
@@ -207,11 +201,11 @@ function InfluencerSignup() {
             <div className="flex flex-col sm:flex-row gap-4 mb-4">
               <div className="mb-4">
                 <label className="font-roboto font-medium text-lg block">
-                  Country
+                  City/State
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter your country"
+                  placeholder="Enter your city/state"
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
                   className="w-[390px] h-[50px] rounded-br-[30px] rounded-bl-[30px] rounded-tr-[30px] bg-gradient-to-r from-[#4c4c4c] to-[#000]/90 text-white p-2"
@@ -221,13 +215,25 @@ function InfluencerSignup() {
                 <label className="font-roboto font-medium text-lg block">
                   Gender
                 </label>
-                <input
-                  type="text"
-                  placeholder="Enter your Gender"
+
+                <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
                   className="w-[390px] h-[50px] rounded-br-[30px] rounded-bl-[30px] rounded-tr-[30px] bg-gradient-to-r from-[#4c4c4c] to-[#000]/90 text-white p-2"
-                />
+                >
+                  <option value="" className="text-black">
+                    Select Gender
+                  </option>
+                  <option value="male" className="text-black">
+                    Male
+                  </option>
+                  <option value="female" className="text-black">
+                    Female
+                  </option>
+                  <option value="other" className="text-black">
+                    Other
+                  </option>
+                </select>
               </div>
             </div>
 
@@ -276,21 +282,21 @@ function InfluencerSignup() {
                   <h1 className="font-semibold font-sf text-white mt-10 sm:mt-20 mb-4">
                     Enter Code
                   </h1>
-                
-                <div className="flex text-white gap-4 justify-center">
-  {[...Array(6)].map((_, index) => (
-    <input
-      key={index}
-      className="h-[60px] w-[80px] text-xl text-center bg-gradient-to-r from-[#4c4c4c] to-[#000]/90 rounded-br-[30px] rounded-bl-[30px] rounded-tr-[30px]"
-      type="text"
-      maxLength="1"
-      value={otp[index] || ""}
-      ref={(el) => (inputRefs.current[index] = el)}
-      onChange={(e) => handleOtpChange(e, index)}
-      onKeyDown={(e) => handleKeyDown(e, index)}
-    />
-  ))}
-</div>
+
+                  <div className="flex text-white gap-4 justify-center">
+                    {[...Array(6)].map((_, index) => (
+                      <input
+                        key={index}
+                        className="h-[60px] w-[80px] text-xl text-center bg-gradient-to-r from-[#4c4c4c] to-[#000]/90 rounded-br-[30px] rounded-bl-[30px] rounded-tr-[30px]"
+                        type="text"
+                        maxLength="1"
+                        value={otp[index] || ""}
+                        ref={(el) => (inputRefs.current[index] = el)}
+                        onChange={(e) => handleOtpChange(e, index)}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
+                      />
+                    ))}
+                  </div>
 
                   <h1 className="font-semibold font-sf text-green-300 cursor-pointer hover:underline mt-4 text-right">
                     Resend Code

@@ -330,6 +330,7 @@ const PhotographerProfile = ({ onNotificationsClick }) => {
           youtube: response.data.data.youtube || "",
           hourlyRate: response.data.data.hourlyRate || 0,
           projectRate: response.data.data.projectRate || 0,
+          lookingFor: response.data.data.lookingFor || "",
           profilePicture: null,
           bannerImage: null,
         });
@@ -522,17 +523,7 @@ const PhotographerProfile = ({ onNotificationsClick }) => {
 
       <div className="bg-white rounded-lg p-6 border border-[#84868B]">
         <h3 className="text-lg font-semibold mb-4">Looking For</h3>
-        <p className="text-gray-600 mb-4">{profileData?.lookingFor}</p>
-        <div className="flex flex-wrap gap-2">
-          {profileData?.skills?.map((item, index) => (
-            <span
-              key={index}
-              className="px-3 py-1 border border-orange-200 text-orange-600 rounded-full text-sm"
-            >
-              {item}
-            </span>
-          ))}
-        </div>
+        <p className="text-red-600 mb-4">{profileData?.lookingFor}</p>
       </div>
     </div>
   );
@@ -823,7 +814,7 @@ const PhotographerProfile = ({ onNotificationsClick }) => {
           ) : (
             <>
               {activeTab === "profile" && renderProfileContent()}
-              {activeTab === "portfolio" && renderPortfolioContent()}
+              {/* {activeTab === "portfolio" && renderPortfolioContent()} */}
               {activeTab === "status" && renderStatusContent()}
             </>
           )}

@@ -8,7 +8,6 @@
 //     const [isLiked, setIsLiked] = useState(false);
 //     const [showFilterModal, setShowFilterModal] = useState(false);
 
-
 //     const handleLike = () => {
 //         setIsLiked(!isLiked);
 //         onLike(profile.id);
@@ -53,8 +52,6 @@
 //                     <Filter onClick={() => setShowFilterModal(true)} size={20} className="text-gray-600" />
 //                 </button>
 //             </div>
-
-
 
 //             {/* Banner and Profile Image */}
 //             <div className="relative h-48">
@@ -173,7 +170,6 @@
 //         </div>
 //     );
 // }
-
 
 // import React, { useState } from 'react';
 // import { Star, MapPin, Heart, X, Instagram, Linkedin, Filter, Search } from 'lucide-react';
@@ -369,10 +365,10 @@ export default function ProfileCard({
 }) {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  
-//   useEffect(() => {
-//   alert(JSON.stringify(profile.portfolio, null, 2)); // show profile data in alert
-// }, [profile]);
+
+  //   useEffect(() => {
+  //   alert(JSON.stringify(profile.portfolio, null, 2)); // show profile data in alert
+  // }, [profile]);
 
   const renderStars = (rating, size = 20, gradientId = "starGradient") => (
     <div className="flex items-center">
@@ -515,49 +511,79 @@ export default function ProfileCard({
 
             {/* Looking For + Skills */}
             <div className="flex justify-between items-center mb-6">
-              <div>
-                <h3 className="text-orange-600 font-semibold mb-2">
-                  Looking For:
-                </h3>
-                <p className="text-gray-700 mb-3">{profile.lookingFor}</p>
-                <div className="flex flex-wrap gap-2">
-                  {profile.skills?.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-pink-100 text-pink-800 rounded-full text-sm font-medium"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              {/* Looking For + Skills */}
+<div className="flex flex-col mb-6 gap-4">
+  {/* Looking For */}
+  {profile.lookingFor && (
+    <div>
+      <h3 className="text-orange-600 font-semibold mb-2">Looking For:</h3>
+      <p className="text-gray-700">{profile.lookingFor}</p>
+    </div>
+  )}
+
+  {/* Skills */}
+  {profile.skills?.length > 0 && (
+    <div>
+      <h3 className="text-orange-600 font-semibold mb-2">Skills:</h3>
+      <div className="flex flex-wrap gap-2">
+        {profile.skills.map((tag, index) => (
+          <span
+            key={index}
+            className="px-3 py-1 bg-pink-100 text-pink-800 rounded-full text-sm font-medium"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
 
               {/* Social Links */}
               <div className="flex space-x-3">
                 {profile.instagram && (
-                  <a href={profile.instagram} target="_blank" rel="noreferrer" className="p-2 hover:bg-gray-100 rounded-full transition">
+                  <a
+                    href={profile.instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 hover:bg-gray-100 rounded-full transition"
+                  >
                     <Instagram size={22} className="text-pink-600" />
                   </a>
                 )}
                 {profile.linkedin && (
-                  <a href={profile.linkedin} target="_blank" rel="noreferrer" className="p-2 hover:bg-gray-100 rounded-full transition">
+                  <a
+                    href={profile.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 hover:bg-gray-100 rounded-full transition"
+                  >
                     <Linkedin size={22} className="text-blue-600" />
                   </a>
                 )}
                 {profile.twitter && (
-                  <a href={profile.twitter} target="_blank" rel="noreferrer" className="p-2 hover:bg-gray-100 rounded-full transition">
+                  <a
+                    href={profile.twitter}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 hover:bg-gray-100 rounded-full transition"
+                  >
                     <Twitter size={22} className="text-sky-500" />
                   </a>
                 )}
                 {profile.youtube && (
-                  <a href={profile.youtube} target="_blank" rel="noreferrer" className="p-2 hover:bg-gray-100 rounded-full transition">
+                  <a
+                    href={profile.youtube}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 hover:bg-gray-100 rounded-full transition"
+                  >
                     <Youtube size={22} className="text-red-600" />
                   </a>
                 )}
               </div>
             </div>
-
-            
 
             {/* Actions */}
             <div className="flex items-center justify-center space-x-16">
@@ -597,12 +623,11 @@ export default function ProfileCard({
   );
 
   // ---------- Mobile Layout ----------
-  
-  const MobileView = () => (
 
-  <div className="lg:hidden w-full bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col min-h-screen">
-    {/* Search & Filter */}
-    {/* <div className="flex items-center justify-between gap-2 px-4 pb-3 border-b border-gray-200">
+  const MobileView = () => (
+    <div className="lg:hidden w-full bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col min-h-screen">
+      {/* Search & Filter */}
+      {/* <div className="flex items-center justify-between gap-2 px-4 pb-3 border-b border-gray-200">
       <div className="flex-1 relative">
         <Search
           className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black"
@@ -630,200 +655,197 @@ export default function ProfileCard({
       />
     )} */}
 
-    {/* Banner Section */}
-    <div className="relative h-40 w-full">
-      <img
-        src={getImageUrl(profile.bannerImage)}
-        alt="Banner"
-        className="w-full h-full object-cover"
-      />
-      <div className="absolute bottom-[-40px] left-4">
+      {/* Banner Section */}
+      <div className="relative h-40 w-full">
         <img
-          src={getImageUrl(profile.profilePicture)}
-          alt={profile.user?.name}
-          className="w-20 h-20 rounded-full border-4 border-white object-cover"
+          src={getImageUrl(profile.bannerImage)}
+          alt="Banner"
+          className="w-full h-full object-cover"
         />
-      </div>
-    </div>
-
-    {/* Content Section */}
-    <div className="mt-12 px-4 pb-6">
-      <div className="flex flex-col gap-1 mb-3">
-        <h2 className="text-xl font-bold text-gray-900">
-          {profile.user?.name}
-        </h2>
-        {profile.gender && (
-          <p className="text-gray-600 flex items-center gap-1 text-sm">
-            <User size={14} /> {profile.gender}
-          </p>
-        )}
-        {profile.hometown && (
-          <p className="text-gray-600 flex items-center gap-1 text-sm">
-            <Home size={14} /> {profile.hometown}
-          </p>
-        )}
-        {profile.location && (
-          <p className="text-gray-600 flex items-center gap-1 text-sm">
-            <MapPin size={14} className="text-orange-500" /> {profile.location}
-          </p>
-        )}
-      </div>
-
-      {/* Bio */}
-      {profile.bio && (
-        <p className="text-gray-700 text-sm leading-relaxed mb-3">
-          {profile.bio}
-        </p>
-      )}
-
-      {/* Portfolio Link */}
-      {profile.portfolio && (
-        <a
-          href={profile.portfolio}
-          target="_blank"
-          rel="noreferrer"
-          className="flex items-center gap-2 text-blue-600 text-sm font-medium mb-4 hover:underline"
-        >
-          <LinkIcon size={16} /> View Portfolio
-        </a>
-      )}
-
-      {/* Availability */}
-      {profile.availability && (
-        <div
-          className={`inline-block mb-4 px-3 py-1 rounded-full text-xs font-medium ${
-            profile.availability === "full-time"
-              ? "bg-green-100 text-green-700"
-              : profile.availability === "part-time"
-              ? "bg-yellow-100 text-yellow-700"
-              : "bg-gray-100 text-gray-600"
-          }`}
-        >
-          {profile.availability}
+        <div className="absolute bottom-[-40px] left-4">
+          <img
+            src={getImageUrl(profile.profilePicture)}
+            alt={profile.user?.name}
+            className="w-20 h-20 rounded-full border-4 border-white object-cover"
+          />
         </div>
-      )}
-
-      {/* Rating */}
-      <div className="flex items-center gap-2 mb-4">
-        {renderStars(profile.rating || 0, 16, "mobileStarGradient")}
-        <span className="text-gray-700 text-sm font-medium">
-          {profile.rating || 0}
-        </span>
-        <span className="text-gray-500 text-xs">
-          ({profile.reviewCount || 0} reviews)
-        </span>
       </div>
 
-      {/* Skills */}
-      {profile.skills?.length > 0 && (
-        <div className="mb-4">
-          <h3 className="text-sm font-semibold text-orange-600 mb-1">
-            Skills:
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {profile.skills.map((tag, index) => (
-              <span
-                key={index}
-                className="px-2 py-1 bg-pink-100 text-pink-800 rounded-full text-xs font-medium"
-              >
-                {tag}
-              </span>
-            ))}
+      {/* Content Section */}
+      <div className="mt-12 px-4 pb-6">
+        <div className="flex flex-col gap-1 mb-3">
+          <h2 className="text-xl font-bold text-gray-900">
+            {profile.user?.name}
+          </h2>
+          {profile.gender && (
+            <p className="text-gray-600 flex items-center gap-1 text-sm">
+              <User size={14} /> {profile.gender}
+            </p>
+          )}
+          {profile.hometown && (
+            <p className="text-gray-600 flex items-center gap-1 text-sm">
+              <Home size={14} /> {profile.hometown}
+            </p>
+          )}
+          {profile.location && (
+            <p className="text-gray-600 flex items-center gap-1 text-sm">
+              <MapPin size={14} className="text-orange-500" />{" "}
+              {profile.location}
+            </p>
+          )}
+        </div>
+
+        {/* Bio */}
+        {profile.bio && (
+          <p className="text-gray-700 text-sm leading-relaxed mb-3">
+            {profile.bio}
+          </p>
+        )}
+
+        {/* Portfolio Link */}
+        {profile.portfolio && (
+          <a
+            href={profile.portfolio}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 text-blue-600 text-sm font-medium mb-4 hover:underline"
+          >
+            <LinkIcon size={16} /> View Portfolio
+          </a>
+        )}
+
+        {/* Availability */}
+        {profile.availability && (
+          <div
+            className={`inline-block mb-4 px-3 py-1 rounded-full text-xs font-medium ${
+              profile.availability === "full-time"
+                ? "bg-green-100 text-green-700"
+                : profile.availability === "part-time"
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-gray-100 text-gray-600"
+            }`}
+          >
+            {profile.availability}
           </div>
+        )}
+
+        {/* Rating */}
+        <div className="flex items-center gap-2 mb-4">
+          {renderStars(profile.rating || 0, 16, "mobileStarGradient")}
+          <span className="text-gray-700 text-sm font-medium">
+            {profile.rating || 0}
+          </span>
+          <span className="text-gray-500 text-xs">
+            ({profile.reviewCount || 0} reviews)
+          </span>
         </div>
-      )}
 
-      {/* Looking For */}
-      {profile.lookingFor && (
-        <div className="mb-4">
-          <h3 className="text-sm font-semibold text-orange-600 mb-1">
-            Looking For:
-          </h3>
-          <p className="text-gray-700 text-sm">{profile.lookingFor}</p>
-        </div>
-      )}
-
-      {/* Social Links */}
-      <div className="flex justify-start gap-3 mb-5">
-        {profile.instagram && (
-          <a
-            href={profile.instagram}
-            target="_blank"
-            rel="noreferrer"
-            className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
-          >
-            <Instagram size={18} className="text-pink-600" />
-          </a>
-        )}
-        {profile.linkedin && (
-          <a
-            href={profile.linkedin}
-            target="_blank"
-            rel="noreferrer"
-            className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
-          >
-            <Linkedin size={18} className="text-blue-600" />
-          </a>
-        )}
-        {profile.twitter && (
-          <a
-            href={profile.twitter}
-            target="_blank"
-            rel="noreferrer"
-            className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
-          >
-            <Twitter size={18} className="text-sky-500" />
-          </a>
-        )}
-        {profile.youtube && (
-          <a
-            href={profile.youtube}
-            target="_blank"
-            rel="noreferrer"
-            className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
-          >
-            <Youtube size={18} className="text-red-600" />
-          </a>
-        )}
-      </div>
-
-      {/* Actions */}
-      <div className="flex items-center justify-center space-x-8">
-        <button
-          onClick={() => {
-            setIsLiked(true);
-            setTimeout(() => {
-              onLike();
-              setIsLiked(false);
-            }, 300);
-          }}
-          className={`p-3 rounded-full transition-all transform hover:scale-110 ${
-            isLiked
-              ? "bg-red-100 text-red-500"
-              : "bg-orange-100 text-orange-500 hover:bg-orange-200"
-          }`}
+        {/* Skills */}
+{profile.skills?.length > 0 && (
+  <div className="mb-4">
+    <h3 className="text-sm font-semibold text-orange-600 mb-1">Skills:</h3>
+    <div className="flex flex-wrap gap-2">
+      {profile.skills.map((tag, index) => (
+        <span
+          key={index}
+          className="px-2 py-1 bg-pink-100 text-pink-800 rounded-full text-xs font-medium"
         >
-          <Heart size={22} className={isLiked ? "fill-current" : ""} />
-        </button>
-
-        <button
-          onClick={() => onStartConversation(profile._id)}
-          className="flex-1 bg-orange-500 text-white py-2 rounded-full font-semibold hover:bg-orange-600 transition"
-        >
-          Message
-        </button>
-
-        <button
-          onClick={onDislike}
-          className="p-3 rounded-full transition-all transform hover:scale-110 bg-gray-100 text-gray-600 hover:bg-gray-200"
-        >
-          <X size={22} />
-        </button>
-      </div>
+          {tag}
+        </span>
+      ))}
     </div>
   </div>
-);
+)}
 
+{/* Looking For */}
+{profile.lookingFor && (
+  <div className="mb-4">
+    <h3 className="text-sm font-semibold text-orange-600 mb-1">Looking For:</h3>
+    <p className="text-gray-700 text-sm">{profile.lookingFor}</p>
+  </div>
+)}
+
+
+        {/* Social Links */}
+        <div className="flex justify-start gap-3 mb-5">
+          {profile.instagram && (
+            <a
+              href={profile.instagram}
+              target="_blank"
+              rel="noreferrer"
+              className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
+            >
+              <Instagram size={18} className="text-pink-600" />
+            </a>
+          )}
+          {profile.linkedin && (
+            <a
+              href={profile.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
+            >
+              <Linkedin size={18} className="text-blue-600" />
+            </a>
+          )}
+          {profile.twitter && (
+            <a
+              href={profile.twitter}
+              target="_blank"
+              rel="noreferrer"
+              className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
+            >
+              <Twitter size={18} className="text-sky-500" />
+            </a>
+          )}
+          {profile.youtube && (
+            <a
+              href={profile.youtube}
+              target="_blank"
+              rel="noreferrer"
+              className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
+            >
+              <Youtube size={18} className="text-red-600" />
+            </a>
+          )}
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center justify-center space-x-8">
+          <button
+            onClick={() => {
+              setIsLiked(true);
+              setTimeout(() => {
+                onLike();
+                setIsLiked(false);
+              }, 300);
+            }}
+            className={`p-3 rounded-full transition-all transform hover:scale-110 ${
+              isLiked
+                ? "bg-red-100 text-red-500"
+                : "bg-orange-100 text-orange-500 hover:bg-orange-200"
+            }`}
+          >
+            <Heart size={22} className={isLiked ? "fill-current" : ""} />
+          </button>
+
+          <button
+            onClick={() => onStartConversation(profile._id)}
+            className="flex-1 bg-orange-500 text-white py-2 rounded-full font-semibold hover:bg-orange-600 transition"
+          >
+            Message
+          </button>
+
+          <button
+            onClick={onDislike}
+            className="p-3 rounded-full transition-all transform hover:scale-110 bg-gray-100 text-gray-600 hover:bg-gray-200"
+          >
+            <X size={22} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -832,5 +854,3 @@ export default function ProfileCard({
     </>
   );
 }
-
-

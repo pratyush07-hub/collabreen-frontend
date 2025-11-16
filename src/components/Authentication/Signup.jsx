@@ -20,16 +20,29 @@ function Signup() {
   const navigate = useNavigate();
 
   const handleOtpChange = (e, index) => {
-    const value = e.target.value;
-    if (/^\d$/.test(value)) {
-      const newOtp = [...otp];
-      newOtp[index] = value;
-      setOtp(newOtp);
-      if (index < inputRefs.current.length - 1) {
-        inputRefs.current[index + 1].focus();
-      }
+  const value = e.target.value;
+
+  // Allow deleting
+  if (value === "") {
+    const newOtp = [...otp];
+    newOtp[index] = "";
+    setOtp(newOtp);
+    return;
+  }
+
+  // Allow only single digit
+  if (/^\d$/.test(value)) {
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    // Move to next input
+    if (index < inputRefs.current.length - 1) {
+      inputRefs.current[index + 1].focus();
     }
-  };
+  }
+};
+
 
   const handleOtpSubmit = async () => {
     const otpCode = otp.join("");
