@@ -38,6 +38,7 @@ import UsersPage from "./admin-dash/UsersPage.jsx";
 import CreatorsPage from "./admin-dash/CreatorsPage.jsx";
 import Matches from "./admin-dash/Matches.jsx";
 import Communities from "./admin-dash/Communities.jsx";
+import AdminLogin from "./admin-dash/AdminLogin.jsx";
 
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
     "/matches",
     "/communities",
     "/payments",
+    "/admin-login",
   ];
 
   const navigate = useNavigate();
@@ -142,6 +144,7 @@ function App() {
         <Route exact path="/dashboard" element={<DashboardLanding />} />
 
         {/* adminRoutes */}
+        <Route exact path="/admin-login" element={<AdminLogin />} />
         <Route exact path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/all-users" element={<UsersPage />} />
         <Route path="/all-creators" element={<CreatorsPage />} />

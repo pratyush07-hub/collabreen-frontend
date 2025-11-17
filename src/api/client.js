@@ -65,33 +65,56 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const api = axios.create({
   baseURL: `${BACKEND_URL}/api`,
+  withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });
 
 api.interceptors.request.use((config) => {
-  const token = Cookies.get("jwt");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const userToken = Cookies.get("jwt");
+  const adminToken = localStorage.getItem("adminToken");
+
+  const finalToken = adminToken || userToken;
+
+  if (finalToken) {
+    config.headers.Authorization = `Bearer ${finalToken}`;
   }
+
   return config;
 });
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+
+    // ---------- ADMIN UNAUTHORIZED ----------
+    if (error.response?.status === 401 && window.location.pathname.startsWith("/admin")) {
+      localStorage.removeItem("adminToken");
+      Cookies.remove("jwt");  // if you are storing it
+      window.location.href = "/admin-login";
+      return;
+    }
+
+    // ---------- USER UNAUTHORIZED ----------
     if (error.response?.status === 401) {
       Cookies.remove("jwt");
-      window.location.href = "/login";
-    } else if (
+      localStorage.removeItem("userToken");
+      window.location.href = "/login";   // normal user login
+      return;
+    }
+
+    // ---------- USER PROFILE NOT SET ----------
+    if (
       error.response?.status === 403 &&
-      error.response?.data?.message &&
-      error.response.data.message.includes("Profile setup required")
+      error.response?.data?.message?.includes("Profile setup required")
     ) {
       window.location.href = "/creator-to-creator?section=setup";
+      return;
     }
+
     return Promise.reject(error);
   }
 );
+
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
@@ -232,6 +255,16 @@ export const sendGroupAudioMessage = (groupId, formData) =>
   api.post(`/groups/send-audio/${groupId}`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+
+// admin api
+
+export const adminGetAllUsers = () => api.get("/admin/allusers");
+export const adminGetAllGroups = () => api.get("/admin/allgroups");
+export const allCreators = () => api.get('/admin/allcreators');
+export const allMatches = () => api.get('/admin/allmatches');
+export const allCollaborations = () => api.get('/admin/allcollaborations');
+export const adminLogin = (data) => api.post("/admin/login", data);
+export const adminLogout = () => api.post("/admin/logout", {}, { withCredentials: true });
 
 
 export const joinNow = (formData) => api.post('/join-now', formData);

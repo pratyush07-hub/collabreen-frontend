@@ -8,7 +8,7 @@ const CommunityModal = ({ community, onClose }) => {
       <div className="bg-[#1b2333] rounded-2xl p-6 w-[90%] max-w-lg">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">{community.name}</h2>
+          <h2 className="text-xl font-semibold">Group Name: {community.name}</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
             ✕
           </button>
@@ -26,22 +26,28 @@ const CommunityModal = ({ community, onClose }) => {
         {/* Details */}
         <div className="grid grid-cols-2 gap-4 mb-6 text-gray-300 text-sm">
           <p>
-            <span className="font-semibold">Owner:</span> {community.owner}
+            <span className="font-semibold">Owner:</span>{" "}
+            {community.createdBy?.name}
           </p>
           <p>
-            <span className="font-semibold">Visibility:</span> {community.visibility}
+            <span className="font-semibold">Visibility:</span>{" "}
+            {community.privacy}
           </p>
           <p>
-            <span className="font-semibold">Moderators:</span> {community.moderators}
+            <span className="font-semibold">Members:</span>{" "}
+            {community.members?.length}
           </p>
           <p>
             <span className="font-semibold">Posts:</span> {community.posts}
           </p>
           <p>
-            <span className="font-semibold">Reports:</span> {community.reports}
+            <span className="font-semibold">CreatedAt: </span>
+            {new Date(community.createdAt).toLocaleString()}
           </p>
+
           <p>
-            <span className="font-semibold">Analytics:</span> {community.analytics}
+            <span className="font-semibold">Category:</span>{" "}
+            {community.category}
           </p>
         </div>
 

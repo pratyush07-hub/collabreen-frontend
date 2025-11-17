@@ -40,13 +40,13 @@ const UserModal = ({ user, onClose }) => {
             <span className="font-semibold">Email:</span> {user.email}
           </p>
           <p>
-            <span className="font-semibold">Phone:</span> {user.phone}
+            <span className="font-semibold">Phone:</span> {user.phoneNumber}
           </p>
           <p>
             <span className="font-semibold">Role:</span> {user.role}
           </p>
           <p>
-            <span className="font-semibold">Location:</span> {user.location}
+            <span className="font-semibold">InstaHandle:</span> {user.instaHandle}
           </p>
           <p>
             <span className="font-semibold">Signup Date:</span> {user.signupDate}
