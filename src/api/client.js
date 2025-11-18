@@ -71,7 +71,7 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const userToken = Cookies.get("jwt");
-  const adminToken = localStorage.getItem("adminToken");
+  const adminToken = Cookies.get("adminToken");
 
   const finalToken = adminToken || userToken;
 
@@ -88,7 +88,7 @@ api.interceptors.response.use(
 
     // ---------- ADMIN UNAUTHORIZED ----------
     if (error.response?.status === 401 && window.location.pathname.startsWith("/admin")) {
-      localStorage.removeItem("adminToken");
+      Cookies.remove("adminToken");
       Cookies.remove("jwt");  // if you are storing it
       window.location.href = "/admin-login";
       return;
