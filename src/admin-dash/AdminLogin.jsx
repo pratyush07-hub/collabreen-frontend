@@ -13,24 +13,25 @@ const AdminLogin = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+  e.preventDefault();
+  setLoading(true);
+  setError("");
 
-    try {
-      const res = await adminLogin(form);
-      console.log("Login response:", res.data);
+  try {
+    const res = await adminLogin(form);
+    console.log("Login response:", res.data);
 
-      if (res.data.success) {
-        localStorage.setItem("adminToken", res.data.token);
-        navigate("/admin-dashboard");
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+    if (res.data.success) {
+      // SUCCESS: The browser has now set the HttpOnly 'adminToken' cookie.
+      // Do NOT set anything in localStorage.
+      navigate("/admin-dashboard"); // Navigate immediately.
     }
+  } catch (err) {
+    setError(err.response?.data?.message || "Login failed");
+  }
 
-    setLoading(false);
-  };
+  setLoading(false);
+};
 
   return (
     <div className="min-h-screen bg-[#121721] flex items-center justify-center px-4">
