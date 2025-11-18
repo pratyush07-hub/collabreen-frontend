@@ -71,13 +71,12 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const userToken = Cookies.get("jwt");
-  const adminToken = localStorage.getItem("adminToken");
 
-  const finalToken = adminToken || userToken;
-
-  if (finalToken) {
-    config.headers.Authorization = `Bearer ${finalToken}`;
+  if (userToken) {
+    config.headers.Authorization = `Bearer ${userToken}`;
   }
+  // The adminToken cookie will be sent automatically by the browser
+  // because of `withCredentials: true` on the axios instance.
 
   return config;
 });
@@ -265,6 +264,5 @@ export const allMatches = () => api.get('/admin/allmatches');
 export const allCollaborations = () => api.get('/admin/allcollaborations');
 export const adminLogin = (data) => api.post("/admin/login", data);
 export const adminLogout = () => api.post("/admin/logout", {}, { withCredentials: true });
-
 
 export const joinNow = (formData) => api.post('/join-now', formData);
