@@ -135,8 +135,7 @@ function Signup() {
               Signup
             </h1>
             <p className="font-roboto font-light text-base md:text-xl mt-6 md:mt-10">
-              Lorem ipsum dolor sit amet consectetur. Duis Pulvinar placerat
-              placerat cras duis.
+              Winkiz connects creators and brands on one powerful platform — where collaboration meets creativity.
             </p>
           </div>
         </div>

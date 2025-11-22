@@ -56,10 +56,10 @@ function Signin() {
         <div className="flex flex-col justify-center items-center text-white font-roboto p-4 md:p-10 h-full w-full absolute top-0 left-0">
           <div className="text-center">
             <h1 className="text-[#EFAC16] font-medium text-4xl md:text-6xl font-sf">
-              Sign Up
+              Sign In
             </h1>
             <p className="font-roboto font-light text-base md:text-xl mt-6 md:mt-10">
-              Lorem ipsum dolor sit amet consectetur. Duis pulvinar placerat cras duis.
+              Winkiz connects creators and brands on one powerful platform — where collaboration meets creativity
             </p>
           </div>
         </div>

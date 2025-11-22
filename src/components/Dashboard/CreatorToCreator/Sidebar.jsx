@@ -84,7 +84,7 @@ export default function Sidebar({ user, onProfileClick, activeItem, onItemClick,
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden md:fixed md:top-16 md:left-0 md:w-34 lg:w-64 md:h-[92vh] md:flex md:flex-col md:border-r md:border-gray-600 md:bg-[#0c0c0c] md:p-3 z-40">
+      <div className="hidden md:fixed md:top-12 2xl:top-16 md:left-0 md:w-34 lg:w-62 2xl:w-64 md:h-[96vh] 2xl:h-[92vh] md:flex md:flex-col md:border-r md:border-gray-600 md:bg-[#0c0c0c] md:p-3 z-40">
         {isFirstTime && (
           <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 mb-4">
             <p className="text-sm text-yellow-800">
@@ -92,7 +92,7 @@ export default function Sidebar({ user, onProfileClick, activeItem, onItemClick,
             </p>
           </div>
         )}
-        <nav className="flex-1 px-2 overflow-y-auto">
+        <nav className="flex-1 px-2 md:pt-2 2xl:pt-0 overflow-y-auto">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeItem === item.id;
