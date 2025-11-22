@@ -94,7 +94,7 @@ function Services() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.4 }}
-            className="text-white flex p-8 items-center justify-between w-full sm:w-[426px] h-[186px] sm:top-[112px] sm:left-[1083px] gap-0 rounded-tl-[30px] bg-gradient-to-r from-[#6a6a6a]/10 to-[#6a6a6a]/10 rounded-tr-[30px] rounded-bl-[30px]"
+            className="text-white flex p-8 items-center justify-between w-full sm:w-[426px] h-[156px] xl:h-[186px] sm:top-[112px] sm:left-[1083px] gap-0 rounded-tl-[30px] bg-gradient-to-r from-[#6a6a6a]/10 to-[#6a6a6a]/10 rounded-tr-[30px] rounded-bl-[30px]"
           >
             <img
               src={influencerVector}
@@ -102,10 +102,10 @@ function Services() {
               className="w-[70px] h-[70px] object-contain"
             />
             <div className="ml-6">
-              <h3 className="font-roboto text-lg font-semibold">
+              <h3 className="font-roboto text-md xl:text-lg font-semibold">
                 Community Zone
               </h3>
-              <p className="font-roboto font-light text-sm text-left">
+              <p className="font-roboto font-light text-xs xl:text-sm text-left">
                 Grow together, not alone. Join exclusive creator groups, share
                 experiences, learn from others, and be part of a growing
                 community that supports creativity, authenticity, and growth —
@@ -120,13 +120,13 @@ function Services() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.4 }}
-            className="text-white mt-10 sm:ml-60 flex p-8 items-center justify-between w-full sm:w-[416px] h-auto bg-gradient-to-r from-[#000000]/10 to-[#6a6a6a]/40 sm:top-[112px] sm:left-[1083px] gap-0 rounded-tl-[30px] rounded-tr-[30px] rounded-br-[30px]"
+            className="text-white mt-0 lg:mt-44 xl:mt-16 xl:ml-60 lg:-mr-20 flex p-8 items-center justify-between w-full sm:w-[416px] h-auto bg-gradient-to-r from-[#000000]/10 to-[#6a6a6a]/40 sm:top-[112px] sm:left-[1283px] gap-0 rounded-tl-[30px] rounded-tr-[30px] rounded-br-[30px]"
           >
             <div className="ml-6">
-              <h3 className="font-roboto text-lg font-semibold">
+              <h3 className="font-roboto text-md xl:text-lg font-semibold">
                 Collaboration Hub
               </h3>
-              <p className="font-roboto font-light text-sm text-left">
+              <p className="font-roboto font-light text-xs xl:text-sm text-left">
                 Where creators and brands connect. Find perfect partnerships
                 without endless searching. Whether you’re a creator looking for
                 paid gigs or a brand wanting the right face for your campaign —
@@ -150,10 +150,10 @@ function Services() {
           className="text-white mt-0 flex p-4 items-center justify-between w-full sm:w-[376px] h-auto bg-gradient-to-r from-[#6a6a6a]/10 to-[#6a6a6a]/10 sm:top-[112px] sm:left-[1083px] gap-0 rounded-tl-[30px] rounded-bl-[30px] rounded-br-[30px]"
         >
           <div className="ml-6">
-            <h3 className="font-roboto text-lg font-semibold">
+            <h3 className="font-roboto text-md xl:text-lg font-semibold">
               Creator Insights
             </h3>
-            <p className="font-roboto font-light text-left text-sm">
+            <p className="font-roboto font-light text-left text-xs xl:text-sm">
               Know what works. Learn what’s trending. Stay updated with real
               stories, success journeys, and insights from creators like you.
               Explore what’s driving engagement, discover upcoming trends, and

@@ -13,7 +13,7 @@ function TestimonialCard({ name, quote, profilePic, borderColor }) {
       </div>
       <div className="flex gap-4 mt-8 items-center justify-end">
         <p className="font-bold">{name}</p>
-        <img src={profilepic} alt="profile Pic" className="h-[44px] w-[44px] rounded-full border-[3px] border-[#F77128]" />
+        {/* <img src={profilepic} alt="profile Pic" className="h-[44px] w-[44px] rounded-full border-[3px] border-[#F77128]" /> */}
       </div>
     </div>
   );

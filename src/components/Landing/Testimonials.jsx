@@ -5,25 +5,49 @@ function Testimonials() {
   const testimonials = [
     {
       id: 1,
-      name: "John Smith",
+      name: "Yuvraj",
       quote:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. orem Ipsum is simply dummy text of the printing and typesetting industry.orem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "Winkiz completely changed the way I collaborate! Earlier, finding creators with the same vibe used to take days, but now I just swipe and match instantly. The UI feels like Tinder but built for creators, which makes the whole process super fun. Already did two collabs thanks to Winkiz!",
       profilePic: "../../assets/profilepic.png",
       borderColor: "#93B076",
     },
     {
       id: 2,
-      name: "Jane Doe",
+      name: "Sumit",
       quote:
-        "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "As an Instagram creator, I always struggled to connect with people outside my niche. Winkiz solved that. The platform shows verified profiles, interests, and collaboration goals clearly. Matched with a travel vlogger and our reel went viral! Highly recommended for serious creators.",
       profilePic: "../../assets/profilepic.png",
       borderColor: "#F5ADB2",
     },
     {
       id: 3,
-      name: "Alice Johnson",
+      name: "Mohit",
       quote:
-        "When an unknown printer took a galley of type and scrambled it to make a type specimen book. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "Winkiz is honestly a game-changer. Instead of cold messaging hundreds of creators, I now get targeted matches who actually want to collaborate. The chat feature is smooth, and the profile insights help you pick the right partner. Love the modern, swipe-based design!",
+      profilePic: "../../assets/profilepic.png",
+      borderColor: "#EFAC16",
+    },
+    {
+      id: 4,
+      name: "Mukul",
+      quote:
+        "I never thought finding collaboration partners could be this easy. Winkiz feels like a matchmaking app but strictly for content creators. The swipe feature is addictive, and within a week, I found three high-quality creators in my city. Super helpful for local shoots.",
+      profilePic: "../../assets/profilepic.png",
+      borderColor: "#93B076",
+    },
+    {
+      id: 5,
+      name: "Vaishali",
+      quote:
+        "Winkiz brings professionalism and fun together. The platform helps creators connect based on niche, follower range, and goals — all with Tinder-style matching. It's perfect for YouTubers, Instagram influencers, and even new creators looking to grow fast. My collab rate literally doubled.",
+      profilePic: "../../assets/profilepic.png",
+      borderColor: "#F5ADB2",
+    },
+    {
+      id: 6,
+      name: "Lavanya",
+      quote:
+        "What I love most about Winkiz is how simple it is. Swipe → Match → Collaborate. No complicated forms. The algorithm also suggests creators based on your content style, which feels on point. Perfect platform for small to mid-level influencers looking to grow.",
       profilePic: "../../assets/profilepic.png",
       borderColor: "#EFAC16",
     },

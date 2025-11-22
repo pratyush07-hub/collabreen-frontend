@@ -1,7 +1,7 @@
 import React from "react";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import CollabReen from "../assets/winkiz.jpeg";
+import CollabReen from "../assets/winkiz.png";
 
 function Footer() {
   return (
