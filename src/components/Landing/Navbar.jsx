@@ -203,7 +203,7 @@ function Navbar() {
         {/* Logo */}
         <NavLink to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <div className="px-0 md:px-2">
-            <div className="w-12 h-12 md:h-16 md:w-16 bg-white rounded-full">
+            <div className="w-16 h-16 md:h-24 md:w-24 rounded-full">
               <img src={logo} alt="Logo" />
             </div>
           </div>
