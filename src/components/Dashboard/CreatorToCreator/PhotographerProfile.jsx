@@ -297,8 +297,8 @@ import {
   Instagram,
   Youtube,
   Linkedin,
-  Twitter
 } from "lucide-react";
+import { FaXTwitter } from "react-icons/fa6";
 import client from "../../../api/client";
 import getImageUrl from "../../utils/getImgUrl/getImgUrl";
 import { useNavigate } from "react-router-dom";
@@ -497,7 +497,7 @@ const PhotographerProfile = ({ onNotificationsClick }) => {
           rel="noopener noreferrer"
           className="text-[#F77128] underline"
         >
-          <Twitter className="text-blue-500 hover:scale-110 transition" size={22} />
+          <FaXTwitter className="text-black hover:scale-110 transition" size={22} />
         </a>
       ) : (
         <p className="text-gray-500">N/A</p>

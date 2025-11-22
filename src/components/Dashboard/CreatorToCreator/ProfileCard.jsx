@@ -347,13 +347,14 @@ import {
   Instagram,
   Linkedin,
   Youtube,
-  Twitter,
   Link as LinkIcon,
   Filter,
   Search,
   User,
   Home,
 } from "lucide-react";
+import { FaXTwitter } from "react-icons/fa6";
+
 import FilterModal from "./FilterModal";
 import getImageUrl from "../../utils/getImgUrl/getImgUrl";
 
@@ -569,7 +570,7 @@ export default function ProfileCard({
                     rel="noreferrer"
                     className="p-2 hover:bg-gray-100 rounded-full transition"
                   >
-                    <Twitter size={22} className="text-sky-500" />
+                    <FaXTwitter size={22} />
                   </a>
                 )}
                 {profile.youtube && (
@@ -795,7 +796,7 @@ export default function ProfileCard({
               rel="noreferrer"
               className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
             >
-              <Twitter size={18} className="text-sky-500" />
+              <FaXTwitter size={18} />
             </a>
           )}
           {profile.youtube && (

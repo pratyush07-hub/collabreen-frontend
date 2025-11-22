@@ -82,7 +82,7 @@ export default function Header({ user, onNotificationsClick, onHamburgerClick, o
     <div className="fixed top-0 left-0 w-full z-50 bg-[#0c0c0c] border-b border-gray-600 p-4 flex justify-between items-center h-[10vh]">
       {/* Logo */}
       <div className="px-0 md:px-4">
-        <div className="w-12 h-12 md:h-16 md:w-16 bg-white rounded-full">
+        <div className="w-16 h-16 md:h-24 md:w-24">
           <img src={logo} alt="Logo" />
         </div>
       </div>

@@ -79,9 +79,9 @@ function Testimonials() {
         <h1 className="text-white font-medium text-4xl md:text-6xl font-sf">
           What Our Client’s Say
         </h1>
-        <p className="text-white font-light text-md md:text-xl font-roboto mt-4">
+        {/* <p className="text-white font-light text-md md:text-xl font-roboto mt-4">
           Lorem ipsum dolor sit amet consectetur.
-        </p>
+        </p> */}
       </div>
 
       <div className="overflow-hidden w-full mt-20 relative">

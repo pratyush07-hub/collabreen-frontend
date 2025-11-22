@@ -1,13 +1,13 @@
 import React from "react";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import CollabReen from "../assets/winkiz.png";
+import CollabReen from "../assets/winkiz.jpeg";
 
 function Footer() {
   return (
     <footer className=" text-white mb-4">
       <div className="flex justify-center mt-10 mb-10">
-        <img src={CollabReen} alt="Collaboration" />
+        <img src={CollabReen} alt="Collaboration" className="rounded-xl" />
       </div>
       
       <div className="max-w-screen-xl mx-auto flex flex-col sm:flex-row justify-between items-center text-center sm:text-left gap-4 sm:gap-0">
