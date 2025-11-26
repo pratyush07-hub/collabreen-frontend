@@ -1,5 +1,6 @@
 import Footer from "../Footer";
 import Hero from "./Hero";
+import Intelligence from "./Intelligence";
 import Meeting from "./Meeting";
 import Navbar from "./Navbar";
 import Numbers from "./Numbers";
@@ -19,6 +20,7 @@ function Landing() {
     <Services/>
     <Testimonials/>
     <Meeting></Meeting>
+    <Intelligence></Intelligence>
     <Footer></Footer>
     </div>
   )

@@ -283,6 +283,18 @@ function Navbar() {
                 About
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/blog"
+                className={({ isActive }) =>
+                  `block px-1 py-2 lg:px-3 rounded text-white hover:text-[#F5ADB2] hover:border-b-2 ${
+                    isActive && !dropdownOpen ? "border-b-2" : ""
+                  }`
+                }
+              >
+                Blog
+              </NavLink>
+            </li>
 
             {/* Products Dropdown */}
             {/* <li className="relative flex flex-col items-center justify-center">

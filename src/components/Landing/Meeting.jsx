@@ -91,7 +91,7 @@ function Meeting() {
         </div>
       </section>
 
-      <div className="flex justify-center mt-2 md:mt-40"></div>
+      <div className="flex justify-center mt-2 md:mt-20"></div>
     </>
   );
 }

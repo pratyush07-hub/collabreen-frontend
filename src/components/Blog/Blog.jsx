@@ -12,7 +12,7 @@ function Blog() {
         <img
           src={BlogCover}
           alt="Blog Cover"
-          className=" h-[529px] w-full object-cover"
+          className=" h-[529px] w-full"
         ></img>
       </div>
       <div className="flex flex-wrap justify-between px-[4rem] font-roboto ">

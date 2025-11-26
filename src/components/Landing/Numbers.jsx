@@ -56,8 +56,8 @@ function Numbers() {
           setHasAnimated(true);
           // Animate numbers only once when visible
           animateValue(0, 200, 2000, setCreatorCount); // 200M+
-          animateValue(0, 50, 2000, setBrandsCount); // 50+
-          animateValue(0, 10, 2000, setCommunityCount); // 10K+
+          animateValue(0, 20, 2000, setBrandsCount); // 20+
+          animateValue(0, 10, 2000, setCommunityCount); // 10+
         }
       },
       { threshold: 0.3 } // trigger when 30% visible
@@ -78,7 +78,7 @@ function Numbers() {
       className="flex flex-col gap-10 md:flex-row justify-evenly items-center max-w-screen-4xl py-10 md:mt-14 mx-auto text-white"
     >
       {/* 200M+ */}
-      <div className="py-2 px-10 flex flex-col gap-2 bg-gradient-to-r from-stone-700 to-stone-900 rounded-br-3xl rounded-t-3xl">
+      <div className="p-2 px-10 md:py-10 md:px-20 flex flex-col gap-2 bg-gradient-to-r from-stone-700 to-stone-900 rounded-br-3xl rounded-t-3xl">
         <h1 className="bg-transparent max-w-4xl text-[#EFAC16] text-3xl font-normal md:text-3xl xl:text-4xl relative font-sf">
           {creatorCount}M+
         </h1>
@@ -89,22 +89,22 @@ function Numbers() {
 
       <span className="w-4 h-4 rounded-full bg-white"></span>
 
-      {/* 50+ */}
-      <div className="py-2 px-10 flex flex-col gap-2 bg-gradient-to-r from-stone-700 to-stone-900 rounded-bl-3xl rounded-r-3xl">
+      {/* 20+ */}
+      <div className="p-2 px-10 md:py-10 md:px-20 flex flex-col gap-2 bg-gradient-to-r from-stone-700 to-stone-900 rounded-bl-3xl rounded-r-3xl">
         <h1 className="bg-transparent max-w-4xl text-[#93B076] text-3xl font-normal md:text-3xl xl:text-4xl relative font-sf">
           {brandsCount}+
         </h1>
         <p className="bg-transparent text-left text-gray-300 text-lg lg:text-xl font-roboto">
-          Brand Partners
+          Total Collobration
         </p>
       </div>
 
       <span className="w-4 h-4 rounded-full bg-white"></span>
 
-      {/* 10K+ */}
-      <div className="py-2 px-10 flex flex-col gap-2 bg-gradient-to-r from-stone-700 to-stone-900 rounded-bl-3xl rounded-t-3xl">
+      {/* 10+ */}
+      <div className="p-2 px-10 md:py-10 md:px-20 flex flex-col gap-2 bg-gradient-to-r from-stone-700 to-stone-900 rounded-bl-3xl rounded-t-3xl">
         <h1 className="bg-transparent max-w-4xl text-[#F5ADB2] text-3xl font-normal md:text-3xl xl:text-4xl relative font-sf">
-          {communityCount}K+
+          {communityCount}+
         </h1>
         <p className="bg-transparent text-left text-gray-300 text-lg lg:text-xl font-roboto">
           Active Community
