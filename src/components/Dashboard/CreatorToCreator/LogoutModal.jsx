@@ -6,14 +6,14 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-2 sm:p-0">
-      <div className="bg-white rounded-2xl shadow-xl p-4 w-full sm:w-[98%] h-auto sm:h-[80%] max-w-md border border-gray-700 flex flex-col">
+      <div className="bg-white rounded-2xl shadow-xl p-4 w-full sm:w-[98%] h-auto lg:h-[80%] max-w-md border border-gray-700 flex flex-col">
         
         {/* Image */}
         <div className="flex-shrink-0">
           <img 
             src={Logout} 
             alt="Logout" 
-            className="mx-auto max-h-40 sm:max-h-96 object-contain" 
+            className="mx-auto max-h-40 lg:max-h-96 object-contain" 
           />
         </div>
 

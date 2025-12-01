@@ -9,7 +9,7 @@ function TestimonialCard({ name, quote, profilePic, borderColor }) {
         <img src={quotes} alt="quotes" />
       </div>
       <div className="mt-6">
-        <p className="text-center">{quote}</p>
+        <p className="text-center text-xs md:text-sm">{quote}</p>
       </div>
       <div className="flex gap-4 mt-8 items-center justify-end">
         <p className="font-bold">{name}</p>

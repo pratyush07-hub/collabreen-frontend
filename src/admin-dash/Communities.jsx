@@ -21,7 +21,7 @@ const Communities = () => {
         setLoading(true);
 
         const response = await adminGetAllGroups();
-        console.log("Fetched groups:", response.data);
+        // console.log("Fetched groups:", response.data);
         const data = response.data;
 
         if (data.success) {

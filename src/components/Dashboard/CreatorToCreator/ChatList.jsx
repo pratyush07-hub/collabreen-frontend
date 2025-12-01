@@ -128,121 +128,122 @@
 //     );
 // }
 
-
-import React, { useState, useEffect } from 'react';
-import { getCurrentUser, getUserChats } from '../../../api/client';
+import React, { useState, useEffect } from "react";
+import { getCurrentUser, getUserChats } from "../../../api/client";
 
 export default function ChatList({ onChatSelect }) {
-    const [chats, setChats] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const [chats, setChats] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchChats();
-    }, []);
+  useEffect(() => {
+    fetchChats();
+  }, []);
 
-    const fetchChats = async () => {
-        try {
-            setLoading(true);
-            const response = await getUserChats();
+  const fetchChats = async () => {
+    try {
+      setLoading(true);
+      const response = await getUserChats();
 
-        // Fetch current user
-        const userResponse = await getCurrentUser(); // Make sure this returns { data: { success: true, data: { _id, name, ... } } }
-        const currentUser = userResponse.data.user;
-        console.log("Fetched chats:", response.data);
-        console.log("Current user:", currentUser);
+      // Fetch current user
+      const userResponse = await getCurrentUser(); // Make sure this returns { data: { success: true, data: { _id, name, ... } } }
+      const currentUser = userResponse.data.user;
+      console.log("Fetched chats:", response.data);
+      console.log("Current user:", currentUser);
 
-        if (response.data.success) {
-            // Save chats along with current user ID
-            const chatsWithCurrentUser = response.data.data.map(chat => ({
-                ...chat,
-                currentUserId: currentUser._id
-            }));
+      if (response.data.success) {
+        // Save chats along with current user ID
+        const chatsWithCurrentUser = response.data.data.map((chat) => ({
+          ...chat,
+          currentUserId: currentUser._id,
+        }));
 
-            setChats(chatsWithCurrentUser);
-        }
-        } catch (error) {
-            console.error('Error fetching chats:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (loading) {
-        return (
-            <div className="bg-white min-h-screen flex items-center justify-center">
-                <div className="text-gray-500">Loading chats...</div>
-            </div>
-        );
+        setChats(chatsWithCurrentUser);
+      }
+    } catch (error) {
+      console.error("Error fetching chats:", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
+  if (loading) {
     return (
-        <div className="bg-white mt-16 min-h-screen">
-            {/* Header */}
-            <div className="p-6 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900">Messages</h1>
-                        <p className="text-gray-600 text-sm">
-                            Stay connected with your creative network
-                        </p>
-                    </div>
-                    <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                        {chats.filter(chat => chat.unread).length} unread
-                    </div>
-                </div>
-            </div>
-
-            {/* Chat List */}
-            <div className="p-4 space-y-3">
-                {chats.length === 0 ? (
-                    <div className="text-center py-8">
-                        <p className="text-gray-500">No conversations yet</p>
-                    </div>
-                ) : (
-                    chats.map((chat) => {
-                        
-
-                        const otherParticipant = chat.participants.find(p => p._id !== chat.currentUserId);
-                        return (
-                            <div
-                                key={chat._id}
-                                onClick={() => onChatSelect(chat._id)}
-                                className="bg-gray-50 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                            >
-                                <div className="flex items-start space-x-3">
-                                    <div className="relative">
-                                        <img
-                                            src={otherParticipant?.profilePic || '/default-avatar.png'}
-                                            alt={otherParticipant?.name}
-                                            className="w-12 h-12 rounded-full object-cover"
-                                        />
-                                        {chat.unread && (
-                                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-                                                <span className="text-white text-xs font-bold">1</span>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <h3 className="font-semibold text-gray-900 truncate">
-                                                {otherParticipant?.name}
-                                            </h3>
-                                            <span className="text-gray-500 text-sm">
-                                                {new Date(chat.updatedAt).toLocaleDateString()}
-                                            </span>
-                                        </div>
-
-                                        <p className="text-sm truncate text-gray-600">
-                                            {chat.lastMessage?.content || 'No messages yet'}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })
-                )}
-            </div>
-        </div>
+      <div className="flex flex-col h-screen bg-gray-900 items-center justify-center">
+        <div className="w-12 h-12 border-4 border-gray-600 border-t-white rounded-full animate-spin"></div>
+      </div>
     );
+  }
+
+  return (
+    <div className="bg-white mt-16 min-h-screen">
+      {/* Header */}
+      <div className="p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Messages</h1>
+            <p className="text-gray-600 text-sm">
+              Stay connected with your creative network
+            </p>
+          </div>
+          <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+            {chats.filter((chat) => chat.unread).length} unread
+          </div>
+        </div>
+      </div>
+
+      {/* Chat List */}
+      <div className="p-4 space-y-3">
+        {chats.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No conversations yet</p>
+          </div>
+        ) : (
+          chats.map((chat) => {
+            const otherParticipant = chat.participants.find(
+              (p) => p._id !== chat.currentUserId
+            );
+            return (
+              <div
+                key={chat._id}
+                onClick={() => onChatSelect(chat._id)}
+                className="bg-gray-50 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex items-start space-x-3">
+                  <div className="relative">
+                    <img
+                      src={
+                        otherParticipant?.profilePic || "/default-avatar.png"
+                      }
+                      alt={otherParticipant?.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    {chat.unread && (
+                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">1</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="font-semibold text-gray-900 truncate">
+                        {otherParticipant?.name}
+                      </h3>
+                      <span className="text-gray-500 text-sm">
+                        {new Date(chat.updatedAt).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    <p className="text-sm truncate text-gray-600">
+                      {chat.lastMessage?.content || "No messages yet"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 
-const UserModal = ({ user, onClose }) => {
+const UserModal = ({ user, onClose, onMessageUser }) => {
   if (!user) return null;
 
   const actions = [
@@ -62,6 +62,11 @@ const UserModal = ({ user, onClose }) => {
             <button
               key={action}
               className="bg-[rgb(36,46,71)] hover:bg-blue-600 px-3 py-2 rounded text-white text-sm transition"
+              onClick={() => {
+                if (action === "Message") {
+                  onMessageUser?.(user); // call parent callback
+                }
+              }}
             >
               {action}
             </button>

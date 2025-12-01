@@ -1,63 +1,3 @@
-// import axios from 'axios';
-// import Cookies from 'js-cookie';
-
-// const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
-// const api = axios.create({
-//     baseURL: `${BACKEND_URL}/api`, // Adjust for production
-//     headers: { 'Content-Type': 'application/json' },
-// });
-
-// api.interceptors.request.use((config) => {
-//     const token = localStorage.getItem('token');
-//     if (token) {
-//         config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-// });
-
-// api.interceptors.response.use(
-//     (response) => response,
-//     (error) => {
-//         if (error.response?.status === 401) {
-//             localStorage.removeItem('token');
-//             window.location.href = '/login';
-//         } else if (error.response?.status === 403 && error.response.data.message.includes('Profile setup required')) {
-//             window.location.href = '/creator-to-creator?section=setup'; // Adjust route
-//         }
-//         return Promise.reject(error);
-//     }
-// );
-
-// const client = axios.create({
-//     baseURL: import.meta.env.VITE_BACKEND_URL,
-// });
-
-// client.interceptors.request.use(
-//     (config) => {
-//         const token = Cookies.get('jwt');
-//         if (token) {
-//             config.headers.Authorization = `Bearer ${token}`;
-//         }
-//         return config;
-//     },
-//     (error) => Promise.reject(error)
-// );
-
-// export const getAllProfiles = (filters = {}) => api.get('/creatorprofiles', { params: filters });
-// export const getProfile = (userId) => api.get(`/creatorprofiles/${userId}`);
-// export const setupProfile = (data) => api.post('/creatorprofiles/setup', data);
-// export const updateProfile = (userId, data) => api.put(`/creatorprofiles/${userId}`, data);
-// export const getUserChats = () => api.get('/chats');
-// export const getOrCreateChat = (participantId) => api.get(`/chats/create/${participantId}`);
-// export const getChatMessages = (chatId) => api.get(`/chats/${chatId}/messages`);
-// export const sendMessage = (chatId, content) => api.post(`/chats/${chatId}/messages`, { content });
-// export const sendCollaborationRequest = (data) => api.post('/collaborations', data);
-// export const getCollaborationRequests = (type) => api.get('/collaborations', { params: { type } });
-// export const updateCollaborationStatus = (requestId, status) => api.put(`/collaborations/${requestId}/status`, { status });
-
-// export default api;
-
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -268,3 +208,27 @@ export const adminLogout = () => api.post("/admin/logout", {}, { withCredentials
 
 
 export const joinNow = (formData) => api.post('/join-now', formData);
+
+
+export const sendUserMessage = (message) =>
+  api.post("/support/send", { message }, { withCredentials: true });
+
+// Get all messages for current user
+export const getUserChat = () =>
+  api.get("/support/chat", { withCredentials: true });
+
+// ---------------------
+// ADMIN SUPPORT ROUTES
+// ---------------------
+
+// Admin: Get all users who sent messages
+export const getAllUsersWithChats = () =>
+  api.get("/support/users");
+
+// Admin: Get chat of specific user
+export const getAdminChat = (userId) =>
+  api.get(`/support/chat/${userId}`);
+
+// Admin: Send a reply to user
+export const adminReply = (userId, message) =>
+  api.post("/support/reply", { userId, message });

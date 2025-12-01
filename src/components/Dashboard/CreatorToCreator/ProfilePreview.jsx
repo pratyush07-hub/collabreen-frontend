@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { MapPin, Edit3, Instagram, Linkedin, Youtube, Twitter, Link } from "lucide-react";
+import { MapPin, Edit3, Instagram, Linkedin, Youtube, Twitter, Link, ArrowLeft } from "lucide-react";
 import getImageUrl from "../../utils/getImgUrl/getImgUrl";
 import axios from "axios";
 import { getMyProfile } from "../../../api/client";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePreview() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -27,7 +29,16 @@ export default function ProfilePreview() {
   if (!profile) return <div className="text-center mt-20 text-gray-600">No profile found.</div>;
 
   return (
-    <div className="max-w-5xl mx-auto mt-24 bg-white rounded-2xl shadow-lg overflow-hidden">
+    <>
+    
+<button
+  onClick={() => navigate(-1)}
+  className="flex items-center gap-2 text-white mb-4 mt-4 lg:w-[70%] lg:mx-auto"
+>
+  <ArrowLeft size={24} />
+  <span className="text-white">Back to Dashboard</span>
+</button>
+    <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
       {/* Banner */}
       <div className="relative h-64 w-full">
         <img
@@ -146,5 +157,6 @@ export default function ProfilePreview() {
         </div>
       </div>
     </div>
+    </>
   );
 }

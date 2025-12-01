@@ -209,6 +209,7 @@ import { createChat } from '../../../api/client';
 import ProjectsDashboard from './ProjectsDashboard';
 import CommunityDashboard from './CommunityDashboard';
 import GroupChatWindow from './groupChatWindow';
+import Support from './Support';
 
 export default function MainContent({
     activeSection,
@@ -281,12 +282,7 @@ export default function MainContent({
             case 'projects':
                 return <ProjectsDashboard />;
             case 'settings':
-                return (
-                    <div className="p-8 text-center">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Settings</h2>
-                        <p className="text-gray-600">Adjust your account settings and preferences.</p>
-                    </div>
-                );
+                return <Support />;
             case 'notifications':
                 return <Notifications />;
             default:

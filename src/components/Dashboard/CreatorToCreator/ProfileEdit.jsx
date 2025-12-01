@@ -7,9 +7,11 @@ import {
   Link as LinkIcon,
   User,
   Home,
+  ArrowLeft,
 } from "lucide-react";
 import api from "../../../api/client";
 import getImageUrl from "../../utils/getImgUrl/getImgUrl";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileEdit({ onEditComplete, existingProfile }) {
   const [formData, setFormData] = useState({
@@ -32,6 +34,7 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // ✅ Fetch existing profile data if available
   useEffect(() => {
@@ -131,7 +134,16 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
   }
 
   return (
-    <div className="min-h-screen mt-16 bg-gray-50 p-4 sm:p-8">
+    <>
+    <button
+  onClick={() => navigate(-1)}
+  className="flex items-center gap-2 text-white mb-4 mt-4 lg:w-[70%] lg:mx-auto"
+>
+  <ArrowLeft size={24} />
+  <span className="text-white">Back to Dashboard</span>
+</button>
+    
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
       <div className="max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-lg space-y-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
           Edit Your Creator Profile
@@ -362,5 +374,6 @@ export default function ProfileEdit({ onEditComplete, existingProfile }) {
         </form>
       </div>
     </div>
+    </>
   );
 }

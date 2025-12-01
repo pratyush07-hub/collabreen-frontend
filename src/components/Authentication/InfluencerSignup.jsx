@@ -104,7 +104,7 @@ function InfluencerSignup() {
         },
         body: JSON.stringify(formData),
       });
-      console.log("Register Response", response);
+      // console.log("Register Response", response);
 
       if (response.ok) {
         const data = await response.json();

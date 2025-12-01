@@ -43,7 +43,7 @@ export default function ProfilesContainer() {
   };
 
   const handleDislike = () => {
-    console.log('Disliked profile');
+    // console.log('Disliked profile');
     showNextProfile();
   };
 

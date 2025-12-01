@@ -19,7 +19,7 @@ const AdminLogin = () => {
 
   try {
     const res = await adminLogin(form);
-    console.log("Login response:", res.data);
+    // console.log("Login response:", res.data);
 
     if (res.data.success) {
       // SUCCESS: The browser has now set the HttpOnly 'adminToken' cookie.

@@ -46,7 +46,7 @@ function Signup() {
 
   const handleOtpSubmit = async () => {
     const otpCode = otp.join("");
-    console.log(Cookies.get("jwt"));
+    // console.log(Cookies.get("jwt"));
     try {
       const response = await fetch(
         `${BACKEND_URL}/api/user/verify-email`,
@@ -59,11 +59,11 @@ function Signup() {
           body: JSON.stringify({ otpCode }),
         }
       );
-      console.log("otp res", response);
+      // console.log("otp res", response);
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         if (data.msg) {
           navigate("/register-as");
         }
@@ -87,7 +87,7 @@ function Signup() {
       password,
       why,
     };
-    console.log("formdata", formData);
+    // console.log("formdata", formData);
     
 
     try {
@@ -99,10 +99,10 @@ function Signup() {
         body: JSON.stringify(formData),
       });
 
-      console.log("response", response);
+      // console.log("response", response);
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         Cookies.set("jwt", data.token);
         //  Cookies.set("user", data.userDetails);
         Cookies.set("user", JSON.stringify(data.userDetails));

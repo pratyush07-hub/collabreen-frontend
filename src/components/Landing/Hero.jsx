@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import hero from "../../assets/hero.png";
 import FormModal from "./FormModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Hero() {
   const [showForm, setShowForm] = useState(false);
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
   return (
     <>
       <section className="text-white pt-8 md:pt-24">
@@ -30,7 +33,7 @@ function Hero() {
                     to="/signup"
                     className="bg-[#F5ADB2] hover:bg-[#EFAC16] w-26 text-sm md:w-auto flex items-center justify-center md:text-base font-medium text-center text-gray-900 py-2 px-3 mt-4 rounded-bl-3xl rounded-t-3xl focus:ring-1 focus:ring-gray-100"
                   >
-                    Explore Now
+                    For Creators
                   </Link>
                   <button
                     onClick={() => setShowForm(true)}

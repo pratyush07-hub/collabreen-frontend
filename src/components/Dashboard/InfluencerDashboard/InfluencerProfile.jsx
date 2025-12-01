@@ -200,7 +200,7 @@ const InfluencerProfile = () => {
             //   headers: { 'Content-Type': 'application/json' },
             //   body: JSON.stringify({ action: 'save' })
             // });
-            console.log('Profile saved');
+            // console.log('Profile saved');
         } catch (error) {
             console.error('Error saving profile:', error);
         }
@@ -210,7 +210,7 @@ const InfluencerProfile = () => {
         try {
             // const response = await fetch(`/api/influencers/${influencerData.id}/contact`);
             // const contactData = await response.json();
-            console.log('Fetching contact details');
+            // console.log('Fetching contact details');
         } catch (error) {
             console.error('Error fetching contact details:', error);
         }

@@ -16,6 +16,7 @@ const CommunityDashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [activeGroupChat, setActiveGroupChat] = useState(null); // Opened group chat
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchUserAndGroups();
@@ -30,7 +31,7 @@ const CommunityDashboard = () => {
       setGroups(res.data.groups || []);
     } catch (err) {
       console.error("Failed to fetch data:", err);
-    }
+    } finally { setLoading(false); } 
   };
 
   const handleJoinGroup = async (groupId) => {
@@ -46,7 +47,7 @@ const CommunityDashboard = () => {
     } catch (err) {
       console.error("Failed to join group:", err);
       alert("Failed to join group");
-    }
+    } finally { setLoading(false); } 
   };
 
   const handleLeaveGroup = async (groupId) => {
@@ -69,6 +70,7 @@ const CommunityDashboard = () => {
       console.error("Failed to leave group:", err);
       alert("Failed to leave group");
     }
+    finally { setLoading(false); } 
   };
 
   const filteredGroups = groups
@@ -93,6 +95,13 @@ const CommunityDashboard = () => {
           currentUser={currentUser}
           onBack={() => setActiveGroupChat(null)}
         />
+      </div>
+    );
+  }
+  if (loading) {
+    return (
+      <div className="flex flex-col h-screen bg-gray-900 items-center justify-center">
+      <div className="w-12 h-12 border-4 border-gray-600 border-t-white rounded-full animate-spin"></div>
       </div>
     );
   }

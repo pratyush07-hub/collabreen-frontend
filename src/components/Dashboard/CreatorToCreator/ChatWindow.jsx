@@ -691,7 +691,7 @@ export default function ChatWindow({ chatId, onBack }) {
         console.log("WebSocket disconnected:", reason);
       });
       socketRef.current.on("messageDeletedForEveryone", ({ messageId }) => {
-        console.log("Received messageDeletedForEveryone event:", messageId);
+        // console.log("Received messageDeletedForEveryone event:", messageId);
         setMessages((prev) =>
           prev.map((m) =>
             m._id === messageId
@@ -721,13 +721,13 @@ export default function ChatWindow({ chatId, onBack }) {
   useEffect(() => {
     if (socketRef.current && chatId) {
       socketRef.current.emit("joinChat", chatId);
-      console.log("Joined chat room:", chatId);
+      // console.log("Joined chat room:", chatId);
     }
 
     return () => {
       if (socketRef.current && chatId) {
         socketRef.current.emit("leaveChat", chatId);
-        console.log("Left chat room:", chatId);
+        // console.log("Left chat room:", chatId);
       }
     };
   }, [chatId]);
@@ -968,7 +968,7 @@ export default function ChatWindow({ chatId, onBack }) {
   if (loading) {
     return (
       <div className="flex flex-col h-screen bg-gray-900 items-center justify-center">
-        <div className="text-white">Loading messages...</div>
+      <div className="w-12 h-12 border-4 border-gray-600 border-t-white rounded-full animate-spin"></div>
       </div>
     );
   }

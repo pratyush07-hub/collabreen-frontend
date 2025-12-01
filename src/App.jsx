@@ -39,6 +39,7 @@ import CreatorsPage from "./admin-dash/CreatorsPage.jsx";
 import Matches from "./admin-dash/Matches.jsx";
 import Communities from "./admin-dash/Communities.jsx";
 import AdminLogin from "./admin-dash/AdminLogin.jsx";
+import AdminSupport from "./admin-dash/AdminSupport.jsx";
 
 
 function App() {
@@ -57,14 +58,20 @@ function App() {
     "/communities",
     "/payments",
     "/admin-login",
+    "/profile-preview",
+    "/admin-support/:userId",
   ];
+  const hideNavbar =
+  hideNavbarRoutes.includes(location.pathname) || 
+  location.pathname.startsWith("/admin-support/");
 
   const navigate = useNavigate();
 
   return (
     <>
-      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+      {/* {!hideNavbarRoutes.includes(location.pathname) && <Navbar />} */}
 
+{!hideNavbar && <Navbar />}
       <Routes>
         <Route exact path="/" element={<Landing />} />
         <Route exact path="about" element={<About />} />
@@ -151,6 +158,8 @@ function App() {
         <Route path="/matches" element={<Matches />} />
         <Route path="/communities" element={<Communities />} />
         <Route path="/payments" element={<Payment />} />
+        <Route path="/admin-support/:userId" element={<AdminSupport />} />
+
 
       </Routes>
     </>

@@ -228,7 +228,7 @@ function InfluencerInsights() {
         );
         if (response.ok) {
           const data = await response.json();
-          console.log("Response Data:", data);
+          // console.log("Response Data:", data);
           if (data.influencer && data.influencer.insights) {
             setInsights(data.influencer.insights);
             setInfluencer(data.influencer);

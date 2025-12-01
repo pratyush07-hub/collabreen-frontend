@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import UserModal from "./UserModal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { adminGetAllUsers } from "../api/client";
 
 const UsersPage = () => {
@@ -11,13 +11,19 @@ const UsersPage = () => {
   const [roleFilter, setRoleFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [sourceFilter, setSourceFilter] = useState("");
-
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const usersPerPage = 10;
 
+  const navigate = useNavigate(); // initialize
+
+  // Function to handle Message button click
+  const handleMessageUser = (user) => {
+    setSelectedUser(null); // close modal
+    navigate(`/admin-support/${user._id}`); // go to AdminSupport with userId param
+  };
   // Fetch all users
   useEffect(() => {
     const fetchUsers = async () => {
@@ -25,7 +31,7 @@ const UsersPage = () => {
         setLoading(true);
 
         const res = await adminGetAllUsers();
-        console.log("Fetched users:", res.data);
+        // console.log("Fetched users:", res.data);
         const data = res.data;
 
         if (!data.success) {
@@ -225,7 +231,11 @@ const UsersPage = () => {
 
       {/* Modal */}
       {selectedUser && (
-        <UserModal user={selectedUser} onClose={() => setSelectedUser(null)} />
+        <UserModal
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+          onMessageUser={handleMessageUser} // pass callback
+        />
       )}
     </div>
   );

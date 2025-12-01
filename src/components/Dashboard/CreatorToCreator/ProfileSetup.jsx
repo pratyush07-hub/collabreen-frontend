@@ -267,7 +267,7 @@ export default function ProfileSetup({ onSetupComplete }) {
     setError(null);
 
     const token = Cookies.get("jwt");
-    console.log("JWT Token:", token);
+    // console.log("JWT Token:", token);
 
     try {
       const submitData = new FormData();
@@ -288,7 +288,7 @@ export default function ProfileSetup({ onSetupComplete }) {
         },
       });
 
-      console.log(response);
+      // console.log(response);
       if (response.data.success) {
         onSetupComplete();
         alert("Profile setup complete!");
@@ -299,6 +299,13 @@ export default function ProfileSetup({ onSetupComplete }) {
     }
     setLoading(false);
   };
+  if (loading) {
+    return (
+      <div className="flex flex-col h-screen bg-gray-900 items-center justify-center">
+      <div className="w-12 h-12 border-4 border-gray-600 border-t-white rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen mt-16 bg-gray-50 p-4 sm:p-8">

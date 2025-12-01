@@ -36,7 +36,7 @@ const CreateNewGroupPage = ({ currentUser, onBack, refreshGroups }) => {
         privacy: isPrivate ? "private" : "public",
       };
       const createdGroup = await createGroup(data);
-      console.log("created group", createdGroup)
+      // console.log("created group", createdGroup)
       setFormData({ name: "", description: "", category: "", image: null });
       setIsPrivate(false);
       refreshGroups();

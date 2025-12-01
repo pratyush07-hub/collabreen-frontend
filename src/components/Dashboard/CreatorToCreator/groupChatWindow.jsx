@@ -223,12 +223,13 @@ export default function GroupChatWindow({ groupId, currentUser, onBack }) {
     }
   };
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center text-white">
-        Loading messages...
+      <div className="flex flex-col h-screen bg-gray-900 items-center justify-center">
+      <div className="w-12 h-12 border-4 border-gray-600 border-t-white rounded-full animate-spin"></div>
       </div>
     );
+  }
 
   return (
     <div className="flex flex-col h-[100vh] bg-gray-900 fixed inset-0 md:left-[16%] overflow-x-hidden">

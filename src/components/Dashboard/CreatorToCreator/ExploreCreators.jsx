@@ -103,7 +103,13 @@ export default function ExploreCreators() {
     currentIndex < filteredProfiles.length ? currentIndex : 0;
   const currentProfile = filteredProfiles[currentFilteredIndex];
 
-  if (loading) return <div>⏳ Loading profiles...</div>;
+  if (loading) {
+    return (
+      <div className="flex flex-col h-screen bg-gray-900 items-center justify-center">
+      <div className="w-12 h-12 border-4 border-gray-600 border-t-white rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   if (!profiles.length)
     return (
       <div className="flex h-screen w-full justify-center items-center">

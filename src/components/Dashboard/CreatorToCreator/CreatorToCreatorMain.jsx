@@ -114,8 +114,8 @@ export default function CreatorToCreatorMain() {
 
 useEffect(() => {
   if (currentUser) {
-    console.log("🎯 currentUser updated:", currentUser);
-    console.log("👤 Profile Picture URL:", currentUser.profilePicture || "No profile picture set");
+    // console.log("🎯 currentUser updated:", currentUser);
+    // console.log("👤 Profile Picture URL:", currentUser.profilePicture || "No profile picture set");
   }
 }, [currentUser]);
 

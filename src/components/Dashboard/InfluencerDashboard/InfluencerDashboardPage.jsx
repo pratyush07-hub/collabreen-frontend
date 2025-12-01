@@ -22,7 +22,7 @@ const InfluencerDashboardPage = () => {
     const influencerData = location.state?.influencer; // This will contain the influencer object
 
     useEffect(() => {
-        console.log("Influencer Data:", influencerData);
+        // console.log("Influencer Data:", influencerData);
     }, [influencerData]);
 
     return (

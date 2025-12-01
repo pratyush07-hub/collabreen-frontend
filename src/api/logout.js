@@ -21,7 +21,7 @@ export const handleLogout = async () => {
       const errorText = await response.text();
       console.error("Backend response:", errorText);
     } else {
-      console.log("Logout successful");
+      // console.log("Logout successful");
     }
   } catch (err) {
     console.error("Logout failed:", err);

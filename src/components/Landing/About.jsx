@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 import Search from "../../assets/Search.jpeg";
+import { useEffect } from "react";
 function About() {
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
       <section className="grid max-w-screen-4xl py-10 mt-14 mx-auto text-white">

@@ -384,6 +384,13 @@ const PhotographerProfile = ({ onNotificationsClick }) => {
     setLoading(false);
   };
 
+  if (loading) {
+    return (
+      <div className="flex flex-col h-screen bg-gray-900 items-center justify-center">
+      <div className="w-12 h-12 border-4 border-gray-600 border-t-white rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   // --- Render Sections ---
 
   const renderProfileContent = () => (
