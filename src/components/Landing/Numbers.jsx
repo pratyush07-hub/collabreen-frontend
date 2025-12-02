@@ -55,7 +55,7 @@ function Numbers() {
         if (entry.isIntersecting && !hasAnimated) {
           setHasAnimated(true);
           // Animate numbers only once when visible
-          animateValue(0, 200, 2000, setCreatorCount); // 200M+
+          animateValue(0, 500, 2000, setCreatorCount); // 200M+
           animateValue(0, 20, 2000, setBrandsCount); // 20+
           animateValue(0, 10, 2000, setCommunityCount); // 10+
         }
@@ -77,10 +77,10 @@ function Numbers() {
       ref={sectionRef}
       className="flex flex-col gap-10 md:flex-row justify-evenly items-center max-w-screen-4xl py-10 md:mt-14 mx-auto text-white"
     >
-      {/* 200M+ */}
+      {/* 500+ */}
       <div className="p-2 px-10 md:py-10 md:px-20 flex flex-col gap-2 bg-gradient-to-r from-stone-700 to-stone-900 rounded-br-3xl rounded-t-3xl">
         <h1 className="bg-transparent max-w-4xl text-[#EFAC16] text-3xl font-normal md:text-3xl xl:text-4xl relative font-sf">
-          {creatorCount}M+
+          {creatorCount}+
         </h1>
         <p className="bg-transparent text-left text-gray-300 text-lg lg:text-xl font-roboto">
           Creator Database

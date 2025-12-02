@@ -68,14 +68,14 @@ function Footer() {
                     <FaXTwitter className="w-6 h-6 hover:text-black hover:bg-white" />
                   </a>
                   <a
-                    href="https://instagram.com"
+                    href="https://www.instagram.com/winkiz.io/"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <FaInstagram className="w-6 h-6 hover:text-pink-600" />
                   </a>
                   <a
-                    href="https://linkedin.com"
+                    href="https://www.linkedin.com/company/winkiz/?viewAsMember=true"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
