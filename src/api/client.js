@@ -232,3 +232,7 @@ export const getAdminChat = (userId) =>
 // Admin: Send a reply to user
 export const adminReply = (userId, message) =>
   api.post("/support/reply", { userId, message });
+
+
+export const applyVolunteerHiring = (formData) =>
+  api.post("/volunteer/hiring", formData);

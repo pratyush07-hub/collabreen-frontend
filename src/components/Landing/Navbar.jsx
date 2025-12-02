@@ -204,7 +204,7 @@ function Navbar() {
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
             <div className="px-0 md:px-2">
-              <div className="w-16 h-16 md:h-24 md:w-24 rounded-full">
+              <div className="w-16 h-16 md:h-16 md:w-16 lg:h-24 lg:w-24 rounded-full">
                 <img src={logo} alt="Logo" />
               </div>
             </div>
@@ -213,13 +213,13 @@ function Navbar() {
           {/* Hamburger / Close Button */}
           <button
             onClick={() => setNavbarOpen(!navbarOpen)}
-            className="inline-flex items-center p-2 w-8 h-8 justify-center text-sm text-gray-400 rounded-lg lg:hidden focus:outline-none focus:ring-1 focus:ring-gray-200"
+            className="inline-flex items-center mb-0 md:mb-4 p-2 w-8 h-8 justify-center text-sm text-gray-400 rounded-lg lg:hidden focus:outline-none focus:ring-1 focus:ring-gray-200"
           >
             <span className="sr-only">Toggle menu</span>
             {navbarOpen ? (
               // Close icon
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -236,7 +236,7 @@ function Navbar() {
             ) : (
               // Hamburger icon
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

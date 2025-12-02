@@ -49,8 +49,15 @@
 import React from "react";
 import meeting from "../../assets/meeting.png";
 import { Link } from "react-router-dom";
+import VolunteerHiring from "./VolunteerHiring";
 
 function Meeting() {
+  const [showForm, setShowForm] = React.useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+  };
   return (
     <>
       <section className="bg-[#0C0C0C] rounded-3xl shadow overflow-hidden h-auto md:h-[530px] relative mb-10 mt-20 md:mt-40">
@@ -79,19 +86,20 @@ function Meeting() {
           </p>
 
           <div className="flex justify-center mt-8 sm:mt-10 md:mt-20">
-            <Link
-              to="/explore"
+            <button
+              onClick={() => setShowForm(true)}
               className="bg-[#EFAC16] hover:bg-[#F77128] w-32 sm:w-36 md:w-40 flex items-center justify-center 
               text-sm sm:text-base font-semibold text-gray-900 py-2 sm:py-3 px-4 mt-4 
               rounded-bl-3xl rounded-t-3xl focus:ring-1 focus:ring-gray-100"
             >
-              Learn More
-            </Link>
+              Volunteer Hiring
+            </button>
           </div>
         </div>
       </section>
 
       <div className="flex justify-center mt-2 md:mt-20"></div>
+      <VolunteerHiring isOpen={showForm} onClose={() => setShowForm(false)} />
     </>
   );
 }

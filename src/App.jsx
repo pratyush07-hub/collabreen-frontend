@@ -113,6 +113,7 @@ function App() {
         />
         <Route exact path="/blogs" element={<Blogs />} />
         <Route exact path="/blog" element={<Blog />} />
+        <Route path="/blog/:id" element={<Blog />} />
         <Route exact path="/kk" element={<CollabReqAcceptReject />} />
 
         {/* Influencer Dashboard */}
